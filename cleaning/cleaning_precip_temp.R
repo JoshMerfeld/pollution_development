@@ -1,4 +1,4 @@
-# Purpose: This script doespulls EVI
+# Purpose: This script pulls temp and precip
 # Author: Josh Merfeld
 # Date: December 12th, 2022
 

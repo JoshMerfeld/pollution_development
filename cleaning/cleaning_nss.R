@@ -77,6 +77,12 @@ df_labor$days_f[df_labor$Current_day_activity_NIC_1998_co %in% c("01", "02")] <-
                                                                                   df_labor$Total_no_of_days_in_current_acti[df_labor$Current_day_activity_NIC_1998_co %in% c("01", "02")]
 df_labor$days_nf <- (df_labor$days_self + df_labor$days_wage - df_labor$days_f)
 
+# Wages
+df_labor$f_wages <- NA
+df_labor$f_wages[df_labor$days_f>0] <- df_labor$Wage_salary_earnings_total_durin[df_labor$days_f>0]
+df_labor$nf_wages <- NA
+df_labor$nf_wages[df_labor$days_nf>0] <- df_labor$Wage_salary_earnings_total_durin[df_labor$days_nf>0]
+
 
 # DAILY - use below
 df_labor_daily <- df_labor
@@ -85,17 +91,20 @@ df_labor_daily <- df_labor
 df_labor <- df_labor %>% mutate(hid = paste(Sector, State_region, District, Stratum, Sub_stratum, Sub_round, Sub_sample, FOD, 
                                         Hamlet, Second_stratum, Sample_hhld_no, sep = "-"),
                                 pid = Personal_srl_no) %>%
-                          select(hid, pid, days_self, days_wage, days_domestic, days_f, days_nf) %>%
+                          select(hid, pid, days_self, days_wage, days_domestic, days_f, days_nf, f_wages, nf_wages) %>%
                           group_by(hid, pid) %>%
                           mutate(days_self = sum(days_self), 
                                  days_wage = sum(days_wage), 
                                  days_domestic = sum(days_domestic), 
                                  days_f = sum(days_f), 
-                                 days_nf = sum(days_nf)) %>%
+                                 days_nf = sum(days_nf),
+                                 f_wages = sum(f_wages), 
+                                 nf_wages = sum(nf_wages)) %>%
                           filter(row_number()==1) %>%
                           ungroup()
 
 # Daily again
+# Intensity
 df_labor_daily$Current_day_activity_intensity_7[is.na(df_labor_daily$Current_day_activity_intensity_7)==T | 
                                                   !(df_labor_daily$Current_day_activity_Status %in% c("11", "12", "21", "31", "41", "51"))] <- 0
 df_labor_daily$Current_day_activity_intensity_6[is.na(df_labor_daily$Current_day_activity_intensity_6)==T | 
@@ -110,17 +119,95 @@ df_labor_daily$Current_day_activity_intensity_2[is.na(df_labor_daily$Current_day
                                                   !(df_labor_daily$Current_day_activity_Status %in% c("11", "12", "21", "31", "41", "51"))] <- 0
 df_labor_daily$Current_day_activity_intensity_1[is.na(df_labor_daily$Current_day_activity_intensity_1)==T | 
                                                   !(df_labor_daily$Current_day_activity_Status %in% c("11", "12", "21", "31", "41", "51"))] <- 0
+# Wage
+df_labor_daily$wage_day1 <- df_labor_daily$Current_day_activity_intensity_1
+df_labor_daily$wage_day1[!(df_labor_daily$Current_day_activity_Status %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day2 <- df_labor_daily$Current_day_activity_intensity_2
+df_labor_daily$wage_day2[!(df_labor_daily$Current_day_activity_Status %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day3 <- df_labor_daily$Current_day_activity_intensity_3
+df_labor_daily$wage_day3[!(df_labor_daily$Current_day_activity_Status %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day4 <- df_labor_daily$Current_day_activity_intensity_4
+df_labor_daily$wage_day4[!(df_labor_daily$Current_day_activity_Status %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day5 <- df_labor_daily$Current_day_activity_intensity_5
+df_labor_daily$wage_day5[!(df_labor_daily$Current_day_activity_Status %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day6 <- df_labor_daily$Current_day_activity_intensity_6
+df_labor_daily$wage_day6[!(df_labor_daily$Current_day_activity_Status %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day7 <- df_labor_daily$Current_day_activity_intensity_7
+df_labor_daily$wage_day7[!(df_labor_daily$Current_day_activity_Status %in% c("31", "41", "51"))] <- 0
+# Self
+df_labor_daily$self_day1 <- df_labor_daily$Current_day_activity_intensity_1
+df_labor_daily$self_day1[!(df_labor_daily$Current_day_activity_Status %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day2 <- df_labor_daily$Current_day_activity_intensity_2
+df_labor_daily$self_day2[!(df_labor_daily$Current_day_activity_Status %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day3 <- df_labor_daily$Current_day_activity_intensity_3
+df_labor_daily$self_day3[!(df_labor_daily$Current_day_activity_Status %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day4 <- df_labor_daily$Current_day_activity_intensity_4
+df_labor_daily$self_day4[!(df_labor_daily$Current_day_activity_Status %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day5 <- df_labor_daily$Current_day_activity_intensity_5
+df_labor_daily$self_day5[!(df_labor_daily$Current_day_activity_Status %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day6 <- df_labor_daily$Current_day_activity_intensity_6
+df_labor_daily$self_day6[!(df_labor_daily$Current_day_activity_Status %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day7 <- df_labor_daily$Current_day_activity_intensity_7
+df_labor_daily$self_day7[!(df_labor_daily$Current_day_activity_Status %in% c("11", "12", "21"))] <- 0
+# non-farm
+df_labor_daily$nf_day1 <- df_labor_daily$Current_day_activity_intensity_1
+df_labor_daily$nf_day1[(df_labor_daily$Current_day_activity_NIC_1998_co %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day2 <- df_labor_daily$Current_day_activity_intensity_2
+df_labor_daily$nf_day2[(df_labor_daily$Current_day_activity_NIC_1998_co %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day3 <- df_labor_daily$Current_day_activity_intensity_3
+df_labor_daily$nf_day3[(df_labor_daily$Current_day_activity_NIC_1998_co %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day4 <- df_labor_daily$Current_day_activity_intensity_4
+df_labor_daily$nf_day4[(df_labor_daily$Current_day_activity_NIC_1998_co %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day5 <- df_labor_daily$Current_day_activity_intensity_5
+df_labor_daily$nf_day5[(df_labor_daily$Current_day_activity_NIC_1998_co %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day6 <- df_labor_daily$Current_day_activity_intensity_6
+df_labor_daily$nf_day6[(df_labor_daily$Current_day_activity_NIC_1998_co %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day7 <- df_labor_daily$Current_day_activity_intensity_7
+df_labor_daily$nf_day7[(df_labor_daily$Current_day_activity_NIC_1998_co %in% c("01", "02"))] <- 0
+# farm
+df_labor_daily$f_day1 <- df_labor_daily$Current_day_activity_intensity_1
+df_labor_daily$f_day1[!(df_labor_daily$Current_day_activity_NIC_1998_co %in% c("01", "02"))] <- 0
+df_labor_daily$f_day2 <- df_labor_daily$Current_day_activity_intensity_2
+df_labor_daily$f_day2[!(df_labor_daily$Current_day_activity_NIC_1998_co %in% c("01", "02"))] <- 0
+df_labor_daily$f_day3 <- df_labor_daily$Current_day_activity_intensity_3
+df_labor_daily$f_day3[!(df_labor_daily$Current_day_activity_NIC_1998_co %in% c("01", "02"))] <- 0
+df_labor_daily$f_day4 <- df_labor_daily$Current_day_activity_intensity_4
+df_labor_daily$f_day4[!(df_labor_daily$Current_day_activity_NIC_1998_co %in% c("01", "02"))] <- 0
+df_labor_daily$f_day5 <- df_labor_daily$Current_day_activity_intensity_5
+df_labor_daily$f_day5[!(df_labor_daily$Current_day_activity_NIC_1998_co %in% c("01", "02"))] <- 0
+df_labor_daily$f_day6 <- df_labor_daily$Current_day_activity_intensity_6
+df_labor_daily$f_day6[!(df_labor_daily$Current_day_activity_NIC_1998_co %in% c("01", "02"))] <- 0
+df_labor_daily$f_day7 <- df_labor_daily$Current_day_activity_intensity_7
+df_labor_daily$f_day7[!(df_labor_daily$Current_day_activity_NIC_1998_co %in% c("01", "02"))] <- 0
+
 df_labor_daily <- df_labor_daily %>% mutate(hid = paste(Sector, State_region, District, Stratum, Sub_stratum, Sub_round, Sub_sample, FOD, 
                                                         Hamlet, Second_stratum, Sample_hhld_no, sep = "-"),
                                             pid = Personal_srl_no) %>%
                                       select(hid, pid, day7 = Current_day_activity_intensity_7, day6 = Current_day_activity_intensity_6,
                                              day5 = Current_day_activity_intensity_5, day4 = Current_day_activity_intensity_4,
                                              day3 = Current_day_activity_intensity_3, day2 = Current_day_activity_intensity_2,
-                                             day1 = Current_day_activity_intensity_1) %>%
+                                             day1 = Current_day_activity_intensity_1,
+                                             starts_with("f_day"), starts_with("nf_day"), starts_with("wage_day"), starts_with("self_day")) %>%
                                       group_by(hid, pid) %>%
                                       mutate(day7 = sum(day7), day6 = sum(day6), day5 = sum(day5),
                                              day4 = sum(day4), day3 = sum(day3), day2 = sum(day2),
-                                             day1= sum(day1)) %>%
+                                             day1 = sum(day1),
+                                             wage_day7 = sum(wage_day7), wage_day6 = sum(wage_day6),
+                                             wage_day5 = sum(wage_day5), wage_day4 = sum(wage_day4),
+                                             wage_day3 = sum(wage_day3), wage_day2 = sum(wage_day2),
+                                             wage_day1 = sum(wage_day1),
+                                             self_day7 = sum(self_day7), self_day6 = sum(self_day6),
+                                             self_day5 = sum(self_day5), self_day4 = sum(self_day4),
+                                             self_day3 = sum(self_day3), self_day2 = sum(self_day2),
+                                             self_day1 = sum(self_day1),
+                                             nf_day7 = sum(nf_day7), nf_day6 = sum(nf_day6),
+                                             nf_day5 = sum(nf_day5), nf_day4 = sum(nf_day4),
+                                             nf_day3 = sum(nf_day3), nf_day2 = sum(nf_day2),
+                                             nf_day1 = sum(nf_day1),
+                                             f_day7 = sum(f_day7), f_day6 = sum(f_day6),
+                                             f_day5 = sum(f_day5), f_day4 = sum(f_day4),
+                                             f_day3 = sum(f_day3), f_day2 = sum(f_day2),
+                                             f_day1 = sum(f_day1)) %>%
                                       filter(row_number()==1) %>%
                                       ungroup()
 
@@ -130,6 +217,44 @@ df_labor_daily <- df_labor_daily %>% gather(
                                              "intensity",
                                              day7, day6, day5, day4, day3, day2, day1
                                              )
+
+# Some cleaning
+df_labor_daily$wage_days <- NA
+df_labor_daily$wage_days[df_labor_daily$days=="day7"] <- df_labor_daily$wage_day7[df_labor_daily$days=="day7"]
+df_labor_daily$wage_days[df_labor_daily$days=="day6"] <- df_labor_daily$wage_day6[df_labor_daily$days=="day6"]
+df_labor_daily$wage_days[df_labor_daily$days=="day5"] <- df_labor_daily$wage_day5[df_labor_daily$days=="day5"]
+df_labor_daily$wage_days[df_labor_daily$days=="day4"] <- df_labor_daily$wage_day4[df_labor_daily$days=="day4"]
+df_labor_daily$wage_days[df_labor_daily$days=="day3"] <- df_labor_daily$wage_day3[df_labor_daily$days=="day3"]
+df_labor_daily$wage_days[df_labor_daily$days=="day2"] <- df_labor_daily$wage_day2[df_labor_daily$days=="day2"]
+df_labor_daily$wage_days[df_labor_daily$days=="day1"] <- df_labor_daily$wage_day1[df_labor_daily$days=="day1"]
+df_labor_daily$self_days <- NA
+df_labor_daily$self_days[df_labor_daily$days=="day7"] <- df_labor_daily$self_day7[df_labor_daily$days=="day7"]
+df_labor_daily$self_days[df_labor_daily$days=="day6"] <- df_labor_daily$self_day6[df_labor_daily$days=="day6"]
+df_labor_daily$self_days[df_labor_daily$days=="day5"] <- df_labor_daily$self_day5[df_labor_daily$days=="day5"]
+df_labor_daily$self_days[df_labor_daily$days=="day4"] <- df_labor_daily$self_day4[df_labor_daily$days=="day4"]
+df_labor_daily$self_days[df_labor_daily$days=="day3"] <- df_labor_daily$self_day3[df_labor_daily$days=="day3"]
+df_labor_daily$self_days[df_labor_daily$days=="day2"] <- df_labor_daily$self_day2[df_labor_daily$days=="day2"]
+df_labor_daily$self_days[df_labor_daily$days=="day1"] <- df_labor_daily$self_day1[df_labor_daily$days=="day1"]
+df_labor_daily$f_days <- NA
+df_labor_daily$f_days[df_labor_daily$days=="day7"] <- df_labor_daily$f_day7[df_labor_daily$days=="day7"]
+df_labor_daily$f_days[df_labor_daily$days=="day6"] <- df_labor_daily$f_day6[df_labor_daily$days=="day6"]
+df_labor_daily$f_days[df_labor_daily$days=="day5"] <- df_labor_daily$f_day5[df_labor_daily$days=="day5"]
+df_labor_daily$f_days[df_labor_daily$days=="day4"] <- df_labor_daily$f_day4[df_labor_daily$days=="day4"]
+df_labor_daily$f_days[df_labor_daily$days=="day3"] <- df_labor_daily$f_day3[df_labor_daily$days=="day3"]
+df_labor_daily$f_days[df_labor_daily$days=="day2"] <- df_labor_daily$f_day2[df_labor_daily$days=="day2"]
+df_labor_daily$f_days[df_labor_daily$days=="day1"] <- df_labor_daily$f_day1[df_labor_daily$days=="day1"]
+df_labor_daily$nf_days <- NA
+df_labor_daily$nf_days[df_labor_daily$days=="day7"] <- df_labor_daily$nf_day7[df_labor_daily$days=="day7"]
+df_labor_daily$nf_days[df_labor_daily$days=="day6"] <- df_labor_daily$nf_day6[df_labor_daily$days=="day6"]
+df_labor_daily$nf_days[df_labor_daily$days=="day5"] <- df_labor_daily$nf_day5[df_labor_daily$days=="day5"]
+df_labor_daily$nf_days[df_labor_daily$days=="day4"] <- df_labor_daily$nf_day4[df_labor_daily$days=="day4"]
+df_labor_daily$nf_days[df_labor_daily$days=="day3"] <- df_labor_daily$nf_day3[df_labor_daily$days=="day3"]
+df_labor_daily$nf_days[df_labor_daily$days=="day2"] <- df_labor_daily$nf_day2[df_labor_daily$days=="day2"]
+df_labor_daily$nf_days[df_labor_daily$days=="day1"] <- df_labor_daily$nf_day1[df_labor_daily$days=="day1"]
+df_labor_daily <- df_labor_daily %>% select(-c(f_day7, f_day6, f_day5, f_day4, f_day3, f_day2, f_day1,
+                                               nf_day7, nf_day6, nf_day5, nf_day4, nf_day3, nf_day2, nf_day1,
+                                               wage_day7, wage_day6, wage_day5, wage_day4, wage_day3, wage_day2, wage_day1,
+                                               self_day7, self_day6, self_day5, self_day4, self_day3, self_day2, self_day1))
 
 
 # merging -------------------------------------------------------
@@ -145,7 +270,7 @@ df_labor <- df_labor %>%
 df_labor <- df_labor %>% left_join(concordance, by = c("state61", "district61"))
 df_labor$state_merge <- df_labor$state61
 df_labor$district_merge <- df_labor$district61
-df_labor <- df_labor[complete.cases(df_labor),]
+#df_labor <- df_labor[complete.cases(df_labor),]
 write.csv(df_labor, "data/clean/nss/nss61.csv")
 
 # And daily
@@ -247,6 +372,11 @@ df_labor$days_f[df_labor$S10B6_v05 %in% c("01", "02")] <- df_labor$days_f[df_lab
                                                               df_labor$S10B6_v14[df_labor$S10B6_v05 %in% c("01", "02")]
 df_labor$days_nf <- (df_labor$days_self + df_labor$days_wage - df_labor$days_f)
 
+# Wages
+df_labor$f_wages <- NA
+df_labor$f_wages[df_labor$days_f>0] <- df_labor$S10B6_v17[df_labor$days_f>0]
+df_labor$nf_wages <- NA
+df_labor$nf_wages[df_labor$days_nf>0] <- df_labor$S10B6_v17[df_labor$days_nf>0]
 
 # DAILY - use below
 df_labor_daily <- df_labor
@@ -254,13 +384,15 @@ df_labor_daily <- df_labor
 
 df_labor <- df_labor %>% mutate(hid = hhid,
                                 pid = S10B6_v01) %>%
-                          select(hid, pid, days_self, days_wage, days_domestic, days_f, days_nf) %>%
+                          select(hid, pid, days_self, days_wage, days_domestic, days_f, days_nf, f_wages, nf_wages) %>%
                           group_by(hid, pid) %>%
                           mutate(days_self = sum(days_self), 
                                  days_wage = sum(days_wage), 
                                  days_domestic = sum(days_domestic), 
                                  days_f = sum(days_f), 
-                                 days_nf = sum(days_nf)) %>%
+                                 days_nf = sum(days_nf),
+                                 f_wages = sum(f_wages), 
+                                 nf_wages = sum(nf_wages)) %>%
                           filter(row_number()==1) %>%
                           ungroup()
 
@@ -279,16 +411,94 @@ df_labor_daily$S10B6_v12[is.na(df_labor_daily$S10B6_v12)==T |
                                                   !(df_labor_daily$S10B6_v04 %in% c("11", "12", "21", "31", "41", "51"))] <- 0
 df_labor_daily$S10B6_v13[is.na(df_labor_daily$S10B6_v13)==T | 
                                                   !(df_labor_daily$S10B6_v04 %in% c("11", "12", "21", "31", "41", "51"))] <- 0
+# Wage
+df_labor_daily$wage_day1 <- df_labor_daily$S10B6_v13
+df_labor_daily$wage_day1[!(df_labor_daily$S10B6_v04 %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day2 <- df_labor_daily$S10B6_v12
+df_labor_daily$wage_day2[!(df_labor_daily$S10B6_v04 %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day3 <- df_labor_daily$S10B6_v11
+df_labor_daily$wage_day3[!(df_labor_daily$S10B6_v04 %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day4 <- df_labor_daily$S10B6_v10
+df_labor_daily$wage_day4[!(df_labor_daily$S10B6_v04 %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day5 <- df_labor_daily$S10B6_v09
+df_labor_daily$wage_day5[!(df_labor_daily$S10B6_v04 %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day6 <- df_labor_daily$S10B6_v08
+df_labor_daily$wage_day6[!(df_labor_daily$S10B6_v04 %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day7 <- df_labor_daily$S10B6_v07
+df_labor_daily$wage_day7[!(df_labor_daily$S10B6_v04 %in% c("31", "41", "51"))] <- 0
+# Self
+df_labor_daily$self_day1 <- df_labor_daily$S10B6_v13
+df_labor_daily$self_day1[!(df_labor_daily$S10B6_v04 %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day2 <- df_labor_daily$S10B6_v12
+df_labor_daily$self_day2[!(df_labor_daily$S10B6_v04 %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day3 <- df_labor_daily$S10B6_v11
+df_labor_daily$self_day3[!(df_labor_daily$S10B6_v04 %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day4 <- df_labor_daily$S10B6_v10
+df_labor_daily$self_day4[!(df_labor_daily$S10B6_v04 %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day5 <- df_labor_daily$S10B6_v09
+df_labor_daily$self_day5[!(df_labor_daily$S10B6_v04 %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day6 <- df_labor_daily$S10B6_v08
+df_labor_daily$self_day6[!(df_labor_daily$S10B6_v04 %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day7 <- df_labor_daily$S10B6_v07
+df_labor_daily$self_day7[!(df_labor_daily$S10B6_v04 %in% c("11", "12", "21"))] <- 0
+# non-farm
+df_labor_daily$nf_day1 <- df_labor_daily$S10B6_v13
+df_labor_daily$nf_day1[(df_labor_daily$S10B6_v05 %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day2 <- df_labor_daily$S10B6_v12
+df_labor_daily$nf_day2[(df_labor_daily$S10B6_v05 %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day3 <- df_labor_daily$S10B6_v11
+df_labor_daily$nf_day3[(df_labor_daily$S10B6_v05 %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day4 <- df_labor_daily$S10B6_v10
+df_labor_daily$nf_day4[(df_labor_daily$S10B6_v05 %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day5 <- df_labor_daily$S10B6_v09
+df_labor_daily$nf_day5[(df_labor_daily$S10B6_v05 %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day6 <- df_labor_daily$S10B6_v08
+df_labor_daily$nf_day6[(df_labor_daily$S10B6_v05 %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day7 <- df_labor_daily$S10B6_v07
+df_labor_daily$nf_day7[(df_labor_daily$S10B6_v05 %in% c("01", "02"))] <- 0
+# farm
+df_labor_daily$f_day1 <- df_labor_daily$S10B6_v13
+df_labor_daily$f_day1[!(df_labor_daily$S10B6_v05 %in% c("01", "02"))] <- 0
+df_labor_daily$f_day2 <- df_labor_daily$S10B6_v12
+df_labor_daily$f_day2[!(df_labor_daily$S10B6_v05 %in% c("01", "02"))] <- 0
+df_labor_daily$f_day3 <- df_labor_daily$S10B6_v11
+df_labor_daily$f_day3[!(df_labor_daily$S10B6_v05 %in% c("01", "02"))] <- 0
+df_labor_daily$f_day4 <- df_labor_daily$S10B6_v10
+df_labor_daily$f_day4[!(df_labor_daily$S10B6_v05 %in% c("01", "02"))] <- 0
+df_labor_daily$f_day5 <- df_labor_daily$S10B6_v09
+df_labor_daily$f_day5[!(df_labor_daily$S10B6_v05 %in% c("01", "02"))] <- 0
+df_labor_daily$f_day6 <- df_labor_daily$S10B6_v08
+df_labor_daily$f_day6[!(df_labor_daily$S10B6_v05 %in% c("01", "02"))] <- 0
+df_labor_daily$f_day7 <- df_labor_daily$S10B6_v07
+df_labor_daily$f_day7[!(df_labor_daily$S10B6_v05 %in% c("01", "02"))] <- 0
+
 df_labor_daily <- df_labor_daily %>% mutate(hid =  hhid,
                                             pid = S10B6_v01) %>%
                                       select(hid, pid, day7 = S10B6_v07, day6 = S10B6_v08,
                                              day5 = S10B6_v09, day4 = S10B6_v10,
                                              day3 = S10B6_v11, day2 = S10B6_v12,
-                                             day1 = S10B6_v13) %>%
+                                             day1 = S10B6_v13,
+                                             starts_with("f_day"), starts_with("nf_day"), starts_with("wage_day"), starts_with("self_day")) %>%
                                       group_by(hid, pid) %>%
                                       mutate(day7 = sum(day7), day6 = sum(day6), day5 = sum(day5),
                                              day4 = sum(day4), day3 = sum(day3), day2 = sum(day2),
-                                             day1= sum(day1)) %>%
+                                             day1 = sum(day1),
+                                             wage_day7 = sum(wage_day7), wage_day6 = sum(wage_day6),
+                                             wage_day5 = sum(wage_day5), wage_day4 = sum(wage_day4),
+                                             wage_day3 = sum(wage_day3), wage_day2 = sum(wage_day2),
+                                             wage_day1 = sum(wage_day1),
+                                             self_day7 = sum(self_day7), self_day6 = sum(self_day6),
+                                             self_day5 = sum(self_day5), self_day4 = sum(self_day4),
+                                             self_day3 = sum(self_day3), self_day2 = sum(self_day2),
+                                             self_day1 = sum(self_day1),
+                                             nf_day7 = sum(nf_day7), nf_day6 = sum(nf_day6),
+                                             nf_day5 = sum(nf_day5), nf_day4 = sum(nf_day4),
+                                             nf_day3 = sum(nf_day3), nf_day2 = sum(nf_day2),
+                                             nf_day1 = sum(nf_day1),
+                                             f_day7 = sum(f_day7), f_day6 = sum(f_day6),
+                                             f_day5 = sum(f_day5), f_day4 = sum(f_day4),
+                                             f_day3 = sum(f_day3), f_day2 = sum(f_day2),
+                                             f_day1 = sum(f_day1)) %>%
                                       filter(row_number()==1) %>%
                                       ungroup()
 
@@ -298,6 +508,44 @@ df_labor_daily <- df_labor_daily %>% gather(
                                              "intensity",
                                              day7, day6, day5, day4, day3, day2, day1
                                              )
+
+# Some cleaning
+df_labor_daily$wage_days <- NA
+df_labor_daily$wage_days[df_labor_daily$days=="day7"] <- df_labor_daily$wage_day7[df_labor_daily$days=="day7"]
+df_labor_daily$wage_days[df_labor_daily$days=="day6"] <- df_labor_daily$wage_day6[df_labor_daily$days=="day6"]
+df_labor_daily$wage_days[df_labor_daily$days=="day5"] <- df_labor_daily$wage_day5[df_labor_daily$days=="day5"]
+df_labor_daily$wage_days[df_labor_daily$days=="day4"] <- df_labor_daily$wage_day4[df_labor_daily$days=="day4"]
+df_labor_daily$wage_days[df_labor_daily$days=="day3"] <- df_labor_daily$wage_day3[df_labor_daily$days=="day3"]
+df_labor_daily$wage_days[df_labor_daily$days=="day2"] <- df_labor_daily$wage_day2[df_labor_daily$days=="day2"]
+df_labor_daily$wage_days[df_labor_daily$days=="day1"] <- df_labor_daily$wage_day1[df_labor_daily$days=="day1"]
+df_labor_daily$self_days <- NA
+df_labor_daily$self_days[df_labor_daily$days=="day7"] <- df_labor_daily$self_day7[df_labor_daily$days=="day7"]
+df_labor_daily$self_days[df_labor_daily$days=="day6"] <- df_labor_daily$self_day6[df_labor_daily$days=="day6"]
+df_labor_daily$self_days[df_labor_daily$days=="day5"] <- df_labor_daily$self_day5[df_labor_daily$days=="day5"]
+df_labor_daily$self_days[df_labor_daily$days=="day4"] <- df_labor_daily$self_day4[df_labor_daily$days=="day4"]
+df_labor_daily$self_days[df_labor_daily$days=="day3"] <- df_labor_daily$self_day3[df_labor_daily$days=="day3"]
+df_labor_daily$self_days[df_labor_daily$days=="day2"] <- df_labor_daily$self_day2[df_labor_daily$days=="day2"]
+df_labor_daily$self_days[df_labor_daily$days=="day1"] <- df_labor_daily$self_day1[df_labor_daily$days=="day1"]
+df_labor_daily$f_days <- NA
+df_labor_daily$f_days[df_labor_daily$days=="day7"] <- df_labor_daily$f_day7[df_labor_daily$days=="day7"]
+df_labor_daily$f_days[df_labor_daily$days=="day6"] <- df_labor_daily$f_day6[df_labor_daily$days=="day6"]
+df_labor_daily$f_days[df_labor_daily$days=="day5"] <- df_labor_daily$f_day5[df_labor_daily$days=="day5"]
+df_labor_daily$f_days[df_labor_daily$days=="day4"] <- df_labor_daily$f_day4[df_labor_daily$days=="day4"]
+df_labor_daily$f_days[df_labor_daily$days=="day3"] <- df_labor_daily$f_day3[df_labor_daily$days=="day3"]
+df_labor_daily$f_days[df_labor_daily$days=="day2"] <- df_labor_daily$f_day2[df_labor_daily$days=="day2"]
+df_labor_daily$f_days[df_labor_daily$days=="day1"] <- df_labor_daily$f_day1[df_labor_daily$days=="day1"]
+df_labor_daily$nf_days <- NA
+df_labor_daily$nf_days[df_labor_daily$days=="day7"] <- df_labor_daily$nf_day7[df_labor_daily$days=="day7"]
+df_labor_daily$nf_days[df_labor_daily$days=="day6"] <- df_labor_daily$nf_day6[df_labor_daily$days=="day6"]
+df_labor_daily$nf_days[df_labor_daily$days=="day5"] <- df_labor_daily$nf_day5[df_labor_daily$days=="day5"]
+df_labor_daily$nf_days[df_labor_daily$days=="day4"] <- df_labor_daily$nf_day4[df_labor_daily$days=="day4"]
+df_labor_daily$nf_days[df_labor_daily$days=="day3"] <- df_labor_daily$nf_day3[df_labor_daily$days=="day3"]
+df_labor_daily$nf_days[df_labor_daily$days=="day2"] <- df_labor_daily$nf_day2[df_labor_daily$days=="day2"]
+df_labor_daily$nf_days[df_labor_daily$days=="day1"] <- df_labor_daily$nf_day1[df_labor_daily$days=="day1"]
+df_labor_daily <- df_labor_daily %>% select(-c(f_day7, f_day6, f_day5, f_day4, f_day3, f_day2, f_day1,
+                                               nf_day7, nf_day6, nf_day5, nf_day4, nf_day3, nf_day2, nf_day1,
+                                               wage_day7, wage_day6, wage_day5, wage_day4, wage_day3, wage_day2, wage_day1,
+                                               self_day7, self_day6, self_day5, self_day4, self_day3, self_day2, self_day1))
 
 # merging -------------------------------------------------------
 # here are the concordance identifiers
@@ -312,7 +560,7 @@ df_labor <- df_labor %>%
 df_labor <- df_labor %>% left_join(concordance, by = c("state62", "district62"))
 df_labor$state_merge <- df_labor$state62
 df_labor$district_merge <- df_labor$district62
-df_labor <- df_labor[complete.cases(df_labor),]
+#df_labor <- df_labor[complete.cases(df_labor),]
 write.csv(df_labor, "data/clean/nss/nss62.csv")
 
 # And daily
@@ -418,19 +666,27 @@ df_labor$days_f[df_labor$B5_c5 %in% c("01", "02")] <- df_labor$days_f[df_labor$B
                                                           df_labor$B5_c14[df_labor$B5_c5 %in% c("01", "02")]
 df_labor$days_nf <- (df_labor$days_self + df_labor$days_wage - df_labor$days_f)
 
+# Wages
+df_labor$f_wages <- NA
+df_labor$f_wages[df_labor$days_f>0] <- df_labor$B5_c17[df_labor$days_f>0]
+df_labor$nf_wages <- NA
+df_labor$nf_wages[df_labor$days_nf>0] <- df_labor$B5_c17[df_labor$days_nf>0]
+
 # DAILY - use below
 df_labor_daily <- df_labor
 
 
 df_labor <- df_labor %>% mutate(hid = key_hhold,
                                 pid = B5_c1) %>%
-                          select(hid, pid, days_self, days_wage, days_domestic, days_f, days_nf) %>%
+                          select(hid, pid, days_self, days_wage, days_domestic, days_f, days_nf, f_wages, nf_wages) %>%
                           group_by(hid, pid) %>%
                           mutate(days_self = sum(days_self), 
                                  days_wage = sum(days_wage), 
                                  days_domestic = sum(days_domestic), 
                                  days_f = sum(days_f), 
-                                 days_nf = sum(days_nf)) %>%
+                                 days_nf = sum(days_nf),
+                                 f_wages = sum(f_wages), 
+                                 nf_wages = sum(nf_wages)) %>%
                           filter(row_number()==1) %>%
                           ungroup()
 
@@ -449,16 +705,94 @@ df_labor_daily$B5_c12[is.na(df_labor_daily$B5_c12)==T |
                                                   !(df_labor_daily$B5_c4 %in% c("11", "12", "21", "31", "41", "51"))] <- 0
 df_labor_daily$B5_c13[is.na(df_labor_daily$B5_c13)==T | 
                                                   !(df_labor_daily$B5_c4 %in% c("11", "12", "21", "31", "41", "51"))] <- 0
+# Wage
+df_labor_daily$wage_day1 <- df_labor_daily$B5_c13
+df_labor_daily$wage_day1[!(df_labor_daily$B5_c4 %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day2 <- df_labor_daily$B5_c12
+df_labor_daily$wage_day2[!(df_labor_daily$B5_c4 %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day3 <- df_labor_daily$B5_c11
+df_labor_daily$wage_day3[!(df_labor_daily$B5_c4 %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day4 <- df_labor_daily$B5_c10
+df_labor_daily$wage_day4[!(df_labor_daily$B5_c4 %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day5 <- df_labor_daily$B5_c9
+df_labor_daily$wage_day5[!(df_labor_daily$B5_c4 %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day6 <- df_labor_daily$B5_c8
+df_labor_daily$wage_day6[!(df_labor_daily$B5_c4 %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day7 <- df_labor_daily$B5_c7
+df_labor_daily$wage_day7[!(df_labor_daily$B5_c4 %in% c("31", "41", "51"))] <- 0
+# Self
+df_labor_daily$self_day1 <- df_labor_daily$B5_c13
+df_labor_daily$self_day1[!(df_labor_daily$B5_c4 %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day2 <- df_labor_daily$B5_c12
+df_labor_daily$self_day2[!(df_labor_daily$B5_c4 %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day3 <- df_labor_daily$B5_c11
+df_labor_daily$self_day3[!(df_labor_daily$B5_c4 %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day4 <- df_labor_daily$B5_c10
+df_labor_daily$self_day4[!(df_labor_daily$B5_c4 %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day5 <- df_labor_daily$B5_c9
+df_labor_daily$self_day5[!(df_labor_daily$B5_c4 %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day6 <- df_labor_daily$B5_c8
+df_labor_daily$self_day6[!(df_labor_daily$B5_c4 %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day7 <- df_labor_daily$B5_c7
+df_labor_daily$self_day7[!(df_labor_daily$B5_c4 %in% c("11", "12", "21"))] <- 0
+# non-farm
+df_labor_daily$nf_day1 <- df_labor_daily$B5_c13
+df_labor_daily$nf_day1[(df_labor_daily$B5_c5 %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day2 <- df_labor_daily$B5_c12
+df_labor_daily$nf_day2[(df_labor_daily$B5_c5 %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day3 <- df_labor_daily$B5_c11
+df_labor_daily$nf_day3[(df_labor_daily$B5_c5 %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day4 <- df_labor_daily$B5_c10
+df_labor_daily$nf_day4[(df_labor_daily$B5_c5 %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day5 <- df_labor_daily$B5_c9
+df_labor_daily$nf_day5[(df_labor_daily$B5_c5 %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day6 <- df_labor_daily$B5_c8
+df_labor_daily$nf_day6[(df_labor_daily$B5_c5 %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day7 <- df_labor_daily$B5_c7
+df_labor_daily$nf_day7[(df_labor_daily$B5_c5 %in% c("01", "02"))] <- 0
+# farm
+df_labor_daily$f_day1 <- df_labor_daily$B5_c13
+df_labor_daily$f_day1[!(df_labor_daily$B5_c5 %in% c("01", "02"))] <- 0
+df_labor_daily$f_day2 <- df_labor_daily$B5_c12
+df_labor_daily$f_day2[!(df_labor_daily$B5_c5 %in% c("01", "02"))] <- 0
+df_labor_daily$f_day3 <- df_labor_daily$B5_c11
+df_labor_daily$f_day3[!(df_labor_daily$B5_c5 %in% c("01", "02"))] <- 0
+df_labor_daily$f_day4 <- df_labor_daily$B5_c10
+df_labor_daily$f_day4[!(df_labor_daily$B5_c5 %in% c("01", "02"))] <- 0
+df_labor_daily$f_day5 <- df_labor_daily$B5_c9
+df_labor_daily$f_day5[!(df_labor_daily$B5_c5 %in% c("01", "02"))] <- 0
+df_labor_daily$f_day6 <- df_labor_daily$B5_c8
+df_labor_daily$f_day6[!(df_labor_daily$B5_c5 %in% c("01", "02"))] <- 0
+df_labor_daily$f_day7 <- df_labor_daily$B5_c7
+df_labor_daily$f_day7[!(df_labor_daily$B5_c5 %in% c("01", "02"))] <- 0
+
 df_labor_daily <- df_labor_daily %>% mutate(hid =  key_hhold,
                                             pid = B5_c1) %>%
                                       select(hid, pid, day7 = B5_c7, day6 = B5_c8,
                                              day5 = B5_c9, day4 = B5_c10,
                                              day3 = B5_c11, day2 = B5_c12,
-                                             day1 = B5_c13) %>%
+                                             day1 = B5_c13,
+                                             starts_with("f_day"), starts_with("nf_day"), starts_with("wage_day"), starts_with("self_day")) %>%
                                       group_by(hid, pid) %>%
                                       mutate(day7 = sum(day7), day6 = sum(day6), day5 = sum(day5),
                                              day4 = sum(day4), day3 = sum(day3), day2 = sum(day2),
-                                             day1= sum(day1)) %>%
+                                             day1 = sum(day1),
+                                             wage_day7 = sum(wage_day7), wage_day6 = sum(wage_day6),
+                                             wage_day5 = sum(wage_day5), wage_day4 = sum(wage_day4),
+                                             wage_day3 = sum(wage_day3), wage_day2 = sum(wage_day2),
+                                             wage_day1 = sum(wage_day1),
+                                             self_day7 = sum(self_day7), self_day6 = sum(self_day6),
+                                             self_day5 = sum(self_day5), self_day4 = sum(self_day4),
+                                             self_day3 = sum(self_day3), self_day2 = sum(self_day2),
+                                             self_day1 = sum(self_day1),
+                                             nf_day7 = sum(nf_day7), nf_day6 = sum(nf_day6),
+                                             nf_day5 = sum(nf_day5), nf_day4 = sum(nf_day4),
+                                             nf_day3 = sum(nf_day3), nf_day2 = sum(nf_day2),
+                                             nf_day1 = sum(nf_day1),
+                                             f_day7 = sum(f_day7), f_day6 = sum(f_day6),
+                                             f_day5 = sum(f_day5), f_day4 = sum(f_day4),
+                                             f_day3 = sum(f_day3), f_day2 = sum(f_day2),
+                                             f_day1 = sum(f_day1)) %>%
                                       filter(row_number()==1) %>%
                                       ungroup()
 
@@ -468,6 +802,44 @@ df_labor_daily <- df_labor_daily %>% gather(
                                              "intensity",
                                              day7, day6, day5, day4, day3, day2, day1
                                              )
+
+# Some cleaning
+df_labor_daily$wage_days <- NA
+df_labor_daily$wage_days[df_labor_daily$days=="day7"] <- df_labor_daily$wage_day7[df_labor_daily$days=="day7"]
+df_labor_daily$wage_days[df_labor_daily$days=="day6"] <- df_labor_daily$wage_day6[df_labor_daily$days=="day6"]
+df_labor_daily$wage_days[df_labor_daily$days=="day5"] <- df_labor_daily$wage_day5[df_labor_daily$days=="day5"]
+df_labor_daily$wage_days[df_labor_daily$days=="day4"] <- df_labor_daily$wage_day4[df_labor_daily$days=="day4"]
+df_labor_daily$wage_days[df_labor_daily$days=="day3"] <- df_labor_daily$wage_day3[df_labor_daily$days=="day3"]
+df_labor_daily$wage_days[df_labor_daily$days=="day2"] <- df_labor_daily$wage_day2[df_labor_daily$days=="day2"]
+df_labor_daily$wage_days[df_labor_daily$days=="day1"] <- df_labor_daily$wage_day1[df_labor_daily$days=="day1"]
+df_labor_daily$self_days <- NA
+df_labor_daily$self_days[df_labor_daily$days=="day7"] <- df_labor_daily$self_day7[df_labor_daily$days=="day7"]
+df_labor_daily$self_days[df_labor_daily$days=="day6"] <- df_labor_daily$self_day6[df_labor_daily$days=="day6"]
+df_labor_daily$self_days[df_labor_daily$days=="day5"] <- df_labor_daily$self_day5[df_labor_daily$days=="day5"]
+df_labor_daily$self_days[df_labor_daily$days=="day4"] <- df_labor_daily$self_day4[df_labor_daily$days=="day4"]
+df_labor_daily$self_days[df_labor_daily$days=="day3"] <- df_labor_daily$self_day3[df_labor_daily$days=="day3"]
+df_labor_daily$self_days[df_labor_daily$days=="day2"] <- df_labor_daily$self_day2[df_labor_daily$days=="day2"]
+df_labor_daily$self_days[df_labor_daily$days=="day1"] <- df_labor_daily$self_day1[df_labor_daily$days=="day1"]
+df_labor_daily$f_days <- NA
+df_labor_daily$f_days[df_labor_daily$days=="day7"] <- df_labor_daily$f_day7[df_labor_daily$days=="day7"]
+df_labor_daily$f_days[df_labor_daily$days=="day6"] <- df_labor_daily$f_day6[df_labor_daily$days=="day6"]
+df_labor_daily$f_days[df_labor_daily$days=="day5"] <- df_labor_daily$f_day5[df_labor_daily$days=="day5"]
+df_labor_daily$f_days[df_labor_daily$days=="day4"] <- df_labor_daily$f_day4[df_labor_daily$days=="day4"]
+df_labor_daily$f_days[df_labor_daily$days=="day3"] <- df_labor_daily$f_day3[df_labor_daily$days=="day3"]
+df_labor_daily$f_days[df_labor_daily$days=="day2"] <- df_labor_daily$f_day2[df_labor_daily$days=="day2"]
+df_labor_daily$f_days[df_labor_daily$days=="day1"] <- df_labor_daily$f_day1[df_labor_daily$days=="day1"]
+df_labor_daily$nf_days <- NA
+df_labor_daily$nf_days[df_labor_daily$days=="day7"] <- df_labor_daily$nf_day7[df_labor_daily$days=="day7"]
+df_labor_daily$nf_days[df_labor_daily$days=="day6"] <- df_labor_daily$nf_day6[df_labor_daily$days=="day6"]
+df_labor_daily$nf_days[df_labor_daily$days=="day5"] <- df_labor_daily$nf_day5[df_labor_daily$days=="day5"]
+df_labor_daily$nf_days[df_labor_daily$days=="day4"] <- df_labor_daily$nf_day4[df_labor_daily$days=="day4"]
+df_labor_daily$nf_days[df_labor_daily$days=="day3"] <- df_labor_daily$nf_day3[df_labor_daily$days=="day3"]
+df_labor_daily$nf_days[df_labor_daily$days=="day2"] <- df_labor_daily$nf_day2[df_labor_daily$days=="day2"]
+df_labor_daily$nf_days[df_labor_daily$days=="day1"] <- df_labor_daily$nf_day1[df_labor_daily$days=="day1"]
+df_labor_daily <- df_labor_daily %>% select(-c(f_day7, f_day6, f_day5, f_day4, f_day3, f_day2, f_day1,
+                                               nf_day7, nf_day6, nf_day5, nf_day4, nf_day3, nf_day2, nf_day1,
+                                               wage_day7, wage_day6, wage_day5, wage_day4, wage_day3, wage_day2, wage_day1,
+                                               self_day7, self_day6, self_day5, self_day4, self_day3, self_day2, self_day1))
 
 # merging -------------------------------------------------------
 # here are the concordance identifiers
@@ -482,7 +854,7 @@ df_labor <- df_labor %>%
 df_labor <- df_labor %>% left_join(concordance, by = c("state64", "district64"))
 df_labor$state_merge <- df_labor$state64
 df_labor$district_merge <- df_labor$district64
-df_labor <- df_labor[complete.cases(df_labor),]
+#df_labor <- df_labor[complete.cases(df_labor),]
 write.csv(df_labor, "data/clean/nss/nss64.csv")
 
 # And daily
@@ -590,6 +962,12 @@ df_labor$days_f[df_labor$nic_code %in% c("01", "02")] <- df_labor$days_f[df_labo
                                                           df_labor$total_days[df_labor$nic_code %in% c("01", "02")]/10
 df_labor$days_nf <- (df_labor$days_self + df_labor$days_wage - df_labor$days_f)
 
+# Wages
+df_labor$f_wages <- NA
+df_labor$f_wages[df_labor$days_f>0] <- df_labor$wages_earning_total[df_labor$days_f>0]
+df_labor$nf_wages <- NA
+df_labor$nf_wages[df_labor$days_nf>0] <- df_labor$wages_earning_total[df_labor$days_nf>0]
+
 # DAILY - use below
 df_labor_daily <- df_labor
 
@@ -597,13 +975,15 @@ df_labor_daily <- df_labor
 df_labor <- df_labor %>% mutate(hid = paste(fsu, sector, state, district, stratum, sub_round, sub_sample, 
                                       sub_region, sub_block, second_stage_stratum, hhld, sep = "-"),
                                 pid = person_id) %>%
-                          select(hid, pid, days_self, days_wage, days_domestic, days_f, days_nf) %>%
-                           group_by(hid, pid) %>%
+                          select(hid, pid, days_self, days_wage, days_domestic, days_f, days_nf, f_wages, nf_wages) %>%
+                          group_by(hid, pid) %>%
                           mutate(days_self = sum(days_self), 
                                  days_wage = sum(days_wage), 
                                  days_domestic = sum(days_domestic), 
                                  days_f = sum(days_f), 
-                                 days_nf = sum(days_nf)) %>%
+                                 days_nf = sum(days_nf),
+                                 f_wages = sum(f_wages), 
+                                 nf_wages = sum(nf_wages)) %>%
                           filter(row_number()==1) %>%
                           ungroup()
 
@@ -622,17 +1002,95 @@ df_labor_daily$intensity_day2[is.na(df_labor_daily$intensity_day2)==T |
                                                   !(df_labor_daily$status %in% c("11", "12", "21", "31", "41", "51"))] <- 0
 df_labor_daily$intensity_day1[is.na(df_labor_daily$intensity_day1)==T | 
                                                   !(df_labor_daily$status %in% c("11", "12", "21", "31", "41", "51"))] <- 0
+# Wage
+df_labor_daily$wage_day1 <- df_labor_daily$intensity_day1
+df_labor_daily$wage_day1[!(df_labor_daily$status %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day2 <- df_labor_daily$intensity_day2
+df_labor_daily$wage_day2[!(df_labor_daily$status %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day3 <- df_labor_daily$intensity_day3
+df_labor_daily$wage_day3[!(df_labor_daily$status %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day4 <- df_labor_daily$intensity_day4
+df_labor_daily$wage_day4[!(df_labor_daily$status %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day5 <- df_labor_daily$intensity_day5
+df_labor_daily$wage_day5[!(df_labor_daily$status %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day6 <- df_labor_daily$intensity_day6
+df_labor_daily$wage_day6[!(df_labor_daily$status %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day7 <- df_labor_daily$intensity_day7
+df_labor_daily$wage_day7[!(df_labor_daily$status %in% c("31", "41", "51"))] <- 0
+# Self
+df_labor_daily$self_day1 <- df_labor_daily$intensity_day1
+df_labor_daily$self_day1[!(df_labor_daily$status %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day2 <- df_labor_daily$intensity_day2
+df_labor_daily$self_day2[!(df_labor_daily$status %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day3 <- df_labor_daily$intensity_day3
+df_labor_daily$self_day3[!(df_labor_daily$status %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day4 <- df_labor_daily$intensity_day4
+df_labor_daily$self_day4[!(df_labor_daily$status %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day5 <- df_labor_daily$intensity_day5
+df_labor_daily$self_day5[!(df_labor_daily$status %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day6 <- df_labor_daily$intensity_day6
+df_labor_daily$self_day6[!(df_labor_daily$status %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day7 <- df_labor_daily$intensity_day7
+df_labor_daily$self_day7[!(df_labor_daily$status %in% c("11", "12", "21"))] <- 0
+# non-farm
+df_labor_daily$nf_day1 <- df_labor_daily$intensity_day1
+df_labor_daily$nf_day1[(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day2 <- df_labor_daily$intensity_day2
+df_labor_daily$nf_day2[(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day3 <- df_labor_daily$intensity_day3
+df_labor_daily$nf_day3[(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day4 <- df_labor_daily$intensity_day4
+df_labor_daily$nf_day4[(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day5 <- df_labor_daily$intensity_day5
+df_labor_daily$nf_day5[(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day6 <- df_labor_daily$intensity_day6
+df_labor_daily$nf_day6[(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day7 <- df_labor_daily$intensity_day7
+df_labor_daily$nf_day7[(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+# farm
+df_labor_daily$f_day1 <- df_labor_daily$intensity_day1
+df_labor_daily$f_day1[!(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+df_labor_daily$f_day2 <- df_labor_daily$intensity_day2
+df_labor_daily$f_day2[!(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+df_labor_daily$f_day3 <- df_labor_daily$intensity_day3
+df_labor_daily$f_day3[!(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+df_labor_daily$f_day4 <- df_labor_daily$intensity_day4
+df_labor_daily$f_day4[!(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+df_labor_daily$f_day5 <- df_labor_daily$intensity_day5
+df_labor_daily$f_day5[!(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+df_labor_daily$f_day6 <- df_labor_daily$intensity_day6
+df_labor_daily$f_day6[!(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+df_labor_daily$f_day7 <- df_labor_daily$intensity_day7
+df_labor_daily$f_day7[!(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+
 df_labor_daily <- df_labor_daily %>% mutate(hid =  paste(fsu, sector, state, district, stratum, sub_round, sub_sample, 
                                                    sub_region, sub_block, second_stage_stratum, hhld, sep = "-"),
                                             pid = person_id) %>%
                                       select(hid, pid, day7 = intensity_day7, day6 = intensity_day6,
                                              day5 = intensity_day5, day4 = intensity_day4,
                                              day3 = intensity_day3, day2 = intensity_day2,
-                                             day1 = intensity_day1) %>%
+                                             day1 = intensity_day1,
+                                             starts_with("f_day"), starts_with("nf_day"), starts_with("wage_day"), starts_with("self_day")) %>%
                                       group_by(hid, pid) %>%
                                       mutate(day7 = sum(day7/10), day6 = sum(day6/10), day5 = sum(day5/10),
                                              day4 = sum(day4/10), day3 = sum(day3/10), day2 = sum(day2/10),
-                                             day1= sum(day1/10)) %>%
+                                             day1 = sum(day1/10),
+                                             wage_day7 = sum(wage_day7/10), wage_day6 = sum(wage_day6/10),
+                                             wage_day5 = sum(wage_day5/10), wage_day4 = sum(wage_day4/10),
+                                             wage_day3 = sum(wage_day3/10), wage_day2 = sum(wage_day2/10),
+                                             wage_day1 = sum(wage_day1/10),
+                                             self_day7 = sum(self_day7/10), self_day6 = sum(self_day6/10),
+                                             self_day5 = sum(self_day5/10), self_day4 = sum(self_day4/10),
+                                             self_day3 = sum(self_day3/10), self_day2 = sum(self_day2/10),
+                                             self_day1 = sum(self_day1/10),
+                                             nf_day7 = sum(nf_day7/10), nf_day6 = sum(nf_day6/10),
+                                             nf_day5 = sum(nf_day5/10), nf_day4 = sum(nf_day4/10),
+                                             nf_day3 = sum(nf_day3/10), nf_day2 = sum(nf_day2/10),
+                                             nf_day1 = sum(nf_day1/10),
+                                             f_day7 = sum(f_day7/10), f_day6 = sum(f_day6/10),
+                                             f_day5 = sum(f_day5/10), f_day4 = sum(f_day4/10),
+                                             f_day3 = sum(f_day3/10), f_day2 = sum(f_day2/10),
+                                             f_day1 = sum(f_day1/10)) %>%
                                       filter(row_number()==1) %>%
                                       ungroup()
 
@@ -642,6 +1100,44 @@ df_labor_daily <- df_labor_daily %>% gather(
                                              "intensity",
                                              day7, day6, day5, day4, day3, day2, day1
                                              )
+
+# Some cleaning
+df_labor_daily$wage_days <- NA
+df_labor_daily$wage_days[df_labor_daily$days=="day7"] <- df_labor_daily$wage_day7[df_labor_daily$days=="day7"]
+df_labor_daily$wage_days[df_labor_daily$days=="day6"] <- df_labor_daily$wage_day6[df_labor_daily$days=="day6"]
+df_labor_daily$wage_days[df_labor_daily$days=="day5"] <- df_labor_daily$wage_day5[df_labor_daily$days=="day5"]
+df_labor_daily$wage_days[df_labor_daily$days=="day4"] <- df_labor_daily$wage_day4[df_labor_daily$days=="day4"]
+df_labor_daily$wage_days[df_labor_daily$days=="day3"] <- df_labor_daily$wage_day3[df_labor_daily$days=="day3"]
+df_labor_daily$wage_days[df_labor_daily$days=="day2"] <- df_labor_daily$wage_day2[df_labor_daily$days=="day2"]
+df_labor_daily$wage_days[df_labor_daily$days=="day1"] <- df_labor_daily$wage_day1[df_labor_daily$days=="day1"]
+df_labor_daily$self_days <- NA
+df_labor_daily$self_days[df_labor_daily$days=="day7"] <- df_labor_daily$self_day7[df_labor_daily$days=="day7"]
+df_labor_daily$self_days[df_labor_daily$days=="day6"] <- df_labor_daily$self_day6[df_labor_daily$days=="day6"]
+df_labor_daily$self_days[df_labor_daily$days=="day5"] <- df_labor_daily$self_day5[df_labor_daily$days=="day5"]
+df_labor_daily$self_days[df_labor_daily$days=="day4"] <- df_labor_daily$self_day4[df_labor_daily$days=="day4"]
+df_labor_daily$self_days[df_labor_daily$days=="day3"] <- df_labor_daily$self_day3[df_labor_daily$days=="day3"]
+df_labor_daily$self_days[df_labor_daily$days=="day2"] <- df_labor_daily$self_day2[df_labor_daily$days=="day2"]
+df_labor_daily$self_days[df_labor_daily$days=="day1"] <- df_labor_daily$self_day1[df_labor_daily$days=="day1"]
+df_labor_daily$f_days <- NA
+df_labor_daily$f_days[df_labor_daily$days=="day7"] <- df_labor_daily$f_day7[df_labor_daily$days=="day7"]
+df_labor_daily$f_days[df_labor_daily$days=="day6"] <- df_labor_daily$f_day6[df_labor_daily$days=="day6"]
+df_labor_daily$f_days[df_labor_daily$days=="day5"] <- df_labor_daily$f_day5[df_labor_daily$days=="day5"]
+df_labor_daily$f_days[df_labor_daily$days=="day4"] <- df_labor_daily$f_day4[df_labor_daily$days=="day4"]
+df_labor_daily$f_days[df_labor_daily$days=="day3"] <- df_labor_daily$f_day3[df_labor_daily$days=="day3"]
+df_labor_daily$f_days[df_labor_daily$days=="day2"] <- df_labor_daily$f_day2[df_labor_daily$days=="day2"]
+df_labor_daily$f_days[df_labor_daily$days=="day1"] <- df_labor_daily$f_day1[df_labor_daily$days=="day1"]
+df_labor_daily$nf_days <- NA
+df_labor_daily$nf_days[df_labor_daily$days=="day7"] <- df_labor_daily$nf_day7[df_labor_daily$days=="day7"]
+df_labor_daily$nf_days[df_labor_daily$days=="day6"] <- df_labor_daily$nf_day6[df_labor_daily$days=="day6"]
+df_labor_daily$nf_days[df_labor_daily$days=="day5"] <- df_labor_daily$nf_day5[df_labor_daily$days=="day5"]
+df_labor_daily$nf_days[df_labor_daily$days=="day4"] <- df_labor_daily$nf_day4[df_labor_daily$days=="day4"]
+df_labor_daily$nf_days[df_labor_daily$days=="day3"] <- df_labor_daily$nf_day3[df_labor_daily$days=="day3"]
+df_labor_daily$nf_days[df_labor_daily$days=="day2"] <- df_labor_daily$nf_day2[df_labor_daily$days=="day2"]
+df_labor_daily$nf_days[df_labor_daily$days=="day1"] <- df_labor_daily$nf_day1[df_labor_daily$days=="day1"]
+df_labor_daily <- df_labor_daily %>% select(-c(f_day7, f_day6, f_day5, f_day4, f_day3, f_day2, f_day1,
+                                               nf_day7, nf_day6, nf_day5, nf_day4, nf_day3, nf_day2, nf_day1,
+                                               wage_day7, wage_day6, wage_day5, wage_day4, wage_day3, wage_day2, wage_day1,
+                                               self_day7, self_day6, self_day5, self_day4, self_day3, self_day2, self_day1))
 
 # merging -------------------------------------------------------
 # here are the concordance identifiers
@@ -656,7 +1152,7 @@ df_labor <- df_labor %>%
 df_labor <- df_labor %>% left_join(concordance, by = c("state66", "district66"))
 df_labor$state_merge <- df_labor$state66
 df_labor$district_merge <- df_labor$district66
-df_labor <- df_labor[complete.cases(df_labor),]
+#df_labor <- df_labor[complete.cases(df_labor),]
 write.csv(df_labor, "data/clean/nss/nss66.csv")
 
 # And daily
@@ -758,6 +1254,12 @@ df_labor$days_f[df_labor$nic_code %in% c("01", "02")] <- df_labor$days_f[df_labo
                                                           df_labor$total_days[df_labor$nic_code %in% c("01", "02")]/10
 df_labor$days_nf <- (df_labor$days_self + df_labor$days_wage - df_labor$days_f)
 
+# Wages
+df_labor$f_wages <- NA
+df_labor$f_wages[df_labor$days_f>0] <- df_labor$wages_earning_total[df_labor$days_f>0]
+df_labor$nf_wages <- NA
+df_labor$nf_wages[df_labor$days_nf>0] <- df_labor$wages_earning_total[df_labor$days_nf>0]
+
 # DAILY - use below
 df_labor_daily <- df_labor
 
@@ -765,13 +1267,15 @@ df_labor_daily <- df_labor
 df_labor <- df_labor %>% mutate(hid = paste(fsu, sector, state, district, stratum, sub_round, sub_sample, 
                                       sub_region, sub_block, second_stage_stratum, hhld, sep = "-"),
                                 pid = person_id) %>%
-                          select(hid, pid, days_self, days_wage, days_domestic, days_f, days_nf) %>%
+                          select(hid, pid, days_self, days_wage, days_domestic, days_f, days_nf, f_wages, nf_wages) %>%
                           group_by(hid, pid) %>%
                           mutate(days_self = sum(days_self), 
                                  days_wage = sum(days_wage), 
                                  days_domestic = sum(days_domestic), 
                                  days_f = sum(days_f), 
-                                 days_nf = sum(days_nf)) %>%
+                                 days_nf = sum(days_nf),
+                                 f_wages = sum(f_wages), 
+                                 nf_wages = sum(nf_wages)) %>%
                           filter(row_number()==1) %>%
                           ungroup()
 
@@ -790,17 +1294,95 @@ df_labor_daily$intensity_day2[is.na(df_labor_daily$intensity_day2)==T |
                                                   !(df_labor_daily$status %in% c("11", "12", "21", "31", "41", "51"))] <- 0
 df_labor_daily$intensity_day1[is.na(df_labor_daily$intensity_day1)==T | 
                                                   !(df_labor_daily$status %in% c("11", "12", "21", "31", "41", "51"))] <- 0
+# Wage
+df_labor_daily$wage_day1 <- df_labor_daily$intensity_day1
+df_labor_daily$wage_day1[!(df_labor_daily$status %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day2 <- df_labor_daily$intensity_day2
+df_labor_daily$wage_day2[!(df_labor_daily$status %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day3 <- df_labor_daily$intensity_day3
+df_labor_daily$wage_day3[!(df_labor_daily$status %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day4 <- df_labor_daily$intensity_day4
+df_labor_daily$wage_day4[!(df_labor_daily$status %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day5 <- df_labor_daily$intensity_day5
+df_labor_daily$wage_day5[!(df_labor_daily$status %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day6 <- df_labor_daily$intensity_day6
+df_labor_daily$wage_day6[!(df_labor_daily$status %in% c("31", "41", "51"))] <- 0
+df_labor_daily$wage_day7 <- df_labor_daily$intensity_day7
+df_labor_daily$wage_day7[!(df_labor_daily$status %in% c("31", "41", "51"))] <- 0
+# Self
+df_labor_daily$self_day1 <- df_labor_daily$intensity_day1
+df_labor_daily$self_day1[!(df_labor_daily$status %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day2 <- df_labor_daily$intensity_day2
+df_labor_daily$self_day2[!(df_labor_daily$status %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day3 <- df_labor_daily$intensity_day3
+df_labor_daily$self_day3[!(df_labor_daily$status %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day4 <- df_labor_daily$intensity_day4
+df_labor_daily$self_day4[!(df_labor_daily$status %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day5 <- df_labor_daily$intensity_day5
+df_labor_daily$self_day5[!(df_labor_daily$status %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day6 <- df_labor_daily$intensity_day6
+df_labor_daily$self_day6[!(df_labor_daily$status %in% c("11", "12", "21"))] <- 0
+df_labor_daily$self_day7 <- df_labor_daily$intensity_day7
+df_labor_daily$self_day7[!(df_labor_daily$status %in% c("11", "12", "21"))] <- 0
+# non-farm
+df_labor_daily$nf_day1 <- df_labor_daily$intensity_day1
+df_labor_daily$nf_day1[(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day2 <- df_labor_daily$intensity_day2
+df_labor_daily$nf_day2[(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day3 <- df_labor_daily$intensity_day3
+df_labor_daily$nf_day3[(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day4 <- df_labor_daily$intensity_day4
+df_labor_daily$nf_day4[(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day5 <- df_labor_daily$intensity_day5
+df_labor_daily$nf_day5[(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day6 <- df_labor_daily$intensity_day6
+df_labor_daily$nf_day6[(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+df_labor_daily$nf_day7 <- df_labor_daily$intensity_day7
+df_labor_daily$nf_day7[(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+# farm
+df_labor_daily$f_day1 <- df_labor_daily$intensity_day1
+df_labor_daily$f_day1[!(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+df_labor_daily$f_day2 <- df_labor_daily$intensity_day2
+df_labor_daily$f_day2[!(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+df_labor_daily$f_day3 <- df_labor_daily$intensity_day3
+df_labor_daily$f_day3[!(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+df_labor_daily$f_day4 <- df_labor_daily$intensity_day4
+df_labor_daily$f_day4[!(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+df_labor_daily$f_day5 <- df_labor_daily$intensity_day5
+df_labor_daily$f_day5[!(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+df_labor_daily$f_day6 <- df_labor_daily$intensity_day6
+df_labor_daily$f_day6[!(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+df_labor_daily$f_day7 <- df_labor_daily$intensity_day7
+df_labor_daily$f_day7[!(df_labor_daily$nic_code %in% c("01", "02"))] <- 0
+
 df_labor_daily <- df_labor_daily %>% mutate(hid = paste(fsu, sector, state, district, stratum, sub_round, sub_sample, 
                                                   sub_region, sub_block, second_stage_stratum, hhld, sep = "-"),
                                             pid = person_id) %>%
                                       select(hid, pid, day7 = intensity_day7, day6 = intensity_day6,
                                              day5 = intensity_day5, day4 = intensity_day4,
                                              day3 = intensity_day3, day2 = intensity_day2,
-                                             day1 = intensity_day1) %>%
+                                             day1 = intensity_day1,
+                                             starts_with("f_day"), starts_with("nf_day"), starts_with("wage_day"), starts_with("self_day")) %>%
                                       group_by(hid, pid) %>%
                                       mutate(day7 = sum(day7/10), day6 = sum(day6/10), day5 = sum(day5/10),
                                              day4 = sum(day4/10), day3 = sum(day3/10), day2 = sum(day2/10),
-                                             day1= sum(day1/10)) %>%
+                                             day1 = sum(day1/10),
+                                             wage_day7 = sum(wage_day7/10), wage_day6 = sum(wage_day6/10),
+                                             wage_day5 = sum(wage_day5/10), wage_day4 = sum(wage_day4/10),
+                                             wage_day3 = sum(wage_day3/10), wage_day2 = sum(wage_day2/10),
+                                             wage_day1 = sum(wage_day1/10),
+                                             self_day7 = sum(self_day7/10), self_day6 = sum(self_day6/10),
+                                             self_day5 = sum(self_day5/10), self_day4 = sum(self_day4/10),
+                                             self_day3 = sum(self_day3/10), self_day2 = sum(self_day2/10),
+                                             self_day1 = sum(self_day1/10),
+                                             nf_day7 = sum(nf_day7/10), nf_day6 = sum(nf_day6/10),
+                                             nf_day5 = sum(nf_day5/10), nf_day4 = sum(nf_day4/10),
+                                             nf_day3 = sum(nf_day3/10), nf_day2 = sum(nf_day2/10),
+                                             nf_day1 = sum(nf_day1/10),
+                                             f_day7 = sum(f_day7/10), f_day6 = sum(f_day6/10),
+                                             f_day5 = sum(f_day5/10), f_day4 = sum(f_day4/10),
+                                             f_day3 = sum(f_day3/10), f_day2 = sum(f_day2/10),
+                                             f_day1 = sum(f_day1/10)) %>%
                                       filter(row_number()==1) %>%
                                       ungroup()
 
@@ -810,6 +1392,45 @@ df_labor_daily <- df_labor_daily %>% gather(
                                              "intensity",
                                              day7, day6, day5, day4, day3, day2, day1
                                              )
+
+# Some cleaning
+df_labor_daily$wage_days <- NA
+df_labor_daily$wage_days[df_labor_daily$days=="day7"] <- df_labor_daily$wage_day7[df_labor_daily$days=="day7"]
+df_labor_daily$wage_days[df_labor_daily$days=="day6"] <- df_labor_daily$wage_day6[df_labor_daily$days=="day6"]
+df_labor_daily$wage_days[df_labor_daily$days=="day5"] <- df_labor_daily$wage_day5[df_labor_daily$days=="day5"]
+df_labor_daily$wage_days[df_labor_daily$days=="day4"] <- df_labor_daily$wage_day4[df_labor_daily$days=="day4"]
+df_labor_daily$wage_days[df_labor_daily$days=="day3"] <- df_labor_daily$wage_day3[df_labor_daily$days=="day3"]
+df_labor_daily$wage_days[df_labor_daily$days=="day2"] <- df_labor_daily$wage_day2[df_labor_daily$days=="day2"]
+df_labor_daily$wage_days[df_labor_daily$days=="day1"] <- df_labor_daily$wage_day1[df_labor_daily$days=="day1"]
+df_labor_daily$self_days <- NA
+df_labor_daily$self_days[df_labor_daily$days=="day7"] <- df_labor_daily$self_day7[df_labor_daily$days=="day7"]
+df_labor_daily$self_days[df_labor_daily$days=="day6"] <- df_labor_daily$self_day6[df_labor_daily$days=="day6"]
+df_labor_daily$self_days[df_labor_daily$days=="day5"] <- df_labor_daily$self_day5[df_labor_daily$days=="day5"]
+df_labor_daily$self_days[df_labor_daily$days=="day4"] <- df_labor_daily$self_day4[df_labor_daily$days=="day4"]
+df_labor_daily$self_days[df_labor_daily$days=="day3"] <- df_labor_daily$self_day3[df_labor_daily$days=="day3"]
+df_labor_daily$self_days[df_labor_daily$days=="day2"] <- df_labor_daily$self_day2[df_labor_daily$days=="day2"]
+df_labor_daily$self_days[df_labor_daily$days=="day1"] <- df_labor_daily$self_day1[df_labor_daily$days=="day1"]
+df_labor_daily$f_days <- NA
+df_labor_daily$f_days[df_labor_daily$days=="day7"] <- df_labor_daily$f_day7[df_labor_daily$days=="day7"]
+df_labor_daily$f_days[df_labor_daily$days=="day6"] <- df_labor_daily$f_day6[df_labor_daily$days=="day6"]
+df_labor_daily$f_days[df_labor_daily$days=="day5"] <- df_labor_daily$f_day5[df_labor_daily$days=="day5"]
+df_labor_daily$f_days[df_labor_daily$days=="day4"] <- df_labor_daily$f_day4[df_labor_daily$days=="day4"]
+df_labor_daily$f_days[df_labor_daily$days=="day3"] <- df_labor_daily$f_day3[df_labor_daily$days=="day3"]
+df_labor_daily$f_days[df_labor_daily$days=="day2"] <- df_labor_daily$f_day2[df_labor_daily$days=="day2"]
+df_labor_daily$f_days[df_labor_daily$days=="day1"] <- df_labor_daily$f_day1[df_labor_daily$days=="day1"]
+df_labor_daily$nf_days <- NA
+df_labor_daily$nf_days[df_labor_daily$days=="day7"] <- df_labor_daily$nf_day7[df_labor_daily$days=="day7"]
+df_labor_daily$nf_days[df_labor_daily$days=="day6"] <- df_labor_daily$nf_day6[df_labor_daily$days=="day6"]
+df_labor_daily$nf_days[df_labor_daily$days=="day5"] <- df_labor_daily$nf_day5[df_labor_daily$days=="day5"]
+df_labor_daily$nf_days[df_labor_daily$days=="day4"] <- df_labor_daily$nf_day4[df_labor_daily$days=="day4"]
+df_labor_daily$nf_days[df_labor_daily$days=="day3"] <- df_labor_daily$nf_day3[df_labor_daily$days=="day3"]
+df_labor_daily$nf_days[df_labor_daily$days=="day2"] <- df_labor_daily$nf_day2[df_labor_daily$days=="day2"]
+df_labor_daily$nf_days[df_labor_daily$days=="day1"] <- df_labor_daily$nf_day1[df_labor_daily$days=="day1"]
+df_labor_daily <- df_labor_daily %>% select(-c(f_day7, f_day6, f_day5, f_day4, f_day3, f_day2, f_day1,
+                                               nf_day7, nf_day6, nf_day5, nf_day4, nf_day3, nf_day2, nf_day1,
+                                               wage_day7, wage_day6, wage_day5, wage_day4, wage_day3, wage_day2, wage_day1,
+                                               self_day7, self_day6, self_day5, self_day4, self_day3, self_day2, self_day1))
+
 
 # merging -------------------------------------------------------
 # here are the concordance identifiers
@@ -824,7 +1445,7 @@ df_labor <- df_labor %>%
 df_labor <- df_labor %>% left_join(concordance, by = c("state68", "district68"))
 df_labor$state_merge <- df_labor$state68
 df_labor$district_merge <- df_labor$district68
-df_labor <- df_labor[complete.cases(df_labor),]
+#df_labor <- df_labor[complete.cases(df_labor),]
 write.csv(df_labor, "data/clean/nss/nss68.csv")
 
 # And daily

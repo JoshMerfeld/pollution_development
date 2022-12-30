@@ -40,7 +40,7 @@ villages$area_weight[villages$area_weight>villages$area_weight_alt] <- villages$
 
 
 
-
+# WEEKLY --------------------------------------------------------------------------------
 df_labor <- c()
 for (nsswave in c(61, 62, 64, 66, 68)){
   temp <- read_csv(paste0("data/clean/nss/nss", nsswave, ".csv"))
@@ -53,11 +53,25 @@ for (nsswave in c(61, 62, 64, 66, 68)){
 }
 rm(temp)
 # Here are the dates
-date_vec <- unique(df_labor$date)
+date_vec <- unique(df_labor$date[is.na(df_labor$date)==F])
 
+
+# First, make the df smaller by dropping districts that do not match to the villages
+village_merge <- villages %>% mutate(state_merge = as.numeric(state),
+                                     district_merge = as.numeric(district)) %>%
+                              select("state_merge", "district_merge")
+village_merge$merge <- 1
+village_merge <- village_merge %>% group_by(state_merge, district_merge) %>%
+                                    filter(row_number()==1) %>%
+                                    ungroup()
+
+df_labor <- df_labor %>% mutate(state_merge = as.numeric(state_merge),
+                                     district_merge = as.numeric(district_merge)) %>% left_join(village_merge, by = c("state_merge", "district_merge"))
+df_labor <- df_labor %>% filter(is.na(merge)==F)
 
 
 # Going to go through the dates and process date by date
+df_labor_merged <-
 for (day in 1:length(date_vec)){
   # First, load villages
   village_wind <- read_csv(paste0("data/clean/wind_ntl/days/date_", year(date_vec[day]), "-", month(date_vec[day]), "-", day(date_vec[day]), ".csv")) %>% as_tibble()
@@ -92,7 +106,11 @@ write.csv(df_labor_merged, "data/clean/nss/merged_week.csv")
 
 
 
-# NOW DO DAILY
+
+
+
+
+# NOW DO DAILY ---------------------------------------------------------
 
 df_labor <- c()
 for (nsswave in c(61, 62, 64, 66, 68)){
@@ -113,11 +131,21 @@ df_labor$day_date_l2 <- as_date(df_labor$day_date_l2)
 date_vec <- unique(df_labor$day_date)
 
 
-df_labor$days_sum <- NA
-df_labor$days_sum_l1 <- NA
-df_labor$days_sum_l2 <- NA
+# First, make the df smaller by dropping districts that do not match to the villages
+village_merge <- villages %>% mutate(state_merge = as.numeric(state),
+                                     district_merge = as.numeric(district)) %>%
+                              select("state_merge", "district_merge")
+village_merge$merge <- 1
+village_merge <- village_merge %>% group_by(state_merge, district_merge) %>%
+                                    filter(row_number()==1) %>%
+                                    ungroup()
+
+df_labor <- df_labor %>% left_join(village_merge, by = c("state_merge", "district_merge"))
+df_labor <- df_labor %>% filter(is.na(merge)==F)
+
 
 # Going to go through the dates and process date by date
+df_labor_merged <- c()
 for (day in 1:length(date_vec)){
   # First, load villages
   village_wind <- read_csv(paste0("data/clean/wind_ntl/days/date_", year(date_vec[day]), "-", month(date_vec[day]), "-", day(date_vec[day]), ".csv")) %>% as_tibble()
@@ -138,8 +166,7 @@ for (day in 1:length(date_vec)){
                   ungroup() %>%
                   select(state_merge, district_merge, days_sum)
   
-  temp <- df_labor[df_labor$date==date_vec[day],]
-  temp <- temp %>% select(-c("days_sum", "days_sum_l1", "days_sum_l2"))
+  temp <- df_labor[df_labor$day_date==date_vec[day],]
   temp <- temp %>% left_join(village_wind, by = c("state_merge", "district_merge"))
   
   # Now one lag
@@ -190,22 +217,21 @@ for (day in 1:length(date_vec)){
                   ungroup() %>%
                   select(state_merge, district_merge, days_sum_l2 = days_sum)
   
-  temp <- temp %>% left_join(village_wind, by = c("state_merge", "district_merge"))
   
+  temp <- temp %>% left_join(village_wind, by = c("state_merge", "district_merge"))
+  # Drop NAs (means they are not )
+  temp <- temp[is.na(temp$days_sum)==F,]
   
   # And finally rbind
   #df_labor_merged <- rbind(df_labor_merged, temp)
-  df_labor[df_labor$date==date_vec[day],] <- temp
+  df_labor_merged <- rbind(df_labor_merged, temp)
   
   
   print(day/length(date_vec))
 }
-df_labor <- df_labor[is.na(df_labor$days_sum)==F,]
-
-
-df_labor_merged <- df_labor_merged %>% mutate(distfe = paste0("s", state_merge, "-d", district_merge),
-                                              pidfe = paste0("h", hid, "-p", pid, "-s", state_merge, "-d", district_merge))
-
+rm(df_labor)
+df_labor_merged <- df_labor_merged %>% mutate(pidfe = paste0(wave, "-", hid, "-", pid),
+                                              distfe = paste0("s", state_merge, "-d", district_merge))
 write.csv(df_labor_merged, "data/clean/nss/merged_daily.csv")
 
 
@@ -213,9 +239,7 @@ write.csv(df_labor_merged, "data/clean/nss/merged_daily.csv")
 
 
 
-
-
-
+df_labor_merged <- read_csv("data/clean/nss/merged_daily.csv")
 
 
 
@@ -224,7 +248,52 @@ df_labor_merged$month <- month(df_labor_merged$date)
 df_labor_merged$year <- year(df_labor_merged$date)
 
 
-df_labor_merged <- df_labor_merged %>% filter(age>=15)
+df_labor_merged <- df_labor_merged %>% filter(age>=15) %>% mutate(day_of_week = wday(day_date))
+
+
+df_labor_merged$f_wages_0 <- df_labor_merged$f_wages
+df_labor_merged$f_wages_0[is.na(df_labor_merged$f_wages_0)==T] <- 0
+df_labor_merged$nf_wages_0 <- df_labor_merged$nf_wages
+df_labor_merged$nf_wages_0[is.na(df_labor_merged$nf_wages_0)==T] <- 0
+df_labor_merged <- df_labor_merged %>% mutate(tot_wages = f_wages_0 + nf_wages_0)
+
+summary(feols(log(tot_wages/days_wage) ~ days_sum + age + age^2 + female | distfe + wave, 
+              data = df_labor_merged, 
+              cluster = c("distfe")))
+
+summary(feols(log(tot_wages/days_wage) ~ days_sum + age + age^2 + female | distfe + year^month^state_merge, 
+              data = df_labor_merged, 
+              cluster = c("distfe")))
+
+
+summary(feols(log(f_wages) ~ days_sum + age + age^2 + female | distfe + wave, 
+              data = df_labor_merged, 
+              cluster = c("distfe")))
+
+summary(feols(log(nf_wages) ~ days_sum + age + age^2 + female | distfe + wave, 
+              data = df_labor_merged, 
+              cluster = c("distfe")))
+
+
+summary(feols(days_f ~ days_sum + age + age^2 + female | distfe + wave, 
+              data = df_labor_merged, 
+              cluster = c("distfe")))
+
+summary(feols(days_nf ~ days_sum + age + age^2 + female | distfe + wave, 
+              data = df_labor_merged, 
+              cluster = c("distfe")))
+
+
+
+
+
+summary(feols(log(f_wages/days_f) ~ days_sum + age + age^2 + female | distfe + wave, 
+              data = df_labor_merged, 
+              cluster = c("distfe")))
+
+summary(feols(log(nf_wages/days_nf) ~ days_sum + age + age^2 + female | distfe + wave, 
+              data = df_labor_merged, 
+              cluster = c("distfe")))
 
 
 summary(feols((days_self + days_wage) ~ days_sum + age + age^2 + female | distfe + wave, 
@@ -251,9 +320,27 @@ summary(feols((days_self) ~ days_sum + age + age^2 + female | distfe + year^mont
               cluster = c("distfe")))
 
 
-summary(feols(intensity ~ days_sum | pidfe, 
+
+
+summary(feols(intensity ~ days_sum + as.factor(day_of_week) | pidfe, 
               data = df_labor_merged, 
-              cluster = c("distfe")))
+              cluster = c("pidfe")))
+
+summary(feols(wage_days ~ days_sum + days_sum_l1 + as.factor(day_of_week) | pidfe, 
+              data = df_labor_merged, 
+              cluster = c("pidfe")))
+summary(feols(self_days ~ days_sum + days_sum_l1 + as.factor(day_of_week) | pidfe, 
+              data = df_labor_merged, 
+              cluster = c("pidfe")))
+
+summary(feols(intensity ~ days_sum + days_sum_l1 + as.factor(day_of_week) | pidfe, 
+              data = df_labor_merged, 
+              cluster = c("pidfe")))
+
+
+summary(feols(intensity ~ days_sum + days_sum_l1 + days_sum_l2 + as.factor(day_of_week) | pidfe, 
+              data = df_labor_merged, 
+              cluster = c("pidfe")))
 
 
 
