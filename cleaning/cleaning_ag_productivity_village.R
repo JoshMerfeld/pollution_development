@@ -1,4 +1,4 @@
-# Purpose: This script doespulls EVI
+# Purpose: This script cleans data for estimates of agricultural productivity
 # Author: Josh Merfeld
 # Date: December 12th, 2022
 
@@ -73,8 +73,9 @@ for (year in 2002:2013){
 for (year in 2002:2013){
   # Monsoon is this year only
   rainfall <- read_csv(paste0("data/clean/terra/precip", year, ".csv"))
-  rainfall$rain_total <- apply(rainfall[,c(7:11)], 1, sum)
-  rainfall <- rainfall %>% dplyr::select(shrid, rain_total)
+  rainfall <- rainfall[, c(1, 7:11)]
+  rainfall$rain_total <- apply(rainfall[,c(2:6)], 1, sum)
+  colnames(rainfall) <- c("shrid", "rain_m1", "rain_m2", "rain_m3", "rain_m4", "rain_m5", "rain_total")
   rainfall$season <- "monsoon"
   # Load the extracted values from above
   extracted_values <- read_csv(paste0("data/clean/ag_productivity/monsoon", year, ".csv"))
@@ -88,15 +89,14 @@ for (year in 2002:2013){
   
   # Winter is TWO years
   rainfall1 <- read_csv(paste0("data/clean/terra/precip", year, ".csv"))
-  rainfall1$rain_total1 <- apply(rainfall1[,c(12:13)], 1, sum)
-  rainfall1 <- rainfall1 %>% dplyr::select(shrid, rain_total1)
+  rainfall1 <- rainfall1[, c(1, 12:13)]
   # Second year
   rainfall2 <- read_csv(paste0("data/clean/terra/precip", year + 1, ".csv"))
-  rainfall2$rain_total2 <- apply(rainfall2[,c(2:4)], 1, sum)
-  rainfall2 <- rainfall2 %>% dplyr::select(shrid, rain_total2)
+  rainfall2 <- rainfall2[, c(1, 2:4)]
+  
   rainfall <- cbind(rainfall1, rainfall2[,-1])
-  rainfall <- rainfall %>% mutate(rain_total = rain_total1 + rain_total2)
-  rainfall <- rainfall %>% dplyr::select(shrid, rain_total)
+  rainfall$rain_total <- apply(rainfall[,c(2:6)], 1, sum)
+  colnames(rainfall) <- c("shrid", "rain_m1", "rain_m2", "rain_m3", "rain_m4", "rain_m5", "rain_total")
   rainfall$season <- "winter"
   
   # Load the extracted values from above
@@ -119,29 +119,36 @@ for (year in 2002:2013){
   # Monsoon is this year only
   village_wind <- read_csv(paste0("data/clean/wind_ntl/months/y", year, "m1.csv")) %>% as_tibble()
   villages <- village_wind %>% dplyr::select(shrid)
+  month_temp <- 1
   for (month in 6:10){
     village_wind <- read_csv(paste0("data/clean/wind_ntl/months/y", year, "m", month, ".csv")) %>% as_tibble()
-    colnames(village_wind) <- c("shrid", paste0("m", month))
+    colnames(village_wind) <- c("shrid", paste0("m", month_temp))
     villages <- villages %>% left_join(village_wind, by = "shrid")
+    month_temp <- month_temp + 1
   }
   villages$season <- "monsoon"
   villages <- villages %>% mutate(days_sums = rowSums(villages[,2:6]))
-  villages <- villages %>% dplyr::select(shrid, days_sums, season)
+  # Just make sure (should already be named this)
+  colnames(villages) <- c("shrid", "m1", "m2", "m3", "m4", "m5", "season", "days_sums")
   
   villages2 <- villages %>% dplyr::select(shrid)
+  month_temp <- 1
   for (month in 11:12){
     village_wind <- read_csv(paste0("data/clean/wind_ntl/months/y", year, "m", month, ".csv")) %>% as_tibble()
-    colnames(village_wind) <- c("shrid", paste0("m", month))
+    colnames(village_wind) <- c("shrid", paste0("m", month_temp))
     villages2 <- villages2 %>% left_join(village_wind, by = "shrid")
+    month_temp <- month_temp + 1
   }
   for (month in 1:3){
     village_wind <- read_csv(paste0("data/clean/wind_ntl/months/y", year + 1, "m", month, ".csv")) %>% as_tibble()
-    colnames(village_wind) <- c("shrid", paste0("m", month))
+    colnames(village_wind) <- c("shrid", paste0("m", month_temp))
     villages2 <- villages2 %>% left_join(village_wind, by = "shrid")
+    month_temp <- month_temp + 1
   }
-  villages2 <- villages2 %>% mutate(days_sums = rowSums(villages2[,2:6]))
-  villages2 <- villages2 %>% dplyr::select(shrid, days_sums)
   villages2$season <- "winter"
+  villages2 <- villages2 %>% mutate(days_sums = rowSums(villages2[,2:6]))
+  # Just make sure (should already be named this)
+  colnames(villages2) <- c("shrid", "m1", "m2", "m3", "m4", "m5", "season", "days_sums")
   
   villages <- rbind(villages, villages2)
   
@@ -161,17 +168,6 @@ for (year in 2002:2013){
   df <- rbind(df, extracted_values)
 }
 write_csv(df, paste0("data/clean/ag_productivity/all_combined.csv"))
-
-
-
-
-
-summary(feols(log(mean) ~ days_sums | shrid^season + year, data = df, cluster = c("shrid")))
-summary(feols(log(mean) ~ days_sums + log(rain_total) | shrid^season + year, data = df, cluster = c("shrid")))
-summary(feols(log(mean) ~ days_sums + log(rain_total) | shrid^season + year^state, data = df, cluster = c("shrid")))
-
-
-
 
 
 

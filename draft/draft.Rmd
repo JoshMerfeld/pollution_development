@@ -1,0 +1,381 @@
+---
+title: "Pollution, agricultural productivity, and development: Evidence from coal in plants in India^[thanks to...]"
+author:
+  - Joshua D. Merfeld^[KDI School of Public Policy and Management and IZA; merfeld@kdis.ac.kr]
+date: "`r Sys.Date()`"
+abstract: |
+  | \noindent abstract
+  |
+  | \textbf{\textit{Keywords}}: 
+  | \textbf{\textit{JEL Codes}}: 
+
+# Output type and options (no TOC and yes fig captions)
+output:
+  bookdown::pdf_document2: 
+    toc: false
+    fig_caption: yes
+    # This also keeps the .tex file that is used to make the output (we will eventually need this for publication)
+    keep_tex: yes
+
+# Set bibliography
+bibliography: references.bib
+
+# This includes latex arguments
+header-includes:
+  - \newcommand{\beginappendix}{   
+      \setcounter{table}{0}  
+      \renewcommand{\thetable}{A\arabic{table}} 
+      \setcounter{figure}{0} 
+      \renewcommand{\thefigure}{A\arabic{figure}}
+    }  # Relabel appendix tables/figures as e.g. A1
+  - \usepackage[capposition=top]{floatrow}
+  - \usepackage{placeins}   # THis is for /FloatBarrier
+  - \usepackage{setspace}
+  - \usepackage{dcolumn}
+  - \usepackage{booktabs}
+  - \usepackage{siunitx}
+  - \usepackage{amsmath}
+  - \usepackage{enumerate}
+  - \usepackage[shortlabels]{enumitem}
+  - \usepackage[hang,flushmargin]{footmisc}		# no indents on footnotes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, dev = "cairo_pdf")
+
+library(sf)
+library(sp)
+library(tidyverse)
+library(scales)
+library(RColorBrewer)
+library(kableExtra)
+library(ggpubr)
+library(rticles)
+library(stats)
+library(broom)
+library(extrafont)
+library(fixest)
+library(modelsummary)
+library(openxlsx)
+library(raster)
+loadfonts()  # Must be run once in each session (markdown is a new "session" each time you render/knit)
+
+
+# Sets wd to folder this script is in so we can create relative paths instead of absolute paths
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+# We want to get the wd up to the main folder
+# Need to go up two levels
+setwd('..')
+setwd('..')
+# Double check
+getwd()    # check
+
+
+reportP <- function(pValue){
+  if (pValue < 0.001){
+    result <- "p < 0.001"
+  } else {
+    result <- sprintf("p = %.3f", pValue) # inserts a float into a string and simultaneously do rounding
+  }
+  return(result)
+}
+
+reportDec <- function(dec){
+  
+    result <- sprintf("%.3f", dec) # inserts a float into a string and simultaneously do rounding
+  
+  return(result)
+}
+
+reportPercent <- function(dec){
+  
+    result <- sprintf("%.1f", 100*dec) # inserts a float into a string and simultaneously do rounding
+  
+  return(result)
+}
+
+commaNum <- function(large){
+  
+  
+  result <- formatC(large, big.mark = ",")
+
+  return(result)
+}
+
+
+# Shapefile of india
+india_shape <- read_sf("data/spatial/shapefiles/state.shp")
+
+
+
+# Coal plants
+### Load raw data ----------------------------------------------------------------------------------------------------------------------------------------------------------
+plants <- read.xlsx("data/raw/coal_plants.xlsx", sheet = "Units")
+# India only
+plants <- plants %>% filter(Country=="India")
+# Also want only things with a non-missing year
+plants <- plants %>% filter(is.na(Year)==F)
+
+# Just keep what we want 
+plants <- plants %>% dplyr::select(plant_id = ParentID, 
+                                   unit_id = Tracker.ID, 
+                                   capacity = `Capacity.(MW)`, 
+                                   year_built = Year, 
+                                   year_retired = RETIRED, 
+                                   lat = Latitude, 
+                                   lon = Longitude)
+
+
+gps_points_plants <- plants %>% dplyr::select(lon, lat)
+plants <- st_as_sf(SpatialPointsDataFrame(gps_points_plants, plants %>% dplyr::select(-c(lon, lat)), proj4string = CRS("EPSG:4326")))
+plants <- plants %>% mutate(capacity = capacity/1000)
+
+plants1990 <- plants %>% 
+                  filter(year_built<=1990 & (year_retired>1990 | is.na(year_retired)==T)) %>%
+                  group_by(plant_id) %>%
+                  mutate(capacity = sum(capacity)) %>%
+                  filter(row_number()==1) %>%
+                  ungroup()
+                  
+plants2010 <- plants %>% 
+                  filter(year_built<=2010 & (year_retired>2010 | is.na(year_retired)==T)) %>%
+                  group_by(plant_id) %>%
+                  mutate(capacity = sum(capacity)) %>%
+                  filter(row_number()==1) %>%
+                  ungroup()
+
+
+# wind example
+windexample <- readRDS("data/spatial/windexample.rds")
+
+# Tables
+pollutiontable <- readRDS("pollution_development/draft/tables/pollutiontable.rds")
+yieldtable <- readRDS("pollution_development/draft/tables/yieldtable.rds")
+yieldtabletwo <- readRDS("pollution_development/draft/tables/yieldtabletwo.rds")
+pmeffects <- readRDS("pollution_development/draft/tables/yieldtablePM.rds")
+labortable <- readRDS("pollution_development/draft/tables/labortable.rds")
+#labortable_two <- readRDS("pollution_development/draft/tables/labortable_two.rds")
+ntltable <- readRDS("pollution_development/draft/tables/ntltable.rds")
+
+```
+
+\newpage
+
+
+# Introduction
+
+# Data and methods
+
+## Data
+SHRUGS: @almn2021 
+Ag productivity: @gangopadhyay2022new
+PM estimates: @hammer2020global
+
+
+## Methodology
+
+# Results
+
+# Conclusion
+
+
+```{r plants, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Coal plants in India from 1990 to 2010"}
+
+plant1 <- ggplot() +
+                theme_minimal() +
+                geom_sf(data = india_shape) +
+                geom_sf(data = plants1990)
+
+plant2 <- ggplot() +
+                theme_minimal() +
+                geom_sf(data = india_shape) +
+                geom_sf(data = plants2010)
+
+
+ggarrange(plant1, plant2,
+          labels = c("1990", "2010"))
+
+```
+
+
+
+```{r windexample, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Wind direction (2010-01-01)"}
+
+ggplot() + 
+  theme_minimal() +
+  geom_sf(data = india_shape, fill = NA) +
+  geom_tile(data = windexample, aes(x = x, y = y, fill = wind_example), alpha = 0.3) +
+  scale_fill_viridis_c("wind direction\n(degrees)", option = "viridis") +
+  geom_sf(data = plants2010) +
+  labs(x = "lon",
+       y = "lat")
+
+```
+
+
+\newpage
+
+```{r pollutiontable, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+
+# Table
+colnames(pollutiontable) <- c("(1)", "(2)", "(3)", "(4)")
+kable(
+      pollutiontable, caption = "Wind direction and particulate matter",
+      align = "cccc", booktabs = TRUE, linesep = ""
+      ) %>%
+  add_footnote(
+               c(
+                 "Note: Standard errors are in parentheses and are clustered at the village level.",
+                 "* p<0.10 ** p<0.05 *** p<0.01"
+                 ), 
+               notation = "none",
+               threeparttable = TRUE
+               ) %>%
+  column_spec(1, width = "4cm") %>%
+  column_spec(c(2:5),width = "2cm") %>%
+  row_spec(c(3, 6), bold = TRUE) %>%
+  row_spec(7, hline_after = TRUE) %>%
+  add_header_above(c(" ", "1998-2015" = 2, "2002-2013" = 2)) %>%
+  kable_classic_2()
+
+```
+
+
+
+
+```{r yieldtable, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+
+# Table
+colnames(yieldtable) <- c("(1)", "(2)", "(3)", "(4)")
+kable(
+      yieldtable, caption = "Wind direction and agricultural productivity",
+      align = "cccc", booktabs = TRUE, linesep = ""
+      ) %>%
+  add_footnote(
+               c(
+                 "Note: Standard errors are in parentheses and are clustered at the village level.",
+                 "* p<0.10 ** p<0.05 *** p<0.01"
+                 ), 
+               notation = "none",
+               threeparttable = TRUE
+               ) %>%
+  column_spec(1, width = "4cm") %>%
+  column_spec(c(2:5),width = "2cm") %>%
+  row_spec(6, bold = TRUE) %>%
+  row_spec(8, hline_after = TRUE) %>%
+  add_header_above(c(" ", "all" = 2, "monsoon" = 1, "winter" = 1)) %>%
+  kable_classic_2()
+
+```
+
+
+
+
+```{r yieldtabletwo, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+
+# Table
+colnames(yieldtabletwo) <- c("(1)", "(2)", "(3)", "(4)")
+kable(
+      yieldtabletwo, caption = "Wind direction and agricultural productivity",
+      align = "cccc", booktabs = TRUE, linesep = ""
+      ) %>%
+  add_footnote(
+               c(
+                 "Note: Standard errors are in parentheses and are clustered at the village level.",
+                 "* p<0.10 ** p<0.05 *** p<0.01"
+                 ), 
+               notation = "none",
+               threeparttable = TRUE
+               ) %>%
+  column_spec(1, width = "4cm") %>%
+  column_spec(c(2:5),width = "2cm") %>%
+  row_spec(c(9, 10), hline_after = TRUE) %>%
+  row_spec(c(6, 11), bold = TRUE) %>%
+  add_header_above(c(" ", "all" = 2, "monsoon" = 1, "winter" = 1)) %>%
+  kable_classic_2()
+
+```
+
+
+
+
+
+
+
+```{r labortable, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+
+# Table
+colnames(labortable) <- c("(1)", "(2)", "(3)")
+kable(
+      labortable, caption = "Wind direction and labor allocation",
+      align = "ccc", booktabs = TRUE, linesep = ""
+      ) %>%
+  add_footnote(
+               c(
+                 "Note: Standard errors are in parentheses and are clustered at the village level.",
+                 "* p<0.10 ** p<0.05 *** p<0.01"
+                 ), 
+               notation = "none",
+               threeparttable = TRUE
+               ) %>%
+  column_spec(1, width = "4cm") %>%
+  column_spec(c(2:4),width = "2cm") %>%
+  row_spec(c(8), hline_after = TRUE) %>%
+  row_spec(c(4, 7), bold = TRUE) %>%
+  kable_classic_2()
+
+```
+
+
+
+
+
+
+
+
+\FloatBarrier
+\newpage 
+# References {.unnumbered}
+
+::: {#refs}
+:::
+\FloatBarrier
+
+```{=tex}
+\beginappendix
+```
+\newpage
+# Appendix A {.unnumbered}
+
+\FloatBarrier
+\singlespacing
+
+
+
+
+```{r pmeffects, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+
+# Table
+colnames(pmeffects) <- c("(1)", "(2)", "(3)", "(4)")
+kable(
+      pmeffects, caption = "Particulate matter and agricultural productivity",
+      align = "cccc", booktabs = TRUE, linesep = ""
+      ) %>%
+  add_footnote(
+               c(
+                 "Note: Standard errors are in parentheses and are clustered at the village level.",
+                 "* p<0.10 ** p<0.05 *** p<0.01"
+                 ), 
+               notation = "none"
+               ) %>%
+  column_spec(1, width = "4cm") %>%
+  column_spec(c(2:5),width = "2cm") %>%
+  row_spec(c(9, 10), hline_after = TRUE) %>%
+  row_spec(c(6, 11), bold = TRUE) %>%
+  add_header_above(c(" ", "all" = 2, "monsoon" = 1, "winter" = 1)) %>%
+  kable_classic_2()
+
+```
+
+
+
