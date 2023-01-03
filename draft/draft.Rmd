@@ -148,72 +148,205 @@ plants2010 <- plants %>%
 # wind example
 windexample <- readRDS("data/spatial/windexample.rds")
 
+
+
+
+# district
+districts <- read_sf(paste0("data/spatial/districts/districts.shp"))
+districts <- districts %>% 
+                dplyr::select(state = ST_CEN_CD, district = DT_CEN_CD, state_name = ST_NM, district_name = DISTRICT)
+districts <- districts %>% filter(state=="02" & district=="02")
+# Villages
+villages <- read_sf(paste0("data/spatial/villages_overlap/villages_overlap.shp"))
+villages <- villages %>% mutate(shrid = paste0(pc11_s_id, "-", pc11_tv_id)) %>%
+                          dplyr::select(shrid, state = ST_CEN_CD, district = DT_CEN_CD, state_name = ST_NM, district_name = DISTRICT)
+villages <- villages %>% filter(state=="02" & district=="02")
+wind <- read_csv(paste0("data/clean/wind_ntl/days/date_2010-1-1.csv")) %>% as_tibble()
+wind$days_sum <- apply(wind[,2:8], 1, FUN = "sum")
+wind <- wind %>% dplyr::select(shrid, days_sum)
+villages <- villages %>% left_join(wind, by = "shrid")
+villages <- villages %>% st_set_crs(st_crs(districts))
+# and crs for plants
+plants1990 <- plants1990 %>% st_transform(st_crs(districts))
+plants2010 <- plants2010 %>% st_transform(st_crs(districts))
+india_shape2 <- india_shape %>% st_transform(st_crs(districts))
+
+
+
 # Tables
 pollutiontable <- readRDS("pollution_development/draft/tables/pollutiontable.rds")
 yieldtable <- readRDS("pollution_development/draft/tables/yieldtable.rds")
 yieldtabletwo <- readRDS("pollution_development/draft/tables/yieldtabletwo.rds")
+yieldtablehet <- readRDS("pollution_development/draft/tables/yieldtablehet.rds")
 pmeffects <- readRDS("pollution_development/draft/tables/yieldtablePM.rds")
 labortable <- readRDS("pollution_development/draft/tables/labortable.rds")
 #labortable_two <- readRDS("pollution_development/draft/tables/labortable_two.rds")
 ntltable <- readRDS("pollution_development/draft/tables/ntltable.rds")
+yieldtableleads <- readRDS("pollution_development/draft/tables/yieldtableleads.rds")
+
 
 ```
 
-\newpage
+```{r, echo = F}
+# This chunk will allow us to add footers below figures
+library(ggplot2)
 
+hook_plot_tex_footer <- function(x, options) {  
+  x_out <- knitr:::hook_plot_tex(x, options) 
+  if(!is.null(options$fig.footer)) {
+    inter <- sprintf("\\floatfoot*{%s}\n\\end{figure}", options$fig.footer[1])
+    x_out <- gsub(x=x_out, pattern="\n\\end{figure}", replacement=inter, fixed=TRUE)
+  }
+  x_out
+}
+
+knitr::knit_hooks$set(plot=hook_plot_tex_footer)
+
+```
+
+
+\newpage
+\doublespacing
 
 # Introduction
+
+
+pollution could be bad for agriculture [@heck1982assessment,@marshall1997hidden]
+
+lower agricultural productivity near gold mines in Ghana [@aragon2016polluting]; apparently lots of pollution
+  - "The main identification assumption is that the change in agricultural productivity over time in both areas would be similar in the absence of mining."
+  - within 20km
+  - also finds suggestive evidence it's not all labor productivity changes
+
+"Much of what we know about the marginal effect of pollution on infant mortality is derived from developed country data. However, given the lower levels of air pollution in developed countries, these estimates may not be externally valid to the developing country context if there is a non-linear dose relationship between pollution and mortality or if the costs of avoidance behaviour differ considerably between the two contexts. In this article, we estimate the relationship between pollution and infant mortality using data from Mexico. Our estimates for PM10 tend to be similar (or even smaller) than the US estimates, while our findings on CO tend to be larger than those derived from the US context." [@arceo2016does]
+
+We have known about the effects of pollution on human health for many years [@brunekreef2002air,@kampa2008human,@pope2006health]
+good review on the effects of pollution early in life in @currie2014we
+  - also in developing countries, where there is a consistent effect of exposure on infant mortality [@heft2018robust]
+  
+"Air pollution has both acute and chronic effects on human health, affecting a number of different systems and organs. It ranges from minor upper respiratory irritation to chronic respiratory and heart disease, lung cancer, acute respiratory infections in children and chronic bronchitis in adults, aggravating pre-existing heart and lung disease, or asthmatic attacks. In addition, short- and long-term exposures have also been linked with premature mortality and reduced life expectancy. These effects of air pollutants on human health and their mechanism of action are briefly discussed." @kampa2008human
+
+worker productivity and cognitive function:
+  - call center workers in China, and at common levels of pollution [@chang2019effect]
+  - tests [@ebenstein2016long]
+  - farm workers in California [@graff2012impact]
+  - increase in extensive margin [@hanna2015effect]
+  - manufacturing in China [@he2019severe]; "We uncover statistically significant adverse output effects from more prolonged exposure, but effects are not large. A substantial +10 mug/m3 PM2.5 variation sustained over 25 days reduces daily output by 1 percent."
+  
+induces migration [@chen2022effect]
+
+
+overall effects on agricultural productivity taking into accounts any changes in input allocation caused by the increase in pollution.
+
+
 
 # Data and methods
 
 ## Data
-SHRUGS: @almn2021 
+
+@almn2021
 Ag productivity: @gangopadhyay2022new
 PM estimates: @hammer2020global
 
 
-## Methodology
+```{r data, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
-# Results
+data <- matrix(NA, nrow = 3, ncol = 5)
+colnames(data) <- c("shapefile", "wind", "pollution", "agriculture", "nightlights")
+rownames(data) <- c("source", "geographic coverage", "temporal coverage")
+data[1,1] <- "Asher et al. (2021)"
+data[1,2] <- "NCAR"
+data[1,3] <- "Hammer et al. (2020)"
+data[1,4] <- "Angopadhyay et al. (2022)"
+data[1,5] <- "Asher et al. (2021)"
+data[2,1] <- "India"
+data[2,2] <- "global"
+data[2,3] <- "global"
+data[2,4] <- "global"
+data[2,5] <- "India"
+data[3,1] <- " "
+data[3,2] <- "daily"
+data[3,3] <- "monthly"
+data[3,4] <- "two seasons/year"
+data[3,5] <- "yearly"
 
-# Conclusion
-
-
-```{r plants, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Coal plants in India from 1990 to 2010"}
-
-plant1 <- ggplot() +
-                theme_minimal() +
-                geom_sf(data = india_shape) +
-                geom_sf(data = plants1990)
-
-plant2 <- ggplot() +
-                theme_minimal() +
-                geom_sf(data = india_shape) +
-                geom_sf(data = plants2010)
-
-
-ggarrange(plant1, plant2,
-          labels = c("1990", "2010"))
+# Table
+kable(
+      data, caption = "Remote sensing data sources",
+      align = "ccccc", booktabs = TRUE, linesep = ""
+      ) %>%
+  footnote(
+           general = "NCAR: https://climatedataguide.ucar.edu/", 
+           general_title = " ",
+           threeparttable = TRUE
+           ) %>%
+  column_spec(1, width = "3cm") %>%
+  column_spec(c(2:6),width = "2cm") %>%
+  kable_classic_2()
 
 ```
 
 
 
-```{r windexample, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Wind direction (2010-01-01)"}
+## Methodology
 
-ggplot() + 
-  theme_minimal() +
-  geom_sf(data = india_shape, fill = NA) +
-  geom_tile(data = windexample, aes(x = x, y = y, fill = wind_example), alpha = 0.3) +
-  scale_fill_viridis_c("wind direction\n(degrees)", option = "viridis") +
-  geom_sf(data = plants2010) +
-  labs(x = "lon",
-       y = "lat")
+
+
+```{r plants, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Coal plants in India from 1990 to 2010", fig.footer = list("Note: The top figure shows the location of coal plants in 1990. The bottom figure shows the location of coal plants in 2010.")}
+
+plant1 <- ggplot() +
+                theme_minimal() +
+                geom_sf(data = india_shape2) +
+                geom_sf(data = plants1990, size = 0.75) +
+                labs(x = "lon",
+                     y = "lat",
+                     subtitle = "Figure A: 1990")
+
+plant2 <- ggplot() +
+                theme_minimal() +
+                geom_sf(data = india_shape2) +
+                geom_sf(data = plants2010, size = 0.75) +
+                labs(x = "lon",
+                     y = "lat",
+                     subtitle = "Figure B: 2010")
+
+
+ggarrange(plant1, plant2)
+
+```
+
+
+
+```{r windexample, echo = FALSE, message = FALSE, warning = FALSE, fig.height = 8, fig.cap = "Wind direction and aggregation examples (2010-01-01)", fig.footer = list("Note: The top figure shows the average wind direction on January 1st, 2010. The points are the location of coal plants on that date. The bottom figure shows the distribution of pollution exposure in a specific district -- Kangra district in Himachal Pradesh -- on the same date.")}
+
+p1 <- ggplot() + 
+        theme_minimal() +
+        geom_sf(data = india_shape, fill = NA) +
+        geom_tile(data = windexample, aes(x = x, y = y, fill = wind_example), alpha = 0.3) +
+        scale_fill_viridis_c("wind direction\n(degrees)", option = "viridis") +
+        geom_sf(data = plants2010, size = 0.5) +
+        labs(x = "lon",
+             y = "lat",
+             subtitle = "Figure A: Wind direction")
+
+p2 <- ggplot() + 
+        theme_minimal() +
+        geom_sf(data = districts, fill = NA) +
+        geom_sf(data = villages %>% filter(is.na(days_sum)==F), aes(fill = days_sum), lwd = NA) +
+        scale_fill_viridis_c("exposure (days)", option = "viridis") +
+        labs(x = "lon",
+             y = "lat",
+             subtitle = "Figure B: Aggregation to district")
+
+ggarrange(p1, p2,
+          nrow = 2)
 
 ```
 
 
 \newpage
+
+
 
 ```{r pollutiontable, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
@@ -223,18 +356,18 @@ kable(
       pollutiontable, caption = "Wind direction and particulate matter",
       align = "cccc", booktabs = TRUE, linesep = ""
       ) %>%
-  add_footnote(
-               c(
-                 "Note: Standard errors are in parentheses and are clustered at the village level.",
-                 "* p<0.10 ** p<0.05 *** p<0.01"
-                 ), 
-               notation = "none",
-               threeparttable = TRUE
-               ) %>%
+  footnote(
+           general = c(
+                       "Note: Standard errors are in parentheses and are clustered at the village level.",
+                       "* p<0.10 ** p<0.05 *** p<0.01"
+                       ), 
+           general_title = "",
+           threeparttable = TRUE
+           ) %>%
   column_spec(1, width = "4cm") %>%
   column_spec(c(2:5),width = "2cm") %>%
-  row_spec(c(3, 6), bold = TRUE) %>%
-  row_spec(7, hline_after = TRUE) %>%
+  row_spec(c(3), bold = TRUE) %>%
+  row_spec(6, hline_after = TRUE) %>%
   add_header_above(c(" ", "1998-2015" = 2, "2002-2013" = 2)) %>%
   kable_classic_2()
 
@@ -243,27 +376,32 @@ kable(
 
 
 
+# Results
+
+
+
+
 ```{r yieldtable, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
 # Table
-colnames(yieldtable) <- c("(1)", "(2)", "(3)", "(4)")
+colnames(yieldtable) <- c("(1)", "(2)", "(3)", "(4)", "(5)")
 kable(
       yieldtable, caption = "Wind direction and agricultural productivity",
-      align = "cccc", booktabs = TRUE, linesep = ""
+      align = "ccccc", booktabs = TRUE, linesep = ""
       ) %>%
-  add_footnote(
-               c(
-                 "Note: Standard errors are in parentheses and are clustered at the village level.",
-                 "* p<0.10 ** p<0.05 *** p<0.01"
-                 ), 
-               notation = "none",
-               threeparttable = TRUE
-               ) %>%
-  column_spec(1, width = "4cm") %>%
-  column_spec(c(2:5),width = "2cm") %>%
-  row_spec(6, bold = TRUE) %>%
-  row_spec(8, hline_after = TRUE) %>%
-  add_header_above(c(" ", "all" = 2, "monsoon" = 1, "winter" = 1)) %>%
+  footnote(
+           general = c(
+                       "Note: Standard errors are in parentheses and are clustered at the village level.",
+                       "* p<0.10 ** p<0.05 *** p<0.01"
+                       ), 
+           general_title = "",
+           threeparttable = TRUE
+           ) %>%
+  column_spec(1, width = "3cm") %>%
+  column_spec(c(2:6),width = "2cm") %>%
+  row_spec(5, bold = TRUE) %>%
+  row_spec(9, hline_after = TRUE) %>%
+  add_header_above(c(" ", "all" = 3, "monsoon" = 1, "winter" = 1)) %>%
   kable_classic_2()
 
 ```
@@ -274,24 +412,51 @@ kable(
 ```{r yieldtabletwo, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
 # Table
-colnames(yieldtabletwo) <- c("(1)", "(2)", "(3)", "(4)")
+colnames(yieldtabletwo) <- c("(1)", "(2)", "(3)", "(4)", "(5)")
 kable(
-      yieldtabletwo, caption = "Wind direction and agricultural productivity",
+      yieldtabletwo, caption = "Pollution and agricultural productivity, IV estimates",
       align = "cccc", booktabs = TRUE, linesep = ""
       ) %>%
-  add_footnote(
-               c(
-                 "Note: Standard errors are in parentheses and are clustered at the village level.",
-                 "* p<0.10 ** p<0.05 *** p<0.01"
-                 ), 
-               notation = "none",
-               threeparttable = TRUE
-               ) %>%
+  footnote(
+           general = c(
+                       "Note: Standard errors are in parentheses and are clustered at the village level.",
+                       "* p<0.10 ** p<0.05 *** p<0.01"
+                       ), 
+           general_title = "",
+           threeparttable = TRUE
+           ) %>%
+  column_spec(1, width = "3.5cm") %>%
+  column_spec(c(2:6),width = "2cm") %>%
+  row_spec(5, bold = TRUE) %>%
+  row_spec(c(9:10), hline_after = TRUE) %>%
+  add_header_above(c(" ", "all" = 3, "monsoon" = 1, "winter" = 1)) %>%
+  kable_classic_2()
+
+```
+
+
+
+```{r yieldtablehet, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+
+# Table
+colnames(yieldtablehet) <- c("(1)", "(2)", "(3)", "(4)", "(5")
+kable(
+      yieldtablehet, caption = "Heterogeneity in the effects of pollution on productivity",
+      align = "ccccc", booktabs = TRUE, linesep = ""
+      ) %>%
+  footnote(
+           general = c(
+                       "Note: Standard errors are in parentheses and are clustered at the village level.",
+                       "* p<0.10 ** p<0.05 *** p<0.01"
+                       ), 
+           general_title = "",
+           threeparttable = TRUE
+           ) %>%
   column_spec(1, width = "4cm") %>%
-  column_spec(c(2:5),width = "2cm") %>%
-  row_spec(c(9, 10), hline_after = TRUE) %>%
-  row_spec(c(6, 11), bold = TRUE) %>%
-  add_header_above(c(" ", "all" = 2, "monsoon" = 1, "winter" = 1)) %>%
+  column_spec(c(2:6),width = "2cm") %>%
+  row_spec(c(13), hline_after = TRUE) %>%
+  row_spec(c(11), bold = TRUE) %>%
+  add_header_above(c(" ", ">p(50)" = 1, "<=p(50)" = 1, "all" = 3)) %>%
   kable_classic_2()
 
 ```
@@ -305,23 +470,23 @@ kable(
 ```{r labortable, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
 # Table
-colnames(labortable) <- c("(1)", "(2)", "(3)")
+colnames(labortable) <- c("all", "all", "self", "wage", "farm", "non-farm")
 kable(
       labortable, caption = "Wind direction and labor allocation",
-      align = "ccc", booktabs = TRUE, linesep = ""
+      align = "cccccc", booktabs = TRUE, linesep = ""
       ) %>%
-  add_footnote(
-               c(
-                 "Note: Standard errors are in parentheses and are clustered at the village level.",
-                 "* p<0.10 ** p<0.05 *** p<0.01"
-                 ), 
-               notation = "none",
-               threeparttable = TRUE
-               ) %>%
-  column_spec(1, width = "4cm") %>%
-  column_spec(c(2:4),width = "2cm") %>%
+  footnote(
+           general = c(
+                       "Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education.",
+                       "* p<0.10 ** p<0.05 *** p<0.01"
+                       ), 
+           general_title = "",
+           threeparttable = TRUE
+           ) %>%
+  column_spec(1, width = "3cm") %>%
+  column_spec(c(2:7),width = "1.5cm") %>%
   row_spec(c(8), hline_after = TRUE) %>%
-  row_spec(c(4, 7), bold = TRUE) %>%
+  row_spec(c(4,7), bold = TRUE) %>%
   kable_classic_2()
 
 ```
@@ -332,9 +497,46 @@ kable(
 
 
 
+```{r ntltable, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+
+# Table
+colnames(ntltable) <- c("(1)", "(2)")
+kable(
+      ntltable, caption = "Wind direction and nightlight growth",
+      align = "cc", booktabs = TRUE, linesep = ""
+      ) %>%
+  footnote(
+           general = c(
+                       "Note: Standard errors are in parentheses and are clustered at the village level.",
+                       "* p<0.10 ** p<0.05 *** p<0.01"
+                       ), 
+           general_title = "",
+           threeparttable = TRUE
+           ) %>%
+  column_spec(1, width = "3cm") %>%
+  column_spec(c(2:3),width = "2cm") %>%
+  row_spec(c(9), hline_after = TRUE) %>%
+  row_spec(c(5,8), bold = TRUE) %>%
+  kable_classic_2()
+
+```
+
+
+
+
+# Conclusion
+
+
+
+
+
+
 
 \FloatBarrier
 \newpage 
+
+\newpage
+\singlespacing
 # References {.unnumbered}
 
 ::: {#refs}
@@ -347,35 +549,31 @@ kable(
 \newpage
 # Appendix A {.unnumbered}
 
-\FloatBarrier
-\singlespacing
 
-
-
-
-```{r pmeffects, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+```{r yieldtableleads, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
 # Table
-colnames(pmeffects) <- c("(1)", "(2)", "(3)", "(4)")
+colnames(yieldtableleads) <- c("(1)", "(2)")
 kable(
-      pmeffects, caption = "Particulate matter and agricultural productivity",
-      align = "cccc", booktabs = TRUE, linesep = ""
+      yieldtableleads, caption = "Agricultural productivity and pollution leads",
+      align = "cc", booktabs = TRUE, linesep = ""
       ) %>%
-  add_footnote(
-               c(
-                 "Note: Standard errors are in parentheses and are clustered at the village level.",
-                 "* p<0.10 ** p<0.05 *** p<0.01"
-                 ), 
-               notation = "none"
-               ) %>%
-  column_spec(1, width = "4cm") %>%
-  column_spec(c(2:5),width = "2cm") %>%
-  row_spec(c(9, 10), hline_after = TRUE) %>%
-  row_spec(c(6, 11), bold = TRUE) %>%
-  add_header_above(c(" ", "all" = 2, "monsoon" = 1, "winter" = 1)) %>%
+  footnote(
+           general = c(
+                       "Note: Standard errors are in parentheses and are clustered at the village level.",
+                       "* p<0.10 ** p<0.05 *** p<0.01"
+                       ), 
+           general_title = "",
+           threeparttable = TRUE
+           ) %>%
+  column_spec(1, width = "3cm") %>%
+  column_spec(c(2:3),width = "2cm") %>%
+  row_spec(c(12), hline_after = TRUE) %>%
+  row_spec(c(9), bold = TRUE) %>%
   kable_classic_2()
 
 ```
+
 
 
 

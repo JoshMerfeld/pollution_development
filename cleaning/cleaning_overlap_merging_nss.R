@@ -71,8 +71,6 @@ df_labor <- df_labor %>% filter(is.na(merge)==F)
 
 
 # Going to go through the dates and process date by date
-pollution <- read_csv(paste0("data/clean/pm25/all_combined.csv"))
-pollution <- pollution %>% rename(pm25 = mean)
 df_labor_merged <- c()
 for (day in 1:length(date_vec)){
   # First, load villages
@@ -114,6 +112,41 @@ df_labor_merged <- df_labor_merged %>% mutate(distfe = paste0("s", state_merge, 
 write.csv(df_labor_merged, "data/clean/nss/merged_week.csv")
 
 
+
+
+
+
+
+pollution <- read_csv(paste0("data/clean/pm25/all_combined.csv"))
+pollution <- pollution %>% rename(pm25 = mean)
+df_labor_merged <- read_csv("data/clean/nss/merged_week.csv")
+
+# And also pm; all years covering the nss data
+pollution_merged <- c()
+for (y in year(min(df_labor_merged$date)):year(max(df_labor_merged$date))){
+  for (m in 1:12){
+    pollution_merge <- pollution %>% filter(year==y & month==m)
+    
+    village_wind <- villages %>% left_join(pollution_merge, by = "shrid")
+    # Weighted mean by AREA. Any parts of the district without villages are ZEROS
+    village_wind <- village_wind %>% 
+                    group_by(state, district) %>%
+                    mutate(pm25 = weighted.mean(pm25, area_weight, na.rm = T),
+                           state_merge = as.numeric(state),
+                           district_merge = as.numeric(district),
+                           tot_weight = sum(area_weight),
+                           pm25 = pm25*tot_weight,
+                           year = y, month_int = m) %>% # Last one adjusts for the zeros for areas not here
+                    filter(row_number()==1) %>%
+                    ungroup() %>%
+                    select(state_merge, district_merge, year, month_int, pm25)
+    
+    pollution_merged <- rbind(pollution_merged, village_wind)
+    
+    print(paste0(y, "-", m))
+  }
+}
+write_csv(pollution_merged, paste0("data/clean/pm25/nss_merge.csv"))
 
 
 
