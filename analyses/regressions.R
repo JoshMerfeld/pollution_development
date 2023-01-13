@@ -526,6 +526,61 @@ saveRDS(labortable, "pollution_development/draft/tables/labortablewinter.rds")
 
 
 
+# control variables
+setFixest_fml(..ctrl = ~ poly(female, 1) + poly(age, 2) + educ)
+df <- df %>% mutate(old = as.numeric(age>37.5),
+                    wind_old = wind*old)
+
+labor1 <- feols((days_self + days_wage) ~ wind+ wind_old | district[year] + year,
+                  data = df,
+                  cluster = "district")
+labor2 <- feols((days_self + days_wage) ~ wind + wind_old + ..ctrl | district[year] + year,
+                  data = df,
+                  cluster = "district")
+labor3 <- feols(days_self ~ wind + wind_old + ..ctrl | district[year] + year,
+                  data = df,
+                  cluster = "district")
+labor4 <- feols(days_wage ~ wind + wind_old + ..ctrl | district[year] + year,
+                  data = df,
+                  cluster = "district")
+labor5 <- feols(days_f ~ wind + wind_old + ..ctrl | district[year] + year,
+                  data = df,
+                  cluster = "district")
+labor6 <- feols(days_nf ~ wind + wind_old + ..ctrl | district[year] + year,
+                  data = df,
+                  cluster = "district")
+
+
+labortable <- etable(
+                      labor1, labor2, labor3, labor4, labor5, labor6,
+                      se.below = TRUE,
+                      depvar = FALSE,
+                      signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+                      digits = 3,
+                      fitstat = c("n"),
+                      coefstat = "se",
+                      group = list(controls = "poly"), drop = "educ"
+                      )
+labortable <- labortable[-c(11:12),]
+labortable <- as.matrix(labortable)
+rownames(labortable) <- c("wind", "", "wind times age>=38", "", "controls", "fixed effects:",
+                          "district", "year", "varying slopes:", "year (by district)", 
+                          "observations")
+labortable[c(6,9),] <- " "
+saveRDS(labortable, "pollution_development/draft/tables/labortableold.rds")
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # Nightlights

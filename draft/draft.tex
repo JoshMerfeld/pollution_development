@@ -123,15 +123,15 @@
 
 \title{Pollution, agricultural productivity, and development: Evidence from coal in plants in India\footnote{thanks to\ldots{}}}
 \author{Joshua D. Merfeld\footnote{KDI School of Public Policy and Management and IZA; \href{mailto:merfeld@kdis.ac.kr}{\nolinkurl{merfeld@kdis.ac.kr}}}}
-\date{2023-01-09}
+\date{2023-01-13}
 
 \begin{document}
 \maketitle
 \begin{abstract}
-\noindent abstract\\
+\noindent The rapid increase in population in India from the 1990s through the 2010s led to the rapid construction of new coal power plants throughout the country. Using this roll-out combined with randdom changes in wind direction, I document negative effects of pollution from coal power plants on agricultural productivity throughout the country. Results suggest this decrease may be driven by a decline in labor allocation of the oldest half of my sample, though I cannot rule out direct effects of pollution on land productivity. These impacts spill over into aggregate economic growth, as well; nightlight growth is slower following years of higher exposure to pollution.\\
 \strut \\
-\textbf{\textit{Keywords}}:\\
-\textbf{\textit{JEL Codes}}:
+\textbf{\textit{Keywords}}: pollution, productivity, agriculture, labor, India\\
+\textbf{\textit{JEL Codes}}: H40, I15, J22, O13, Q52, Q53
 \end{abstract}
 
 \newpage
@@ -140,37 +140,35 @@
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
 
-pollution could be bad for agriculture (Heck et al. 1982; Marshall et al. 1997)
+From 1990 to 2010, India's population grew by more than 40 percent.\footnote{data.worldbank.org} This population growth led to a large increase in demand for power. While natural gas has become a popular alternative in much of the world, the Indian government met much of the increased demand through the construction of coal power plants. During those same two decades, power generation from all coal units of at least 30 megawatts increased by almost 140 percent, from 42.4 gigawatts to more than 100 gigawatts.\footnote{\url{https://globalenergymonitor.org/}} There are no doubt positive effects from this increase in power generation; for example, electricity may lead to economic and productivity growth (Dinkelman 2011; Kline and Moretti 2014; Rud 2012; Van de Walle et al. 2017), though electrification alone may not be a sufficient condition (Lee, Miguel, and Wolfram 2020).
 
-lower agricultural productivity near gold mines in Ghana (Aragón and Rud 2016); apparently lots of pollution
-- ``The main identification assumption is that the change in agricultural productivity over time in both areas would be similar in the absence of mining.''
-- within 20km
-- also finds suggestive evidence it's not all labor productivity changes
+These improvements do not come without downsides, however, especially when it comes to power derived from coal. Pollutants from coal contribute to climate change and the phase out of coal energy is therefore a major climate goal (IEA 2022). Emissions from the production and burning of coal are also directly harmful to health and the environment, including pollutants like sulfur dioxide, nitrogen oxides, and mercury, to name but a few.\footnote{\url{https://www.eia.gov/energyexplained/coal/coal-and-the-environment.php}} While the use of coal had been declining, recent events -- including Russia's invasion of Ukraine -- have led to an increase in the demand for coal.\footnote{\url{https://www.npr.org/2022/08/15/1117560560/a-rising-demand-for-coal-amidst-war-in-ukraine}}
 
-``Much of what we know about the marginal effect of pollution on infant mortality is derived from developed country data. However, given the lower levels of air pollution in developed countries, these estimates may not be externally valid to the developing country context if there is a non-linear dose relationship between pollution and mortality or if the costs of avoidance behaviour differ considerably between the two contexts. In this article, we estimate the relationship between pollution and infant mortality using data from Mexico. Our estimates for PM10 tend to be similar (or even smaller) than the US estimates, while our findings on CO tend to be larger than those derived from the US context.'' (Arceo, Hanna, and Oliva 2016)
+In this paper, I study the effects of emissions from coal power plants on agricultural productivity, labor allocation, and economic growth in India. Previous work has suggested that there may be harmful direct effects of air pollution (Heck et al. 1982; Marshall et al. 1997) and water pollution (Reddy and Behera 2006) on agricultural productivity, including work showing that gold mines -- which release large amounts of pollutants into the surrounding environment -- lead to lower agricultural productivity in Ghana (Aragón and Rud 2016). This paper, however, tackles the broader case of coal plants, which are a leading source of power throughout the world. I show that pollution from these plants can lead to decreased agricultural productivity in the case of India.
 
-We have known about the effects of pollution on human health for many years (Brunekreef and Holgate 2002; Kampa and Castanas 2008; Pope III and Dockery 2006)
-good review on the effects of pollution early in life in Currie et al. (2014)
-- also in developing countries, where there is a consistent effect of exposure on infant mortality (Heft-Neal et al. 2018, 2019)
+I combine the roll out of coal plants in India with plausibly exogenous changes in wind direction -- in a similar spirit to (Deryugina et al. 2019) -- to measure the effects of pollution from coal plants on key development outcomes. I first locate the location of coal plants in India by year. Using village-level shapefiles, I identify all villages that are located within 30km of a coal plant at any timn during the sample period, which comprises the 1990s to the 2010s, with differences depending on data availability. I then download daily wind data and create an identifier for whether a village is located downwind from a coal plant on any given day, aggregating these daily values to different levels depending on the analysis.
 
-``Air pollution has both acute and chronic effects on human health, affecting a number of different systems and organs. It ranges from minor upper respiratory irritation to chronic respiratory and heart disease, lung cancer, acute respiratory infections in children and chronic bronchitis in adults, aggravating pre-existing heart and lung disease, or asthmatic attacks. In addition, short- and long-term exposures have also been linked with premature mortality and reduced life expectancy. These effects of air pollutants on human health and their mechanism of action are briefly discussed.'' Kampa and Castanas (2008)
+After validating that wind direction is a strong predictor of particulate matter, I first document that the total number of days of being downwind from a coal power plant has a negative effect on overall agricultural productivity, using newly available estimates of India-wide agricultural (land) productivity. The within-village absolute deviation of wind exposure is around eight days, meaning that median changes in wind direction are responsible for fluctuations in agricultural productivity of around 2.4 percent, with changes of more than five percent from season to season being common. Using wind direction as an instrument for particulate matter, an increase of PM 2.5 by one microgram leads to an even larger decrease in agricultural productivity, at around 20 percent. This IV strategy is similar to that in Deryugina et al. (2019), though they use general ``high-pollution'' wind directions while I concentrate only on wind directions from the location of a coal power plant.
 
-worker productivity and cognitive function:
-- call center workers in China, and at common levels of pollution (Chang et al. 2019)
-- tests (Ebenstein, Lavy, and Roth 2016; Wen and Burke 2022)
-- farm workers in California (Graff Zivin and Neidell 2012)
-- increase in extensive margin (Hanna and Oliva 2015)
-- manufacturing in China (He, Liu, and Salvo 2019); ``We uncover statistically significant adverse output effects from more prolonged exposure, but effects are not large. A substantial +10 mug/m3 PM2.5 variation sustained over 25 days reduces daily output by 1 percent.''
+These effects are apparently concentrated in villages that do not experience the most extreme exposure to pollution; villages with higher maximum exposure experience effects only around 10 percent as large as villages with lower maximum exposure. Additional heterogeneity analysis shows that, despite the results with respect to the maximum, the effects are increasing in \emph{mean} exposure. I also show that the effects are largest in villages with the highest initial agricultural productivity and that pollution and rainfall shocks are compounding; higher exposure along with less rainfall increases the negative effect of either shock individually.
 
-induces migration (Chen, Oliva, and Zhang 2022)
+Robustness checks show that this effect is concentrated in the years after the construction of the power plant, which helps decrease concerns around endogeneity since, conditional on the village fixed effect and rainfall, windfall direction across years and seasons is exogenous. Additionally, leads for wind direction do not predict current agricultural productivity, again supporting the identifying assumptions.
 
-overall effects on agricultural productivity taking into accounts any changes in input allocation caused by the increase in pollution.
+While I am not able to explicitly test effects on land productivity, I look at how adults allocate labor over the last seven days using the National Sample Survey and creating a district-level exposure measure based on the timing of the survey for each household. An additional day of wind over the previous week decreases overall labor allocation by 0.027 days. However, all effects on labor allocation are driven by the older half of my sample; these adults see much large decreases in overall labor allocation, self employment, farm employment, and non-farm employment. This is suggestive evidence of productivity effects being driven by the health effects on individuals, though I am not able to rule out direct effects on land productivity with my data.
+
+The final set of results explores whether there are impacts of pollution on aggregate economic development. Using nightlights, I show that lagged wind -- i.e.~pollution exposure in the prior year -- has a negative impact on economic development as proxied by nightlights. Going from the 25th percentile to the 75th percentile of wind exposure is synonymous with a decrease in the growth of nightlights within a village by around 0.7 percent. While this is a relatively small magnitude, it is worth noting that there are more than 100,000 villages in this sample. While the effect for a single village might be small, the overall, aggregate effect on growth is quite substantial.
+
+This paper contributes to several strands of literature. First, we already have evidence of effects of pollution on different forms of labor activity. For example, general levels of pollution decrease productivity of call center works in China (Chang et al. 2019), lead people to perform worse on cognitive functions (Ebenstein, Lavy, and Roth 2016; Wen and Burke 2022), and also lead to lower levels of farm labor productivity in California, driven by changes in ozone concentration (Graff Zivin and Neidell 2012). Also in China, He, Liu, and Salvo (2019) find small but significant negative effects of pollution on manufacturing productivity, while Chen, Oliva, and Zhang (2022) show pollution leads to labor out migration. Perhaps relevant to my labor allocation results, Hanna and Oliva (2015) show that decreases in pollution lead to increases in labor allocation, while I show the same relationship among the oldest cohort. The paper most related to this one is Aragón and Rud (2016), who show that gold mines in Ghana have substantial negative impacts on agricultural productivity in the surrounding areas. This paper differs in two important ways. First, I explore effects of pollution from coal plants, which are much more ubiquitous than goald mines across the world. Second, I use a different identification strategy, relying on wind blowing pollution from coal plants.
+
+I also contribute to the more general literature on the effects of pollution on health. Pollution has substantial negative effects on health in both developing and developed countries (Arceo, Hanna, and Oliva 2016) and we have known of these negative effects for many years (Brunekreef and Holgate 2002; Kampa and Castanas 2008; Pope III and Dockery 2006). Currie et al. (2014) review the literature on the health effects of pollution during adolescence; we have robust evidence of pollution exposure leading to increases in infant mortality, including in developing countries (Heft-Neal et al. 2018, 2019). Since these effects are often driven by heart and lung disease and asthma (Kampa and Castanas 2008), this my explain the labor allocation effects I identify in this paper.
+
+The rest of the paper is organized as follows. I first discuss data and methodology. I break this section up into \autoref{data2}, which covers the multiple sources of data used in this paper; \autoref{identification}, which discusses the empirical strategy; and \autoref{validation}, which validates the wind direction variable using data on particulate matter. I present the main results in \autoref{results} before concluding in \autoref{conclusion}.
 
 \hypertarget{data-and-methods}{%
-\section{Data and methods}\label{data-and-methods}}
+\section{\texorpdfstring{Data and methods \label{data}}{Data and methods }}\label{data-and-methods}}
 
 \hypertarget{data}{%
-\subsection{Data}\label{data}}
+\subsection{\texorpdfstring{Data \label{data2}}{Data }}\label{data}}
 
 The main goal of this paper is to examine whether exposure to exhaust from coal plants affects agricultural productivity, labor allocation, and economic growth. I use several sources of data, which I describe here and in Table \ref{tab:data} in the appendix.
 
@@ -203,7 +201,7 @@ The biggest issue with using the NSS is that it includes only district-level ide
 Finally, I use nightlights as a measure of economic growth (Henderson, Storeygard, and Weil 2012). I also take this data directly from SHRUG and Asher et al. (2021). This covers 1992 through 2013. Some of the older data may not be ideal (Gibson et al. 2021), but this is the only way to document changes in economic growth at a more disaggregated level and at a regular basis. Although satellite imagery is an attractive alternative (Burke et al. 2021), high-resolution satellite imagery does not go back to the early 1990s.
 
 \hypertarget{identification}{%
-\subsection{Identification}\label{identification}}
+\subsection{\texorpdfstring{Identification \label{identification}}{Identification }}\label{identification}}
 
 To calculate the effects of exposure to pollution on different outcomes, I rely on fixed effects and the differential exposure driven by plausibly exogenous wind direction, conditional on total rainfall. The regession is of the form
 \begin{gather} y_{it} = \alpha_{i} + \gamma_{t} + \beta wind_{it} + \delta rain_{it} + \varepsilon_{it}, \end{gather}
@@ -212,7 +210,7 @@ where \(y_{it}\) is outcome \(y\) for unit \(i\) at time \(t\), \(\alpha\) is a 
 Identification relies on changes in wind direction across time for the same geographic units. In other words, conditional on the fixed effects and rainfall, I assume changes in wind direction are as good as random and uncorrelated with the outcome -- e.g.~agricultural productivity -- except through exposure to pollution. One major threat to identification is that the building of a coal plant could lead to a spurious correlation between the exposure variable and the outcome. Specifically, since exposure is defined as zero prior to the building of a coal plant, the exposure variable itself might be endogenous even though wind direction is not. To help allay these concerns, I estimate additional regressions restricting the sample to only time periods after which a given location has a coal plant. I also present results using leads to show that future wind direction does not seem to predict current outcomes.
 
 \hypertarget{an-example-validating-wind-direction}{%
-\subsection{An example: validating wind direction}\label{an-example-validating-wind-direction}}
+\subsection{\texorpdfstring{An example: validating wind direction \label{validation}}{An example: validating wind direction }}\label{an-example-validating-wind-direction}}
 
 Before moving on to the main results, it is worth taking the time to better understand the fixed effects strategy with an example. Consider the data used for the regressions presented in Table \ref{tab:pollutiontable}. The outcome variable is particulate matter -- specifically, \(\mathrm{PM_{2.5}}\), which is particulate matter no larger than 2.5 micrometers in diameter -- which comes from Hammer et al. (2020). \(\mathrm{PM_{2.5}}\) is one of the harmful byproducts from coal plants, along with sulfur dioxide, different types of nitrogen oxides, and mercury.\footnote{\url{https://www.epa.gov/airmarkets/power-plants-and-neighboring-communities}} This data is available at the monthly level, so in Table \ref{tab:pollutiontable}, I aggregate wind exposure to the monthly level, as well.
 
@@ -251,7 +249,7 @@ In addition to serving as an example, Table \ref{tab:pollutiontable} also helps 
 To put these numbers into perspective, the World Health Organization's updated guidelines are that average annual exposure should not exceed 15 \(\mathrm{\mu g/m^3}\). For the month, an increase at the midpoint of the estimated range is equal to an increase of 0.2 percent of the maximum recommended mean concentration from the WHO. This is just a single day of wind in the direction of a village. Since this includes all villages located within 30km of a coal plant, this is evidence that wind direction can have serious repercussions on the health of hundreds of millions of people in India.
 
 \hypertarget{results}{%
-\section{Results}\label{results}}
+\section{\texorpdfstring{Results \label{results}}{Results }}\label{results}}
 
 This section presents the main results of this paper. I present three sets of results: one set looking at agricultural productivity, another looking at labor allocation, and a final set looking at nightlights, which are a proxy for economic development. I go through each of these in turn.
 
@@ -438,10 +436,46 @@ observations & 899,045 & 898,856 & 898,856 & 898,856 & 898,856 & 898,856\\
 \end{threeparttable}
 \end{table}
 
+Previous research has shown larger effects of pollution on the health of the oldest (Deryugina et al. 2019). The labor sample includes all adults between 15 and 60 years of age. To look at heterogeneity by age, I present an additional set of results interacting the wind variable with an indicator for whether an individual is over 37 years of age.\footnote{This splits the sample into two equal bins of age: those who are 15-37 and those who are 38-60.} These results are in Table \ref{tab:labortableold}, which otherwise presents the same specifications in the last five columns as \ref{tab:labortable}.
+
+\begin{table}
+
+\caption{\label{tab:labortableold}Wind direction and labor allocation, heterogeneity by age}
+\centering
+\begin{threeparttable}
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{4cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}}
+\toprule
+  & all & self & wage & farm & non-farm\\
+\midrule
+wind & 0.061*** & 0.096*** & -0.034 & 0.068*** & -0.006\\
+ & (0.023) & (0.022) & (0.024) & (0.020) & (0.030)\\
+wind times age>=38 & -0.207*** & -0.207*** & -0.0001 & -0.078*** & -0.129***\\
+ & (0.037) & (0.033) & (0.040) & (0.020) & (0.030)\\
+controls & Yes & Yes & Yes & Yes & Yes\\
+\textbf{fixed effects:} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
+district & Yes & Yes & Yes & Yes & Yes\\
+year & Yes & Yes & Yes & Yes & Yes\\
+\textbf{varying slopes:} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
+year (by district) & Yes & Yes & Yes & Yes & Yes\\
+\midrule
+observations & 898,856 & 898,856 & 898,856 & 898,856 & 898,856\\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\item Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education.
+\item * p<0.10 ** p<0.05 *** p<0.01
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+Table \ref{tab:labortableold} presents a very clear set of results: the effects are always larger (more negative) for older adults. Particularly interestingly, we now see that the mean-zero effect on self employment in the previous table is driven by two stark contrasts: a large increase for the younger group and a large decrease for the older group. For the youngest group, this increase appears in farm labor, indicating likely increases in farm self-employment. The oldest, on the other hand, have large decreases in both farm and non-farm labor, with larger decreases in the latter.
+
+While speculative, one possible explanation for this pattern is a decrease in labor productivity. While the youngest may be able to readjust and increase their overall self-employment labor allocation, perhaps the oldest cannot due to, for example, health effects of pollution, which are well documented (Bentayeb et al. 2012; Pope 3rd 2000).\footnote{Much of the literature also suggests the youngest are at significant risk of mortality and morbidities. However, given my focus on labor allocation, I only discuss older adults here.}
+
 \hypertarget{nightlights}{%
 \subsection{Nightlights}\label{nightlights}}
 
-Pollution leads to lower agricultural productivity as well as changes in labor allocation. This leads to an obvious question: might higher levels of pollution also directly affect economic growth? To explore this question, I look at changes in nightlights relative to changes in pollution. It seems reasonable to think that pollution might affect nightlights with a lag, so I include the lag of pollution rather than contempraneous pollution.
+Pollution leads to lower agricultural productivity as well as changes in labor allocation. This leads to an obvious question: might higher levels of pollution also directly affect economic growth? To explore this question, I look at changes in nightlights relative to changes in pollution. It seems reasonable to think that pollution might affect nightlights with a lag, so I include the lag of pollution rather than contemporaneous pollution.
 
 \begin{table}
 
@@ -477,7 +511,11 @@ I present these results in Table \ref{tab:ntltable}. To help simplify the coeffi
 We see a strong, negative relationship between pollution (lagged wind) and nightlights. Going from the 25th percentile to the 75th percentile of wind exposure is synonymous with a decrease in the growth of nightlights within a village by around 0.7 percent. While this is a relatively small magnitude, it is worth noting that there are more than 100,000 villages in this sample. While the effect for a single village might be small, the overall, aggregate effect on growth is quite substantial.
 
 \hypertarget{conclusion}{%
-\section{Conclusion}\label{conclusion}}
+\section{\texorpdfstring{Conclusion \label{conclusion}}{Conclusion }}\label{conclusion}}
+
+This paper documents the negative effects of pollution on agricultural productivity in India. I find clear indications that pollution from coal plants leads to lower agricultural productivity. Importantly, I use exogenous changes in wind direction to measure exposure to pollution and show that these effects are robust to a range of alternative specifications. Results indicate that these effects may be driven by changes in labor allocation patterns, but I am unable to rule out direct effects on land productivity with the data available. Finally, these negative effects are also seen in aggregate economic development, with pollution leading to decreases in the growth of nightlights.
+
+These results suggest caution in building new power plants that emit substantial amounts of pollution. While the building of additional power generation facilities may be an economic necessity, the location of these facilities may be particular important for multiple aspects of economic activity, not just health and mortality.
 
 \FloatBarrier
 \newpage
@@ -501,6 +539,9 @@ Asher, Sam, Tobias Lunt, Ryu Matsuura, and Paul Novosad. 2021. {``{Development R
 \leavevmode\vadjust pre{\hypertarget{ref-bencko1977health}{}}%
 Bencko, Vladimir, and Karel Symon. 1977. {``Health Aspects of Burning Coal with a High Arsenic Content.''} \emph{{Environmental Research}} 13 (3): 378--85.
 
+\leavevmode\vadjust pre{\hypertarget{ref-bentayeb2012adverse}{}}%
+Bentayeb, Malek, Marzia Simoni, Nour Baiz, Dan Norback, Sandra Baldacci, Sara Maio, Giovanni Viegi, Isabella Annesi-Maesano, Geriatric Study in Europe on Health Effects of Air Quality in Nursing Homes (GERIE) Group, et al. 2012. {``Adverse Respiratory Effects of Outdoor Air Pollution in the Elderly.''} \emph{{The International Journal of Tuberculosis and Lung Disease}} 16 (9): 1149--61.
+
 \leavevmode\vadjust pre{\hypertarget{ref-brunekreef2002air}{}}%
 Brunekreef, Bert, and Stephen T Holgate. 2002. {``{Air pollution and health}.''} \emph{{The Lancet}} 360 (9341): 1233--42.
 
@@ -515,6 +556,12 @@ Chen, Shuai, Paulina Oliva, and Peng Zhang. 2022. {``{The effect of air pollutio
 
 \leavevmode\vadjust pre{\hypertarget{ref-currie2014we}{}}%
 Currie, Janet, Joshua Graff Zivin, Jamie Mullins, and Matthew Neidell. 2014. {``{What do we know about short-and long-term effects of early-life exposure to pollution?}''} \emph{{Annual Review Resource Economics}} 6 (1): 217--47.
+
+\leavevmode\vadjust pre{\hypertarget{ref-deryugina2019mortality}{}}%
+Deryugina, Tatyana, Garth Heutel, Nolan H Miller, David Molitor, and Julian Reif. 2019. {``{The mortality and medical costs of air pollution: Evidence from changes in wind direction}.''} \emph{{American Economic Review}} 109 (12): 4178--4219.
+
+\leavevmode\vadjust pre{\hypertarget{ref-dinkelman2011effects}{}}%
+Dinkelman, Taryn. 2011. {``{The effects of rural electrification on employment: New evidence from South Africa}.''} \emph{{American Economic Review}} 101 (7): 3078--108.
 
 \leavevmode\vadjust pre{\hypertarget{ref-ebenstein2016long}{}}%
 Ebenstein, Avraham, Victor Lavy, and Sefi Roth. 2016. {``{The long-run economic consequences of high-stakes examinations: Evidence from transitory variation in pollution}.''} \emph{{American Economic Journal: Applied Economics}} 8 (4): 36--65.
@@ -549,8 +596,17 @@ Heft-Neal, Sam, Jennifer Burney, Eran Bendavid, Kara Voss, and Marshall Burke. 2
 \leavevmode\vadjust pre{\hypertarget{ref-henderson2012measuring}{}}%
 Henderson, J Vernon, Adam Storeygard, and David N Weil. 2012. {``Measuring Economic Growth from Outer Space.''} \emph{{American Economic Review}} 102 (2): 994--1028.
 
+\leavevmode\vadjust pre{\hypertarget{ref-iea2022}{}}%
+IEA. 2022. {``{Coal-fired electricity}.''} {International Energy Association}.
+
 \leavevmode\vadjust pre{\hypertarget{ref-kampa2008human}{}}%
 Kampa, Marilena, and Elias Castanas. 2008. {``{Human health effects of air pollution}.''} \emph{{Environmental Pollution}} 151 (2): 362--67.
+
+\leavevmode\vadjust pre{\hypertarget{ref-kline2014local}{}}%
+Kline, Patrick, and Enrico Moretti. 2014. {``{Local economic development, agglomeration economies, and the big push: 100 years of evidence from the Tennessee Valley Authority}.''} \emph{The Quarterly Journal of Economics} 129 (1): 275--331.
+
+\leavevmode\vadjust pre{\hypertarget{ref-lee2020does}{}}%
+Lee, Kenneth, Edward Miguel, and Catherine Wolfram. 2020. {``Does Household Electrification Supercharge Economic Development?''} \emph{{Journal of Economic Perspectives}} 34 (1): 122--44.
 
 \leavevmode\vadjust pre{\hypertarget{ref-li2014health}{}}%
 Li, Ya-Ru, and Jacqueline MacDonald Gibson. 2014. {``{Health and air quality benefits of policies to reduce coal-fired power plant emissions: a case study in North Carolina}.''} \emph{{Environmental Science \& Technology}} 48 (17): 10019--27.
@@ -558,8 +614,20 @@ Li, Ya-Ru, and Jacqueline MacDonald Gibson. 2014. {``{Health and air quality ben
 \leavevmode\vadjust pre{\hypertarget{ref-marshall1997hidden}{}}%
 Marshall, Fiona, Mike Ashmore, Fiona Hinchcliffe, et al. 1997. \emph{{A hidden threat to food production: Air pollution and agriculture in the developing world}}. {International Institute for Environment and Development.}
 
+\leavevmode\vadjust pre{\hypertarget{ref-pope2000epidemiology}{}}%
+Pope 3rd, CA. 2000. {``Epidemiology of Fine Particulate Air Pollution and Human Health: Biologic Mechanisms and Who's at Risk?''} \emph{{Environmental Health Perspectives}} 108 (suppl 4): 713--23.
+
 \leavevmode\vadjust pre{\hypertarget{ref-pope2006health}{}}%
 Pope III, C Arden, and Douglas W Dockery. 2006. {``{Health effects of fine particulate air pollution: lines that connect}.''} \emph{{Journal of the Air \& Waste Management Association}} 56 (6): 709--42.
+
+\leavevmode\vadjust pre{\hypertarget{ref-reddy2006impact}{}}%
+Reddy, V Ratna, and Bhagirath Behera. 2006. {``{Impact of water pollution on rural communities: An economic analysis}.''} \emph{{Ecological Economics}} 58 (3): 520--37.
+
+\leavevmode\vadjust pre{\hypertarget{ref-rud2012electricity}{}}%
+Rud, Juan Pablo. 2012. {``{Electricity provision and industrial development: Evidence from India}.''} \emph{{Journal of Development Economics}} 97 (2): 352--67.
+
+\leavevmode\vadjust pre{\hypertarget{ref-van2017long}{}}%
+Van de Walle, Dominique, Martin Ravallion, Vibhuti Mendiratta, and Gayatri Koolwal. 2017. {``{Long-term gains from electrification in rural India}.''} \emph{{The World Bank Economic Review}} 31 (2): 385--411.
 
 \leavevmode\vadjust pre{\hypertarget{ref-wen2022lower}{}}%
 Wen, Jeff, and Marshall Burke. 2022. {``{Lower test scores from wildfire smoke exposure}.''} \emph{{Nature Sustainability}} 5 (11): 947--55.
