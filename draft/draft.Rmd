@@ -1,5 +1,5 @@
 ---
-title: "Pollution, agricultural productivity, and development: Evidence from coal in plants in India^[thanks to...]"
+title: "Pollution, agricultural productivity, and development: Evidence from coal in plants in India^[All scripts used in this paper are publicly available on my GitHub page: github.com/JoshMerfeld/pollution_development]"
 author:
   - Joshua D. Merfeld^[KDI School of Public Policy and Management and IZA; merfeld@kdis.ac.kr]
 date: "`r Sys.Date()`"
