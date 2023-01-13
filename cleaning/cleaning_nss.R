@@ -64,6 +64,7 @@ df_labor$Total_no_of_days_in_current_acti[is.na(df_labor$Total_no_of_days_in_cur
 df_labor$days_self <- 0
 df_labor$days_wage <- 0
 df_labor$days_domestic <- 0
+df_labor$days_sick <- 0
 # Now labor types
 df_labor$days_self[df_labor$Current_day_activity_Status %in% c("11", "12", "21")] <- df_labor$days_self[df_labor$Current_day_activity_Status %in% c("11", "12", "21")] + 
                                                                                       df_labor$Total_no_of_days_in_current_acti[df_labor$Current_day_activity_Status %in% c("11", "12", "21")]
