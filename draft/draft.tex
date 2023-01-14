@@ -95,6 +95,7 @@
 \usepackage{enumerate}
 \usepackage[shortlabels]{enumitem}
 \usepackage[hang,flushmargin]{footmisc}
+\usepackage{makecell}
 \usepackage{booktabs}
 \usepackage{longtable}
 \usepackage{array}
@@ -123,7 +124,7 @@
 
 \title{Pollution, agricultural productivity, and development: Evidence from coal in plants in India\footnote{All scripts used in this paper are publicly available on my GitHub page: github.com/JoshMerfeld/pollution\_development}}
 \author{Joshua D. Merfeld\footnote{KDI School of Public Policy and Management and IZA; \href{mailto:merfeld@kdis.ac.kr}{\nolinkurl{merfeld@kdis.ac.kr}}}}
-\date{2023-01-13}
+\date{2023-01-15}
 
 \begin{document}
 \maketitle
@@ -209,6 +210,47 @@ where \(y_{it}\) is outcome \(y\) for unit \(i\) at time \(t\), \(\alpha\) is a 
 
 Identification relies on changes in wind direction across time for the same geographic units. In other words, conditional on the fixed effects and rainfall, I assume changes in wind direction are as good as random and uncorrelated with the outcome -- e.g.~agricultural productivity -- except through exposure to pollution. One major threat to identification is that the building of a coal plant could lead to a spurious correlation between the exposure variable and the outcome. Specifically, since exposure is defined as zero prior to the building of a coal plant, the exposure variable itself might be endogenous even though wind direction is not. To help allay these concerns, I estimate additional regressions restricting the sample to only time periods after which a given location has a coal plant. I also present results using leads to show that future wind direction does not seem to predict current outcomes.
 
+\hypertarget{where-do-coal-plants-open}{%
+\subsection{Where do coal plants open?}\label{where-do-coal-plants-open}}
+
+A large question looms with respect to identification: what are the characteristics of areas near the construction of new coal plants? While I examine the identifying assumptions in a panel context below, I begin with this static question here. Table \ref{tab:plantresultstable} presents four separate regressions. The first two columns use 1991 census data -- downloaded from SHRUG -- and the second two columns use 2001 census data, all at the village level. The first column presents results from regressing a dummy for whether there is a coal plant within 30km in 1991 on several census variables. Villages with higher populations and higher literacy in 1991 are more likely to be near a coal plant at the time. Interestingly, however, they are less likely to have a paved road.
+
+\begin{table}
+
+\caption{\label{tab:plantresultstable}Local characteristics and the construction of coal plants}
+\centering
+\begin{threeparttable}
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{3cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}}
+\toprule
+\multicolumn{1}{c}{ } & \multicolumn{2}{c}{1991 census} & \multicolumn{2}{c}{2001 census} \\
+\cmidrule(l{3pt}r{3pt}){2-3} \cmidrule(l{3pt}r{3pt}){4-5}
+  & 1991 & 2001 & 2001 & 2011\\
+\midrule
+pop (log) & 0.068*** & 0.0003 & 0.009*** & 0.002***\\
+ & (0.0002) & (0.0002) & (0.0003) & (0.0002)\\
+literacy (prop) & 0.127*** & -0.005*** & 0.043*** & 0.030***\\
+ & (0.002) & (0.001) & (0.002) & (0.002)\\
+has paved road & -0.036*** & 0.003*** & -0.008*** & -2.68e-7\\
+ & (0.0008) & (0.0004) & (0.0008) & (0.0006)\\
+ag productivity &  &  & 0.033*** & 0.005***\\
+ &  &  & (0.0005) & (0.0004)\\
+sub-sample & all & no plant & all & no plant\\
+\midrule
+observations & 490,882 & 447,288 & 516,798 & 476,517\\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[para]
+\item Note: Robust standard errors are in parentheses. The outcome in the first column is whether the village is within 30km of a coal plant in 1991. The second column is whether a village in 1991 will have a coal plant in 2001, conditional on not having one in 1991. The last two columns are similarly defined, except using 2001 and 2011 as the years. * p<0.10 ** p<0.05 *** p<0.01
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+The second column keeps the 1991 census data but changes the outcome variable to a dummy for whether there \emph{will be} a coal plant constructed before 2001. This column restricts the sample to only villages that do not already have a coal plant in 1991. Population is no longer a significant predictor while the coefficients on literacy and the presence of a paved road have flipped.
+
+The last two columns are particularly relevant to the current results. They present similar results to those in the first two columns, but use the 2001 census data and a dummy for the presence of a coal plant in 2001 and 2011 in columns three and four, respectively. Importantly, I include agricultural productivity in the monsoon season of 2002 -- the earliest year available -- as an additional predictor. In 2001, agricultural productivity is a strong predictor for the presence of a coal plant. Moreover, it is also a significant predictor of the construction of a coal plant between 2001 and 2011 (column four). Given that the coefficient is positive, this indicates that coal plants are more likely to be built in areas with higher agricultural productivity. In other words, any selection in the overall location of coal plants would bias against finding negative effects of pollution on agricultural productivity.
+
+However, note that this is not the same as looking at wind direction. I discuss this more in the results section below.
+
 \hypertarget{an-example-validating-wind-direction}{%
 \subsection{\texorpdfstring{An example: validating wind direction \label{validation}}{An example: validating wind direction }}\label{an-example-validating-wind-direction}}
 
@@ -235,9 +277,8 @@ district-month & No & Yes & No & Yes\\
 observations & 22,345,092 & 22,345,092 & 14,896,728 & 14,896,728\\
 \bottomrule
 \end{tabular}
-\begin{tablenotes}
-\item Note: Standard errors are in parentheses and are clustered at the village level.
-\item * p<0.10 ** p<0.05 *** p<0.01
+\begin{tablenotes}[para]
+\item Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -286,9 +327,8 @@ village & No & No & No & Yes & Yes\\
 observations & 2,391,533 & 2,375,337 & 2,375,337 & 1,259,123 & 1,116,214\\
 \bottomrule
 \end{tabular}
-\begin{tablenotes}
-\item Note: Standard errors are in parentheses and are clustered at the village level.
-\item * p<0.10 ** p<0.05 *** p<0.01
+\begin{tablenotes}[para]
+\item Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -325,9 +365,8 @@ rain (z) &  & -1.23*** & -0.235*** & 0.301*** & -1.36***\\
  &  & (0.010) & (0.018) & (0.015) & (0.009)\\
 \bottomrule
 \end{tabular}
-\begin{tablenotes}
-\item Note: Standard errors are in parentheses and are clustered at the village level.
-\item * p<0.10 ** p<0.05 *** p<0.01
+\begin{tablenotes}[para]
+\item Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -367,9 +406,8 @@ year & Yes & Yes & Yes & Yes & Yes\\
 observations & 1,115,694 & 1,259,643 & 2,375,337 & 2,375,337 & 2,371,364\\
 \bottomrule
 \end{tabular}
-\begin{tablenotes}
-\item Note: Standard errors are in parentheses and are clustered at the village level.
-\item * p<0.10 ** p<0.05 *** p<0.01
+\begin{tablenotes}[para]
+\item Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -429,9 +467,8 @@ year (by district) & Yes & Yes & Yes & Yes & Yes & Yes\\
 observations & 899,045 & 898,856 & 898,856 & 898,856 & 898,856 & 898,856\\
 \bottomrule
 \end{tabular}
-\begin{tablenotes}
-\item Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education.
-\item * p<0.10 ** p<0.05 *** p<0.01
+\begin{tablenotes}[para]
+\item Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education. * p<0.10 ** p<0.05 *** p<0.01
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -461,9 +498,8 @@ year (by district) & Yes & Yes & Yes & Yes & Yes\\
 observations & 898,856 & 898,856 & 898,856 & 898,856 & 898,856\\
 \bottomrule
 \end{tabular}
-\begin{tablenotes}
-\item Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education.
-\item * p<0.10 ** p<0.05 *** p<0.01
+\begin{tablenotes}[para]
+\item Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education. * p<0.10 ** p<0.05 *** p<0.01
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -499,9 +535,8 @@ year (by village) & Yes & Yes\\
 observations & 2,146,715 & 2,146,715\\
 \bottomrule
 \end{tabular}
-\begin{tablenotes}
-\item Note: Standard errors are in parentheses and are clustered at the village level.
-\item * p<0.10 ** p<0.05 *** p<0.01
+\begin{tablenotes}[para]
+\item Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -661,7 +696,7 @@ agriculture & Angopadhyay et al. (2022) & global & two seasons/year\\
 nightlights & Asher et al. (2021) & India & yearly\\
 \bottomrule
 \end{tabular}
-\begin{tablenotes}
+\begin{tablenotes}[para]
 \item Note: NCAR stands for the National Center for Atmospheric Research. Additional information on Global Energy Monitor and NCAR can be found on their websites, at https://globalenergymonitor.org/projects/global-coal-plant-tracker and https://climatedataguide.ucar.edu/, respectively.
 \end{tablenotes}
 \end{threeparttable}
@@ -692,9 +727,8 @@ village & No & No & No & Yes & Yes\\
 observations & 2,062,036 & 2,046,104 & 2,046,104 & 1,089,013 & 957,091\\
 \bottomrule
 \end{tabular}
-\begin{tablenotes}
-\item Note: Standard errors are in parentheses and are clustered at the village level. The sample is restricted to village-years after a coal plant was built near the village.
-\item * p<0.10 ** p<0.05 *** p<0.01
+\begin{tablenotes}[para]
+\item Note: Standard errors are in parentheses and are clustered at the village level. The sample is restricted to village-years after a coal plant was built near the village. * p<0.10 ** p<0.05 *** p<0.01
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -726,9 +760,8 @@ district-year-season & No & Yes\\
 observations & 1,979,635 & 1,979,635\\
 \bottomrule
 \end{tabular}
-\begin{tablenotes}
-\item Note: Standard errors are in parentheses and are clustered at the village level.
-\item * p<0.10 ** p<0.05 *** p<0.01
+\begin{tablenotes}[para]
+\item Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -762,9 +795,8 @@ year (by district) & Yes & Yes & Yes & Yes & Yes & Yes\\
 observations & 359,652 & 359,576 & 359,576 & 359,576 & 359,576 & 359,576\\
 \bottomrule
 \end{tabular}
-\begin{tablenotes}
-\item Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education.
-\item * p<0.10 ** p<0.05 *** p<0.01
+\begin{tablenotes}[para]
+\item Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education. * p<0.10 ** p<0.05 *** p<0.01
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -792,9 +824,8 @@ year (by district) & Yes & Yes & Yes & Yes & Yes & Yes\\
 observations & 375,956 & 375,883 & 375,883 & 375,883 & 375,883 & 375,883\\
 \bottomrule
 \end{tabular}
-\begin{tablenotes}
-\item Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education.
-\item * p<0.10 ** p<0.05 *** p<0.01
+\begin{tablenotes}[para]
+\item Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education. * p<0.10 ** p<0.05 *** p<0.01
 \end{tablenotes}
 \end{threeparttable}
 \end{table}

@@ -38,6 +38,7 @@ header-includes:
   - \usepackage{enumerate}
   - \usepackage[shortlabels]{enumitem}
   - \usepackage[hang,flushmargin]{footmisc}		# no indents on footnotes
+  - \usepackage{makecell}
 ---
 
 ```{r setup, include=FALSE}
@@ -181,6 +182,7 @@ india_shape2 <- india_shape %>% st_transform(st_crs(districts))
 
 
 # Tables
+plantresultstable <- readRDS("pollution_development/draft/tables/plantresultstable.rds")
 pollutiontable <- readRDS("pollution_development/draft/tables/pollutiontable.rds")
 yieldtable <- readRDS("pollution_development/draft/tables/yieldtable.rds")
 yieldtabletwo <- readRDS("pollution_development/draft/tables/yieldtabletwo.rds")
@@ -333,6 +335,38 @@ where $y_{it}$ is outcome $y$ for unit $i$ at time $t$, $\alpha$ is a geographic
 
 Identification relies on changes in wind direction across time for the same geographic units. In other words, conditional on the fixed effects and rainfall, I assume changes in wind direction are as good as random and uncorrelated with the outcome -- e.g. agricultural productivity -- except through exposure to pollution. One major threat to identification is that the building of a coal plant could lead to a spurious correlation between the exposure variable and the outcome. Specifically, since exposure is defined as zero prior to the building of a coal plant, the exposure variable itself might be endogenous even though wind direction is not. To help allay these concerns, I estimate additional regressions restricting the sample to only time periods after which a given location has a coal plant. I also present results using leads to show that future wind direction does not seem to predict current outcomes. 
 
+## Where do coal plants open?
+
+A large question looms with respect to identification: what are the characteristics of areas near the construction of new coal plants? While I examine the identifying assumptions in a panel context below, I begin with this static question here. Table \@ref(tab:plantresultstable) presents four separate regressions. The first two columns use 1991 census data -- downloaded from SHRUG -- and the second two columns use 2001 census data, all at the village level. The first column presents results from regressing a dummy for whether there is a coal plant within 30km in 1991 on several census variables. Villages with higher populations and higher literacy in 1991 are more likely to be near a coal plant at the time. Interestingly, however, they are less likely to have a paved road.
+
+```{r plantresultstable, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+
+# Table
+colnames(plantresultstable) <- c("1991", "2001", "2001", "2011")
+kable(
+      plantresultstable, caption = "Local characteristics and the construction of coal plants",
+      align = "cccc", booktabs = TRUE, linesep = "", escape = FALSE
+      ) %>%
+  footnote(
+           "Note: Robust standard errors are in parentheses. The outcome in the first column is whether the village is within 30km of a coal plant in 1991. The second column is whether a village in 1991 will have a coal plant in 2001, conditional on not having one in 1991. The last two columns are similarly defined, except using 2001 and 2011 as the years. * p<0.10 ** p<0.05 *** p<0.01",
+           general_title = "",
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE,
+           escape = FALSE
+           ) %>%
+  column_spec(1, width = "3cm") %>%
+  column_spec(c(2:5),width = "2cm") %>%
+  row_spec(9, hline_after = TRUE) %>%
+  add_header_above(c(" ", "1991 census" = 2, "2001 census" = 2)) %>%
+  kable_classic_2()
+
+```
+
+The second column keeps the 1991 census data but changes the outcome variable to a dummy for whether there *will be* a coal plant constructed before 2001. This column restricts the sample to only villages that do not already have a coal plant in 1991. Population is no longer a significant predictor while the coefficients on literacy and the presence of a paved road have flipped.
+
+The last two columns are particularly relevant to the current results. They present similar results to those in the first two columns, but use the 2001 census data and a dummy for the presence of a coal plant in 2001 and 2011 in columns three and four, respectively. Importantly, I include agricultural productivity in the monsoon season of 2002 -- the earliest year available -- as an additional predictor. In 2001, agricultural productivity is a strong predictor for the presence of a coal plant. Moreover, it is also a significant predictor of the construction of a coal plant between 2001 and 2011 (column four). Given that the coefficient is positive, this indicates that coal plants are more likely to be built in areas with higher agricultural productivity. In other words, any selection in the overall location of coal plants would bias against finding negative effects of pollution on agricultural productivity.
+
+However, note that this is not the same as looking at wind direction. I discuss this more in the results section below.
 
 
 ## An example: validating wind direction \label{validation}
@@ -348,12 +382,10 @@ kable(
       align = "cccc", booktabs = TRUE, linesep = ""
       ) %>%
   footnote(
-           general = c(
-                       "Note: Standard errors are in parentheses and are clustered at the village level.",
-                       "* p<0.10 ** p<0.05 *** p<0.01"
-                       ), 
+           "Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01", 
            general_title = "",
-           threeparttable = TRUE
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE
            ) %>%
   column_spec(1, width = "4cm") %>%
   column_spec(c(2:5),width = "2cm") %>%
@@ -394,12 +426,10 @@ kable(
       align = "ccccc", booktabs = TRUE, linesep = ""
       ) %>%
   footnote(
-           general = c(
-                       "Note: Standard errors are in parentheses and are clustered at the village level.",
-                       "* p<0.10 ** p<0.05 *** p<0.01"
-                       ), 
+           "Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01", 
            general_title = "",
-           threeparttable = TRUE
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE
            ) %>%
   column_spec(1, width = "3cm") %>%
   column_spec(c(2:6),width = "2cm") %>%
@@ -421,12 +451,10 @@ kable(
       align = "cccc", booktabs = TRUE, linesep = ""
       ) %>%
   footnote(
-           general = c(
-                       "Note: Standard errors are in parentheses and are clustered at the village level.",
-                       "* p<0.10 ** p<0.05 *** p<0.01"
-                       ), 
+           "Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01", 
            general_title = "",
-           threeparttable = TRUE
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE
            ) %>%
   column_spec(1, width = "3.5cm") %>%
   column_spec(c(2:6),width = "2cm") %>%
@@ -453,12 +481,10 @@ kable(
       align = "ccccc", booktabs = TRUE, linesep = ""
       ) %>%
   footnote(
-           general = c(
-                       "Note: Standard errors are in parentheses and are clustered at the village level.",
-                       "* p<0.10 ** p<0.05 *** p<0.01"
-                       ), 
+           "Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01", 
            general_title = "",
-           threeparttable = TRUE
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE
            ) %>%
   column_spec(1, width = "4cm") %>%
   column_spec(c(2:6),width = "2cm") %>%
@@ -516,12 +542,10 @@ kable(
       align = "cccccc", booktabs = TRUE, linesep = ""
       ) %>%
   footnote(
-           general = c(
-                       "Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education.",
-                       "* p<0.10 ** p<0.05 *** p<0.01"
-                       ), 
+           "Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education. * p<0.10 ** p<0.05 *** p<0.01", 
            general_title = "",
-           threeparttable = TRUE
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE
            ) %>%
   column_spec(1, width = "3cm") %>%
   column_spec(c(2:7),width = "1.5cm") %>%
@@ -543,12 +567,10 @@ kable(
       align = "ccccc", booktabs = TRUE, linesep = ""
       ) %>%
   footnote(
-           general = c(
-                       "Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education.",
-                       "* p<0.10 ** p<0.05 *** p<0.01"
-                       ), 
+           "Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education. * p<0.10 ** p<0.05 *** p<0.01", 
            general_title = "",
-           threeparttable = TRUE
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE
            ) %>%
   column_spec(1, width = "4cm") %>%
   column_spec(c(2:6),width = "1.5cm") %>%
@@ -580,12 +602,10 @@ kable(
       align = "cc", booktabs = TRUE, linesep = ""
       ) %>%
   footnote(
-           general = c(
-                       "Note: Standard errors are in parentheses and are clustered at the village level.",
-                       "* p<0.10 ** p<0.05 *** p<0.01"
-                       ), 
+           "Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01", 
            general_title = "",
-           threeparttable = TRUE
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE
            ) %>%
   column_spec(1, width = "3cm") %>%
   column_spec(c(2:3),width = "2cm") %>%
@@ -658,11 +678,10 @@ kable(
       align = "ccccc", booktabs = TRUE, linesep = ""
       ) %>%
   footnote(
-           general = c(
-                       "Note: NCAR stands for the National Center for Atmospheric Research. Additional information on Global Energy Monitor and NCAR can be found on their websites, at https://globalenergymonitor.org/projects/global-coal-plant-tracker and https://climatedataguide.ucar.edu/, respectively."
-                       ), 
+           "Note: NCAR stands for the National Center for Atmospheric Research. Additional information on Global Energy Monitor and NCAR can be found on their websites, at https://globalenergymonitor.org/projects/global-coal-plant-tracker and https://climatedataguide.ucar.edu/, respectively.", 
            general_title = "",
-           threeparttable = TRUE
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE
            ) %>%
   column_spec(1, width = "2cm") %>%
   column_spec(2,width = "4.5cm") %>%
@@ -683,12 +702,10 @@ kable(
       align = "ccccc", booktabs = TRUE, linesep = ""
       ) %>%
   footnote(
-           general = c(
-                       "Note: Standard errors are in parentheses and are clustered at the village level. The sample is restricted to village-years after a coal plant was built near the village.",
-                       "* p<0.10 ** p<0.05 *** p<0.01"
-                       ), 
+           "Note: Standard errors are in parentheses and are clustered at the village level. The sample is restricted to village-years after a coal plant was built near the village. * p<0.10 ** p<0.05 *** p<0.01", 
            general_title = "",
-           threeparttable = TRUE
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE
            ) %>%
   column_spec(1, width = "3cm") %>%
   column_spec(c(2:6),width = "2cm") %>%
@@ -711,12 +728,10 @@ kable(
       align = "cc", booktabs = TRUE, linesep = ""
       ) %>%
   footnote(
-           general = c(
-                       "Note: Standard errors are in parentheses and are clustered at the village level.",
-                       "* p<0.10 ** p<0.05 *** p<0.01"
-                       ), 
+           "Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01", 
            general_title = "",
-           threeparttable = TRUE
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE
            ) %>%
   column_spec(1, width = "3cm") %>%
   column_spec(c(2:3),width = "2cm") %>%
@@ -752,12 +767,10 @@ kable(
       align = "cccccc", booktabs = TRUE, linesep = ""
       ) %>%
   footnote(
-           general = c(
-                       "Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education.",
-                       "* p<0.10 ** p<0.05 *** p<0.01"
-                       ), 
+           "Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education. * p<0.10 ** p<0.05 *** p<0.01", 
            general_title = "",
-           threeparttable = TRUE
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE
            ) %>%
   column_spec(1, width = "3cm") %>%
   column_spec(c(2:7),width = "1.5cm") %>%
@@ -780,12 +793,10 @@ kable(
       align = "cccccc", booktabs = TRUE, linesep = ""
       ) %>%
   footnote(
-           general = c(
-                       "Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education.",
-                       "* p<0.10 ** p<0.05 *** p<0.01"
-                       ), 
+           "Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education. * p<0.10 ** p<0.05 *** p<0.01", 
            general_title = "",
-           threeparttable = TRUE
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE
            ) %>%
   column_spec(1, width = "3cm") %>%
   column_spec(c(2:7),width = "1.5cm") %>%

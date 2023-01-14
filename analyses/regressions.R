@@ -21,6 +21,61 @@ getwd()    # check
 
 
 
+# Where do plants open?
+villages90 <- read_csv("data/clean/census_plants/villages90.csv")
+villages90 <- villages90 %>% mutate(
+                                    literacy = pc91_pca_p_lit/pc91_pca_tot_p,
+                                    pop = pc91_pca_tot_p,
+                                    scst_prop = (pc91_pca_p_sc + pc91_pca_p_st)/pop,
+                                    tar_road = pc91_vd_tar_road
+                                    )
+villages00 <- read_csv("data/clean/census_plants/villages00.csv")
+villages00 <- villages00 %>% group_by(shrid) %>%
+                             mutate(
+                                    literacy = sum(pc01_pca_p_lit)/sum(pc01_pca_tot_p),
+                                    pop = sum(pc01_pca_tot_p),
+                                    scst_prop = (sum(pc01_pca_p_sc) + sum(pc01_pca_p_st))/pop,
+                                    tar_road = max(pc01_vd_tar_road)
+                                    ) %>%
+                              filter(row_number()==1) %>%
+                              ungroup()
+monsoon <- read_csv("data/clean/census_plants/monsoon2002.csv")
+monsoon <- monsoon %>% group_by(shrid) %>% 
+                        mutate(ag_prod = log(mean(mean))) %>%
+                        filter(row_number()==1) %>%
+                        ungroup()
+villages00 <- villages00 %>% left_join(monsoon, by = "shrid")
+
+
+reg1 <- feols(plants90 ~ log(pop) + literacy + tar_road, data = villages90, vcov = "hetero")
+reg2 <- feols(plants00 ~ log(pop) + literacy + tar_road, data = villages90 %>% filter(plants90==0), vcov = "hetero")
+reg3 <- feols(plants00 ~ ag_prod + log(pop) + literacy + tar_road, data = villages00, vcov = "hetero")
+reg4 <- feols(plants10 ~ ag_prod + log(pop) + literacy + tar_road, data = villages00 %>% filter(plants00==0), vcov = "hetero")
+
+plantresultstable <- etable(
+                          reg1, reg2, reg3, reg4,
+                          se.below = TRUE,
+                          depvar = FALSE,
+                          signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+                          digits = 3,
+                          fitstat = c("n"),
+                          coefstat = "se",
+                          extralines = list("Sub-sample" = c("all", "no plant", "all", "no plant"))
+                          )
+plantresultstable <- plantresultstable[-c(1:2,12:13),]
+plantresultstable <- as.matrix(plantresultstable)
+rownames(plantresultstable) <- c("pop (log)", "", "literacy (prop)", "", "has paved road", "", "ag productivity", "", 
+                                "sub-sample", "observations")
+saveRDS(plantresultstable, "pollution_development/draft/tables/plantresultstable.rds") 
+
+
+
+
+
+
+
+
+
 pollution <- read_csv(paste0("data/clean/pm25/all_combined.csv"))
 pollution <- pollution %>% mutate(
                                   date = as_date(paste0(year, "-", month, "-01")),
@@ -103,6 +158,7 @@ df <- df %>% group_by(shrid, season) %>%
                 arrange(shrid, season, year) %>% 
                 mutate(original_yield = log(yield[1])) %>%
                 ungroup()
+
 
 # And district identifiers
 villages_overlap <- read_sf("data/spatial/villages_overlap/villages_overlap.shp")
