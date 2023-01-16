@@ -260,6 +260,36 @@ saveRDS(yieldtabletwo_merge, "pollution_development/draft/tables/yieldtabletwo.r
 
 
 
+df <- df %>% mutate(pm = (pm25/1000))
+yield1 <- feols(log(yield) ~ pm25 | village^season + year, data = df, cluster = c("village"))
+yield2 <- feols(log(yield) ~ pm25 + rain_z | village^season + year, data = df, cluster = c("village"))
+yield3 <- feols(log(yield) ~ pm25 + rain_z | village^season + year^season^distfe, data = df, cluster = c("village"))
+yield4 <- feols(log(yield) ~ pm25 + rain_z | village + year, data = df %>% filter(season=="monsoon"), cluster = c("village"))
+yield5 <- feols(log(yield) ~ pm25 + rain_z | village + year, data = df %>% filter(season=="winter"), cluster = c("village"))
+
+yieldtable <- etable(
+                      yield1, yield2, yield3, yield4, yield5,
+                      se.below = TRUE,
+                      depvar = FALSE,
+                      signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+                      digits = 3,
+                      fitstat = c("n"),
+                      coefstat = "se"
+                      #extralines = list("Sub-sample" = c("all", "all", "all", "monsoon", "winter"))
+                      )
+yieldtable <- yieldtable[-c(10,11),]
+# Turn to matrix so that duplicate row names are allowed
+yieldtable <- as.matrix(yieldtable)
+rownames(yieldtable) <- c("particulate matter", "(PM 2.5, '000s)", "rain (z)", "", 
+                          "fixed effects:", "village-season", "year", "district-year-season", "village", "observations")
+yieldtable[5,] <- ""
+yieldtable[1,1] <- "0.0000"
+yieldtable[2,1] <- "(0.0000)"
+saveRDS(yieldtable, "pollution_development/draft/tables/yieldtablepm.rds")
+
+
+
+
 
 
 df <- df %>% mutate(pm = (pm25/1000))
