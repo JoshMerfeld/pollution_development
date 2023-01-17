@@ -182,12 +182,15 @@ summary(df$wind*10)
 # Min. 1st Qu.  Median    Mean  3rd Qu.   Max. 
 # 0.00    0.00    2.00   14.33   14.00  153.00 
 
+# Mean, divided by ten (for presentation)
+df <- df %>% mutate(temp_mean = (tmax_mean + tmin_mean)/20)
+
 
 yield1 <- feols(log(yield) ~ wind | village^season + year, data = df, cluster = c("village"))
-yield2 <- feols(log(yield) ~ wind + rain_z | village^season + year, data = df, cluster = c("village"))
-yield3 <- feols(log(yield) ~ wind + rain_z | village^season + year^season^distfe, data = df, cluster = c("village"))
-yield4 <- feols(log(yield) ~ wind + rain_z | village + year, data = df %>% filter(season=="monsoon"), cluster = c("village"))
-yield5 <- feols(log(yield) ~ wind + rain_z | village + year, data = df %>% filter(season=="winter"), cluster = c("village"))
+yield2 <- feols(log(yield) ~ wind + rain_z + temp_mean | village^season + year, data = df, cluster = c("village"))
+yield3 <- feols(log(yield) ~ wind + rain_z + temp_mean | village^season + year^season^distfe, data = df, cluster = c("village"))
+yield4 <- feols(log(yield) ~ wind + rain_z + temp_mean | village + year, data = df %>% filter(season=="monsoon"), cluster = c("village"))
+yield5 <- feols(log(yield) ~ wind + rain_z + temp_mean | village + year, data = df %>% filter(season=="winter"), cluster = c("village"))
 
 yieldtable <- etable(
                       yield1, yield2, yield3, yield4, yield5,
@@ -199,22 +202,22 @@ yieldtable <- etable(
                       coefstat = "se"
                       #extralines = list("Sub-sample" = c("all", "all", "all", "monsoon", "winter"))
                       )
-yieldtable <- yieldtable[-c(10,11),]
+yieldtable <- yieldtable[-c(12,13),]
 # Turn to matrix so that duplicate row names are allowed
 yieldtable <- as.matrix(yieldtable)
-rownames(yieldtable) <- c("wind", "", "rain (z)", "", 
+rownames(yieldtable) <- c("wind", "", "rain (z)", "", "mean temp (10s)", "",
                           "fixed effects:", "village-season", "year", "district-year-season", "village", "observations")
-yieldtable[5,] <- ""
+yieldtable[7,] <- ""
 saveRDS(yieldtable, "pollution_development/draft/tables/yieldtable.rds")
 
 
 
 
 yield1 <- feols(log(yield) ~ 1 | village^season + year | pm25 ~ wind, data = df, cluster = c("village"))
-yield2 <- feols(log(yield) ~ rain_z | village^season + year | pm25 ~ wind, data = df, cluster = c("village"))
-yield3 <- feols(log(yield) ~ rain_z | village^season + year^season^distfe | pm25 ~ wind, data = df, cluster = c("village"))
-yield4 <- feols(log(yield) ~ rain_z | village + year | pm25 ~ wind, data = df %>% filter(season=="monsoon"), cluster = c("village"))
-yield5 <- feols(log(yield) ~ rain_z | village + year | pm25 ~ wind, data = df %>% filter(season=="winter"), cluster = c("village"))
+yield2 <- feols(log(yield) ~ rain_z + temp_mean | village^season + year | pm25 ~ wind, data = df, cluster = c("village"))
+yield3 <- feols(log(yield) ~ rain_z + temp_mean | village^season + year^season^distfe | pm25 ~ wind, data = df, cluster = c("village"))
+yield4 <- feols(log(yield) ~ rain_z + temp_mean | village + year | pm25 ~ wind, data = df %>% filter(season=="monsoon"), cluster = c("village"))
+yield5 <- feols(log(yield) ~ rain_z + temp_mean | village + year | pm25 ~ wind, data = df %>% filter(season=="winter"), cluster = c("village"))
 
 
 yieldtabletwo <- etable(
@@ -245,15 +248,15 @@ rownames(new_row) <- c("First stage:")
 colnames(new_row) <- colnames(yieldtabletwo)
 
 
-yieldtabletwo_merge <- rbind(yieldtabletwo[-c(10:11),], new_row, yieldtabletwo1[1:4,])
+yieldtabletwo_merge <- rbind(yieldtabletwo[-c(12:13),], new_row, yieldtabletwo1[1:6,])
 # Turn to matrix so that duplicate row names are allowed
 yieldtabletwo_merge <- as.matrix(yieldtabletwo_merge)
 
-rownames(yieldtabletwo_merge) <- c("particulate matter", "(PM 2.5)", "rain (z)", "",
+rownames(yieldtabletwo_merge) <- c("particulate matter", "(PM 2.5)", "rain (z)", "", "mean temp (10s)", "",
                                    "fixed effects:", "village-season", "year", "district-year-season", "village", 
                                    "observations",
-                                   "first stage:", "wind", " ", "rain (z)", " ")
-yieldtabletwo_merge[5,] <- " "
+                                   "first stage:", "wind", " ", "rain (z)", " ", "mean temp (10s)", "")
+yieldtabletwo_merge[7,] <- " "
 saveRDS(yieldtabletwo_merge, "pollution_development/draft/tables/yieldtabletwo.rds")
 
 
@@ -262,10 +265,10 @@ saveRDS(yieldtabletwo_merge, "pollution_development/draft/tables/yieldtabletwo.r
 
 df <- df %>% mutate(pm = (pm25/1000))
 yield1 <- feols(log(yield) ~ pm25 | village^season + year, data = df, cluster = c("village"))
-yield2 <- feols(log(yield) ~ pm25 + rain_z | village^season + year, data = df, cluster = c("village"))
-yield3 <- feols(log(yield) ~ pm25 + rain_z | village^season + year^season^distfe, data = df, cluster = c("village"))
-yield4 <- feols(log(yield) ~ pm25 + rain_z | village + year, data = df %>% filter(season=="monsoon"), cluster = c("village"))
-yield5 <- feols(log(yield) ~ pm25 + rain_z | village + year, data = df %>% filter(season=="winter"), cluster = c("village"))
+yield2 <- feols(log(yield) ~ pm25 + rain_z + temp_mean | village^season + year, data = df, cluster = c("village"))
+yield3 <- feols(log(yield) ~ pm25 + rain_z + temp_mean | village^season + year^season^distfe, data = df, cluster = c("village"))
+yield4 <- feols(log(yield) ~ pm25 + rain_z + temp_mean | village + year, data = df %>% filter(season=="monsoon"), cluster = c("village"))
+yield5 <- feols(log(yield) ~ pm25 + rain_z + temp_mean | village + year, data = df %>% filter(season=="winter"), cluster = c("village"))
 
 yieldtable <- etable(
                       yield1, yield2, yield3, yield4, yield5,
@@ -277,46 +280,17 @@ yieldtable <- etable(
                       coefstat = "se"
                       #extralines = list("Sub-sample" = c("all", "all", "all", "monsoon", "winter"))
                       )
-yieldtable <- yieldtable[-c(10,11),]
+yieldtable <- yieldtable[-c(12,13),]
 # Turn to matrix so that duplicate row names are allowed
 yieldtable <- as.matrix(yieldtable)
-rownames(yieldtable) <- c("particulate matter", "(PM 2.5, '000s)", "rain (z)", "", 
+rownames(yieldtable) <- c("particulate matter", "(PM 2.5, '000s)", "rain (z)", "", "mean temp (10s)", "",
                           "fixed effects:", "village-season", "year", "district-year-season", "village", "observations")
-yieldtable[5,] <- ""
+yieldtable[7,] <- ""
 yieldtable[1,1] <- "0.0000"
 yieldtable[2,1] <- "(0.0000)"
 saveRDS(yieldtable, "pollution_development/draft/tables/yieldtablepm.rds")
 
 
-
-
-
-
-df <- df %>% mutate(pm = (pm25/1000))
-yield1 <- feols(log(yield) ~ pm | village^season + year, data = df, cluster = c("village"))
-yield2 <- feols(log(yield) ~ pm + rain_z | village^season + year, data = df, cluster = c("village"))
-yield3 <- feols(log(yield) ~ pm + rain_z | village^season + year^season^distfe, data = df, cluster = c("village"))
-yield4 <- feols(log(yield) ~ pm + rain_z | village + year, data = df %>% filter(season=="monsoon"), cluster = c("village"))
-yield5 <- feols(log(yield) ~ pm + rain_z | village + year, data = df %>% filter(season=="winter"), cluster = c("village"))
-
-yieldtable <- etable(
-                      yield1, yield2, yield3, yield4, yield5, 
-                      se.below = TRUE,
-                      depvar = FALSE,
-                      signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
-                      digits = 3,
-                      fitstat = c("n"),
-                      coefstat = "se"
-                      #extralines = list("Sub-sample" = c("all", "all", "monsoon", "winter"))
-                      )
-yieldtable <- yieldtable[-11,]
-yieldtable <- yieldtable[-10,]
-# Turn to matrix so that duplicate row names are allowed
-yieldtable <- as.matrix(yieldtable)
-rownames(yieldtable) <- c("particulate matter", "(PM 2.5, '000s)", "rain (z)", "", "sub-sample", 
-                          "fixed effects:", "village-season", "year", "village", "observations")
-yieldtable[6,] <- " "
-saveRDS(yieldtable, "pollution_development/draft/tables/yieldtablePM.rds")
 
 
 
@@ -330,11 +304,11 @@ df <- df %>% group_by(shrid) %>%
 
 
 
-yield1 <- feols(log(yield) ~ wind + rain_z | village^season + year, data = df %>% filter(wind_max>wind_max_median), cluster = c("village"))
-yield2 <- feols(log(yield) ~ wind + rain_z | village^season + year, data = df %>% filter(wind_max<=wind_max_median), cluster = c("village"))
-yield3 <- feols(log(yield) ~ wind*rain_z | village^season + year, data = df, cluster = c("village"))
-yield4 <- feols(log(yield) ~ wind + wind^2 + rain_z | village^season + year, data = df, cluster = c("village"))
-yield5 <- feols(log(yield) ~ wind*original_yield + rain_z | village^season + year, data = df, cluster = c("village"))
+yield1 <- feols(log(yield) ~ wind + rain_z + temp_mean | village^season + year, data = df %>% filter(wind_max>wind_max_median), cluster = c("village"))
+yield2 <- feols(log(yield) ~ wind + rain_z + temp_mean | village^season + year, data = df %>% filter(wind_max<=wind_max_median), cluster = c("village"))
+yield3 <- feols(log(yield) ~ wind*rain_z + temp_mean | village^season + year, data = df, cluster = c("village"))
+yield4 <- feols(log(yield) ~ wind + wind^2 + rain_z + temp_mean | village^season + year, data = df, cluster = c("village"))
+yield5 <- feols(log(yield) ~ wind*original_yield + rain_z + temp_mean | village^season + year, data = df, cluster = c("village"))
 
 yieldtablehet <- etable(
                         yield1, yield2, yield3, yield4, yield5,
@@ -345,10 +319,10 @@ yieldtablehet <- etable(
                         fitstat = c("n"),
                         coefstat = "se"
                         )
-yieldtablehet <- yieldtablehet[-c(14,15),]
-yieldtablehet[11,] <- ""
+yieldtablehet <- yieldtablehet[-c(16,17),]
+yieldtablehet[13,] <- ""
 yieldtablehet <- as.matrix(yieldtablehet)
-rownames(yieldtablehet) <- c("wind", "", "rain (z)", "", "wind x rain", "", "wind squared", "", "wind x starting yield", "",
+rownames(yieldtablehet) <- c("wind", "", "rain (z)", "", "mean temp (10s)", "", "wind x rain", "", "wind squared", "", "wind x starting yield", "",
                              "fixed effects:", "village-season", "year", "observations")
 saveRDS(yieldtablehet, "pollution_development/draft/tables/yieldtablehet.rds")
 
@@ -362,8 +336,8 @@ saveRDS(yieldtablehet, "pollution_development/draft/tables/yieldtablehet.rds")
 df <- df %>% mutate(shrid_season = paste0(shrid, "-", season))
 df <- panel(df, ~ shrid_season + year, duplicate.method = "first")
 
-yield1 <- feols(log(yield) ~ f(wind, -1:1) + rain_z | village^season + year, data = df, cluster = c("village"))
-yield2 <- feols(log(yield) ~ f(wind, -1:1) + rain_z | village^season + year^season^distfe, data = df, cluster = c("village"))
+yield1 <- feols(log(yield) ~ f(wind, -1:1) + rain_z + temp_mean | village^season + year, data = df, cluster = c("village"))
+yield2 <- feols(log(yield) ~ f(wind, -1:1) + rain_z + temp_mean | village^season + year^season^distfe, data = df, cluster = c("village"))
 
 
 yieldtableleads <- etable(
@@ -375,10 +349,12 @@ yieldtableleads <- etable(
                         fitstat = c("n"),
                         coefstat = "se"
                         )
-yieldtableleads <- yieldtableleads[-c(13,14),]
-yieldtableleads[9,] <- ""
+yieldtableleads <- yieldtableleads[-c(15,16),]
+yieldtableleads[11,] <- ""
+yieldtableleads[5,2] <- "0.0000"
+yieldtableleads[6,2] <- "(0.0000)"
 yieldtableleads <- as.matrix(yieldtableleads)
-rownames(yieldtableleads) <- c("wind (lag)", "", "wind", "", "wind (lead)", "", "rain (z)", "",
+rownames(yieldtableleads) <- c("wind (lag)", "", "wind", "", "wind (lead)", "", "rain (z)", "", "mean temp (10s)", "",
                              "fixed effects:", "village-season", "year", "district-year-season", "observations")
 saveRDS(yieldtableleads, "pollution_development/draft/tables/yieldtableleads.rds")
 
@@ -408,10 +384,10 @@ df_new <- df_new %>% group_by(shrid) %>%
 
 
 yield1 <- feols(log(yield) ~ wind | village^season + year, data = df_new, cluster = c("village"))
-yield2 <- feols(log(yield) ~ wind + rain_z | village^season + year, data = df_new, cluster = c("village"))
-yield3 <- feols(log(yield) ~ wind + rain_z | village^season + year^season^distfe, data = df_new, cluster = c("village"))
-yield4 <- feols(log(yield) ~ wind + rain_z | village + year, data = df_new %>% filter(season=="monsoon"), cluster = c("village"))
-yield5 <- feols(log(yield) ~ wind + rain_z | village + year, data = df_new %>% filter(season=="winter"), cluster = c("village"))
+yield2 <- feols(log(yield) ~ wind + rain_z + temp_mean | village^season + year, data = df_new, cluster = c("village"))
+yield3 <- feols(log(yield) ~ wind + rain_z + temp_mean | village^season + year^season^distfe, data = df_new, cluster = c("village"))
+yield4 <- feols(log(yield) ~ wind + rain_z + temp_mean | village + year, data = df_new %>% filter(season=="monsoon"), cluster = c("village"))
+yield5 <- feols(log(yield) ~ wind + rain_z + temp_mean | village + year, data = df_new %>% filter(season=="winter"), cluster = c("village"))
 
 yieldtable <- etable(
                       yield1, yield2, yield3, yield4, yield5,
@@ -423,12 +399,12 @@ yieldtable <- etable(
                       coefstat = "se"
                       #extralines = list("Sub-sample" = c("all", "all", "all", "monsoon", "winter"))
                       )
-yieldtable <- yieldtable[-c(10,11),]
+yieldtable <- yieldtable[-c(12,13),]
 # Turn to matrix so that duplicate row names are allowed
 yieldtable <- as.matrix(yieldtable)
-rownames(yieldtable) <- c("wind", "", "rain (z)", "", 
+rownames(yieldtable) <- c("wind", "", "rain (z)", "", "mean temp (10s)", "",
                           "fixed effects:", "village-season", "year", "district-year-season", "village", "observations")
-yieldtable[5,] <- ""
+yieldtable[7,] <- ""
 saveRDS(yieldtable, "pollution_development/draft/tables/yieldtablepostplant.rds")
 
 

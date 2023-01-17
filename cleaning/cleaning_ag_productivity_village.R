@@ -77,6 +77,17 @@ for (year in 2002:2013){
   rainfall$rain_total <- apply(rainfall[,c(2:6)], 1, sum)
   colnames(rainfall) <- c("shrid", "rain_m1", "rain_m2", "rain_m3", "rain_m4", "rain_m5", "rain_total")
   rainfall$season <- "monsoon"
+  # temp
+  tempMax <- read_csv(paste0("data/clean/terra/tmax", year, ".csv"))
+  tempMax <- tempMax[, c(1, 7:11)]
+  tempMax$tmax_mean <- apply(tempMax[,c(2:6)], 1, mean)
+  colnames(tempMax) <- c("shrid", "tmax_m1", "tmax_m2", "tmax_m3", "tmax_m4", "tmax_m5", "tmax_mean")
+  tempMax$season <- "monsoon"
+  tempMin <- read_csv(paste0("data/clean/terra/tmax", year, ".csv"))
+  tempMin <- tempMin[, c(1, 7:11)]
+  tempMin$tmin_mean <- apply(tempMin[,c(2:6)], 1, mean)
+  colnames(tempMin) <- c("shrid", "tmin_m1", "tmin_m2", "tmin_m3", "tmin_m4", "tmin_m5", "tmin_mean")
+  tempMin$season <- "monsoon"
   # Load the extracted values from above
   extracted_values <- read_csv(paste0("data/clean/ag_productivity/monsoon", year, ".csv"))
   # Fix some mistakes in the extraction
@@ -85,7 +96,45 @@ for (year in 2002:2013){
                         mutate(mean = mean(mean)) %>% 
                         filter(row_number()==1) %>% 
                         ungroup()
+  rainfall <- rainfall %>% 
+              group_by(shrid) %>% 
+              mutate(
+                     rain_m1 = mean(rain_m1),
+                     rain_m2 = mean(rain_m2),
+                     rain_m3 = mean(rain_m3),
+                     rain_m4 = mean(rain_m4),
+                     rain_m5 = mean(rain_m5),
+                     rain_total = mean(rain_total)
+                     ) %>% 
+              filter(row_number()==1) %>% 
+              ungroup()
+  tempMax <- tempMax %>% 
+              group_by(shrid) %>% 
+              mutate(
+                     tmax_m1 = mean(tmax_m1),
+                     tmax_m2 = mean(tmax_m2),
+                     tmax_m3 = mean(tmax_m3),
+                     tmax_m4 = mean(tmax_m4),
+                     tmax_m5 = mean(tmax_m5),
+                     tmax_mean = mean(tmax_mean)
+                     ) %>% 
+              filter(row_number()==1) %>% 
+              ungroup()
+  tempMin <- tempMin %>% 
+              group_by(shrid) %>% 
+              mutate(
+                     tmin_m1 = mean(tmin_m1),
+                     tmin_m2 = mean(tmin_m2),
+                     tmin_m3 = mean(tmin_m3),
+                     tmin_m4 = mean(tmin_m4),
+                     tmin_m5 = mean(tmin_m5),
+                     tmin_mean = mean(tmin_mean)
+                     ) %>% 
+              filter(row_number()==1) %>% 
+              ungroup()
   extracted_values <- extracted_values %>% left_join(rainfall, by = "shrid")
+  extracted_values <- extracted_values %>% left_join(tempMax, by = "shrid")
+  extracted_values <- extracted_values %>% left_join(tempMin, by = "shrid")
   
   # Winter is TWO years
   rainfall1 <- read_csv(paste0("data/clean/terra/precip", year, ".csv"))
@@ -98,6 +147,29 @@ for (year in 2002:2013){
   rainfall$rain_total <- apply(rainfall[,c(2:6)], 1, sum)
   colnames(rainfall) <- c("shrid", "rain_m1", "rain_m2", "rain_m3", "rain_m4", "rain_m5", "rain_total")
   rainfall$season <- "winter"
+  # Temp
+  tmax1 <- read_csv(paste0("data/clean/terra/tmax", year, ".csv"))
+  tmax1 <- tmax1[, c(1, 12:13)]
+  # Second year
+  tmax2 <- read_csv(paste0("data/clean/terra/tmax", year + 1, ".csv"))
+  tmax2 <- tmax2[, c(1, 2:4)]
+  
+  tempMax <- cbind(tmax1, tmax2[,-1])
+  tempMax$tmax_mean <- apply(tempMax[,c(2:6)], 1, mean)
+  colnames(tempMax) <- c("shrid", "tmax_m1", "tmax_m2", "tmax_m3", "tmax_m4", "tmax_m5", "tmax_mean")
+  tempMax$season <- "winter"
+  
+  tmin1 <- read_csv(paste0("data/clean/terra/tmin", year, ".csv"))
+  tmin1 <- tmin1[, c(1, 12:13)]
+  # Second year
+  tmin2 <- read_csv(paste0("data/clean/terra/tmin", year + 1, ".csv"))
+  tmin2 <- tmin2[, c(1, 2:4)]
+  
+  tempMin <- cbind(tmin1, tmin2[,-1])
+  tempMin$tmin_mean <- apply(tempMin[,c(2:6)], 1, mean)
+  colnames(tempMin) <- c("shrid", "tmin_m1", "tmin_m2", "tmin_m3", "tmin_m4", "tmin_m5", "tmin_mean")
+  tempMin$season <- "winter"
+  
   
   # Load the extracted values from above
   extracted_values_winter <- read_csv(paste0("data/clean/ag_productivity/winter", year, ".csv"))
@@ -106,7 +178,45 @@ for (year in 2002:2013){
                               mutate(mean = mean(mean)) %>% 
                               filter(row_number()==1) %>% 
                               ungroup()
+  rainfall <- rainfall %>% 
+              group_by(shrid) %>% 
+              mutate(
+                     rain_m1 = mean(rain_m1),
+                     rain_m2 = mean(rain_m2),
+                     rain_m3 = mean(rain_m3),
+                     rain_m4 = mean(rain_m4),
+                     rain_m5 = mean(rain_m5),
+                     rain_total = mean(rain_total)
+                     ) %>% 
+              filter(row_number()==1) %>% 
+              ungroup()
+  tempMax <- tempMax %>% 
+              group_by(shrid) %>% 
+              mutate(
+                     tmax_m1 = mean(tmax_m1),
+                     tmax_m2 = mean(tmax_m2),
+                     tmax_m3 = mean(tmax_m3),
+                     tmax_m4 = mean(tmax_m4),
+                     tmax_m5 = mean(tmax_m5),
+                     tmax_mean = mean(tmax_mean)
+                     ) %>% 
+              filter(row_number()==1) %>% 
+              ungroup()
+  tempMin <- tempMin %>% 
+              group_by(shrid) %>% 
+              mutate(
+                     tmin_m1 = mean(tmin_m1),
+                     tmin_m2 = mean(tmin_m2),
+                     tmin_m3 = mean(tmin_m3),
+                     tmin_m4 = mean(tmin_m4),
+                     tmin_m5 = mean(tmin_m5),
+                     tmin_mean = mean(tmin_mean)
+                     ) %>% 
+              filter(row_number()==1) %>% 
+              ungroup()
   extracted_values_winter <- extracted_values_winter %>% left_join(rainfall, by = "shrid")
+  extracted_values_winter <- extracted_values_winter %>% left_join(tempMax, by = "shrid")
+  extracted_values_winter <- extracted_values_winter %>% left_join(tempMin, by = "shrid")
   
   
   extracted_values <- rbind(extracted_values, extracted_values_winter)
