@@ -1,0 +1,528 @@
+---
+title: "Pollution, agricultural productivity, and development: Evidence from coal in plants in India"
+subtitle: 
+author: 
+  - "Joshua D. Merfeld <br> KDI School and IZA"
+date: '`r Sys.Date()`'
+output:
+  xaringan::moon_reader:
+    css: xaringan-themer.css
+    nature:
+      slideNumberFormat: "%current%"
+      highlightStyle: github
+      highlightLines: true
+      ratio: 16:9
+      countIncrementalSlides: true
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(
+  fig.width=9, fig.height=3.5, fig.retina=3,
+  out.width = "100%",
+  cache = FALSE,
+  echo = TRUE,
+  message = FALSE, 
+  warning = FALSE,
+  hiline = TRUE
+)
+
+
+library(sf)
+library(sp)
+library(tidyverse)
+library(gganimate)
+library(transformr)
+library(gifski)
+library(ggthemes)
+library(scales)
+library(RColorBrewer)
+library(kableExtra)
+library(ggpubr)
+library(rticles)
+library(stats)
+library(broom)
+library(extrafont)
+library(fixest)
+library(modelsummary)
+library(openxlsx)
+library(raster)
+library(lubridate)
+loadfonts()  # Must be run once in each session (markdown is a new "session" each time you render/knit)
+
+# Sets wd to folder this script is in so we can create relative paths instead of absolute paths
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+# We want to get the wd up to the main folder
+# Need to go up three levels
+setwd('..')
+setwd('..')
+setwd('..')
+# Double check
+getwd()    # check
+
+
+reportP <- function(pValue){
+  if (pValue < 0.001){
+    result <- "p < 0.001"
+  } else {
+    result <- sprintf("p = %.3f", pValue) # inserts a float into a string and simultaneously do rounding
+  }
+  return(result)
+}
+
+reportDec <- function(dec){
+  
+    result <- sprintf("%.3f", dec) # inserts a float into a string and simultaneously do rounding
+  
+  return(result)
+}
+
+reportDecOne <- function(dec){
+  
+    result <- sprintf("%.1f", dec) # inserts a float into a string and simultaneously do rounding
+  
+  return(result)
+}
+
+reportPercent <- function(dec){
+  
+    result <- sprintf("%.1f", 100*dec) # inserts a float into a string and simultaneously do rounding
+  
+  return(result)
+}
+
+commaNum <- function(large){
+  
+  
+  result <- formatC(large, big.mark = ",")
+
+  return(result)
+}
+
+
+# Shapefile of india
+india_shape <- read_sf("data/spatial/shapefiles/state.shp")
+
+
+
+# Coal plants
+### Load raw data ----------------------------------------------------------------------------------
+
+plants <- read.xlsx("data/raw/coal_plants.xlsx", sheet = "Units")
+# India only
+plants <- plants %>% filter(Country=="India")
+# Also want only things with a non-missing year
+plants <- plants %>% filter(is.na(Year)==F)
+
+# Just keep what we want 
+plants <- plants %>% dplyr::select(plant_id = ParentID, 
+                                   unit_id = Tracker.ID, 
+                                   capacity = `Capacity.(MW)`, 
+                                   year_built = Year, 
+                                   year_retired = RETIRED, 
+                                   lat = Latitude, 
+                                   lon = Longitude)
+
+plants <- plants %>% mutate(capacity = capacity/1000)
+
+# long
+plantsyearly <- c()
+for (year in 1990:2015){
+  plantstemp <- plants %>% filter(year_built<=year & (year_retired>year | is.na(year_retired)==TRUE))
+  plantstemp <- plantstemp %>%
+                  group_by(plant_id) %>%
+                  mutate(capacity = sum(capacity)) %>%
+                  filter(row_number()==1) %>%
+                  ungroup() %>%
+                  dplyr::select(plant_id, capacity, lat, lon)
+  plantstemp$year <- year
+  plantsyearly <- rbind(plantsyearly, plantstemp)
+}
+
+
+# Wind example
+# district
+districts <- read_sf(paste0("data/spatial/districts/districts.shp"))
+districts <- districts %>% 
+                dplyr::select(state = ST_CEN_CD, district = DT_CEN_CD, state_name = ST_NM, district_name = DISTRICT)
+districts <- districts %>% filter(state=="23" & district=="07")
+# Villages
+villages <- read_sf(paste0("data/spatial/villages_overlap/villages_overlap.shp"))
+villages <- villages %>% mutate(shrid = paste0(pc11_s_id, "-", pc11_tv_id)) %>%
+                          dplyr::select(shrid, state = ST_CEN_CD, district = DT_CEN_CD, state_name = ST_NM, district_name = DISTRICT)
+villages <- villages %>% filter(state=="23" & district=="07")
+# Go through two months worth of days
+date <- as_date("2010-01-01")
+villageswind <- c()
+for (add_day in 1:100){
+  wind <- read_csv(paste0("data/clean/wind_ntl/days/date_2010-", month(date), "-", day(date), ".csv")) %>% as_tibble()
+  wind <- wind[,1:2]
+  colnames(wind) <- c("shrid", "indicator")
+  villagestemp <- villages %>% left_join(wind, by = "shrid")
+  villagestemp$date <- date
+  
+  villageswind <- rbind(villageswind, villagestemp)
+  
+  date <- date + 1
+}
+
+villageswind <- villageswind %>% st_set_crs(st_crs(districts))
+
+
+
+
+# Tables
+plantresultstable <- readRDS("pollution_development/draft/tables/plantresultstable.rds")
+pollutiontable <- readRDS("pollution_development/draft/tables/pollutiontable.rds")
+yieldtable <- readRDS("pollution_development/draft/tables/yieldtable.rds")
+yieldtablepm <- readRDS("pollution_development/draft/tables/yieldtablepm.rds")
+yieldtabletwo <- readRDS("pollution_development/draft/tables/yieldtabletwo.rds")
+yieldtablehet <- readRDS("pollution_development/draft/tables/yieldtablehet.rds")
+pmeffects <- readRDS("pollution_development/draft/tables/yieldtablePM.rds")
+labortable <- readRDS("pollution_development/draft/tables/labortable.rds")
+labortablemonsoon <- readRDS("pollution_development/draft/tables/labortablemonsoon.rds")
+labortablewinter <- readRDS("pollution_development/draft/tables/labortablewinter.rds")
+labortableold <- readRDS("pollution_development/draft/tables/labortableold.rds")
+ntltable <- readRDS("pollution_development/draft/tables/ntltable.rds")
+yieldtableleads <- readRDS("pollution_development/draft/tables/yieldtableleads.rds")
+yieldtablepostplant <- readRDS("pollution_development/draft/tables/yieldtablepostplant.rds")
+laborplot <- readRDS("pollution_development/draft/tables/laborplot.rds")
+
+```
+
+```{r xaringan-themer, include=FALSE, warning=FALSE}
+library(xaringanthemer)
+# style_duo_accent(
+#   primary_color = "#006334",
+#   secondary_color = "#A7A9AC",
+#   inverse_header_color = "#FFFFFF"
+# )
+# style_mono_light(
+#                  base_color = "#006334"
+#                  )
+style_duo(
+          primary_color = "#A7A9AC", 
+          secondary_color = "#006334"
+          )
+```
+
+
+## Coal plants over time
+
+```{r plants, echo = FALSE, message = FALSE, warning = FALSE,}
+
+ggplot() +
+    geom_sf(data = india_shape, color = "gray85", fill = "gray80") +
+    geom_point(data = plantsyearly, 
+               aes(x = lon, y = lat, size = capacity),
+               colour = "#006334", alpha = .5) +
+    # Here comes the gganimate code
+    transition_manual(
+                      frames = year,
+                      cumulative = FALSE
+                      ) +
+    labs(title = "year: {current_frame}") +
+    theme(legend.position = "none")
+
+
+
+```
+
+
+
+
+
+
+---
+
+
+## Wind direction - first 100 days of 2010 in Guna district (MP)
+
+```{r wind, echo = FALSE, message = FALSE, warning = FALSE,}
+
+ggplot() +
+    geom_sf(data = districts, color = "gray85", fill = "gray80") +
+    geom_sf(data = villageswind, 
+            aes(fill = indicator),
+            alpha = .5) +
+    # Here comes the gganimate code
+    transition_manual(
+                      frames = date,
+                      cumulative = FALSE
+                      ) +
+    labs(title = "date: {current_frame}") +
+    theme(legend.position = "none")
+
+
+
+```
+
+
+
+
+
+
+
+---
+
+## Where do coal plants open?
+
+
+```{r plantresultstable, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+
+# Table
+colnames(plantresultstable) <- c("1991", "2001", "2001", "2011")
+kable(
+      plantresultstable, caption = "Local characteristics and the construction of coal plants",
+      align = "cccc", booktabs = TRUE, linesep = "", escape = FALSE
+      ) %>%
+  footnote(
+           "Note: Robust standard errors are in parentheses. The outcome in the first column is whether the village is within 30km of a coal plant in 1991. The second column is whether a village in 1991 will have a coal plant in 2001, conditional on not having one in 1991. The last two columns are similarly defined, except using 2001 and 2011 as the years. * p<0.10 ** p<0.05 *** p<0.01",
+           general_title = "",
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE,
+           escape = FALSE
+           ) %>%
+  column_spec(1, width = "3cm") %>%
+  column_spec(c(2:5),width = "2cm") %>%
+  row_spec(9, hline_after = TRUE) %>%
+  add_header_above(c(" ", "1991 census" = 2, "2001 census" = 2)) %>%
+  kable_classic_2()
+
+```
+
+
+
+
+
+
+
+---
+
+## Validating wind direction
+
+```{r pollutiontable, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+
+# Table
+colnames(pollutiontable) <- c("(1)", "(2)", "(3)", "(4)")
+kable(
+      pollutiontable, caption = "Wind direction and particulate matter",
+      align = "cccc", booktabs = TRUE, linesep = ""
+      ) %>%
+  footnote(
+           "Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01", 
+           general_title = "",
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE
+           ) %>%
+  column_spec(1, width = "4cm") %>%
+  column_spec(c(2:5),width = "2cm") %>%
+  row_spec(c(3), bold = TRUE) %>%
+  row_spec(6, hline_after = TRUE) %>%
+  add_header_above(c(" ", "1998-2015" = 2, "2002-2013" = 2)) %>%
+  kable_classic_2()
+
+```
+
+
+
+
+
+
+
+---
+
+## Effects of wind direction on agricultural productivity
+
+
+```{r yieldtable, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+
+# Table
+colnames(yieldtable) <- c("(1)", "(2)", "(3)", "(4)", "(5)")
+kable(
+      yieldtable, caption = "Wind direction and agricultural productivity",
+      align = "ccccc", booktabs = TRUE, linesep = ""
+      ) %>%
+  footnote(
+           "Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01", 
+           general_title = "",
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE
+           ) %>%
+  column_spec(1, width = "3cm") %>%
+  column_spec(c(2:6),width = "2cm") %>%
+  row_spec(7, bold = TRUE) %>%
+  row_spec(11, hline_after = TRUE) %>%
+  add_header_above(c(" ", "all" = 3, "monsoon" = 1, "winter" = 1)) %>%
+  kable_classic_2()
+
+```
+
+
+
+
+
+
+
+
+
+
+
+---
+
+## Effects of PM on agricultural productivity
+
+
+```{r yieldtablepm, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+
+# Table
+colnames(yieldtablepm) <- c("(1)", "(2)", "(3)", "(4)", "(5)")
+kable(
+      yieldtablepm, caption = "Particulate matter (PM 2.5) and agricultural productivity",
+      align = "ccccc", booktabs = TRUE, linesep = ""
+      ) %>%
+  footnote(
+           "Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01", 
+           general_title = "",
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE
+           ) %>%
+  column_spec(1, width = "3cm") %>%
+  column_spec(c(2:6),width = "2cm") %>%
+  row_spec(7, bold = TRUE) %>%
+  row_spec(11, hline_after = TRUE) %>%
+  add_header_above(c(" ", "all" = 3, "monsoon" = 1, "winter" = 1)) %>%
+  kable_classic_2()
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---
+
+## Effects of PM on agricultural productivity, IV estimates
+
+
+```{r yieldtabletwo, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+
+# Table
+colnames(yieldtabletwo) <- c("(1)", "(2)", "(3)", "(4)", "(5)")
+kable(
+      yieldtabletwo, caption = "Pollution and agricultural productivity, IV estimates",
+      align = "cccc", booktabs = TRUE, linesep = ""
+      ) %>%
+  footnote(
+           "Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01", 
+           general_title = "",
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE
+           ) %>%
+  column_spec(1, width = "3cm") %>%
+  column_spec(c(2:6),width = "2cm") %>%
+  row_spec(c(7,13), bold = TRUE) %>%
+  row_spec(c(11:12), hline_after = TRUE) %>%
+  add_header_above(c(" ", "all" = 3, "monsoon" = 1, "winter" = 1)) %>%
+  kable_classic_2()
+
+```
+
+
+
+
+
+
+
+
+---
+
+## Wind direction and labor allocation, by age
+
+
+```{r labortableold, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+
+# Table
+labortableold <- labortableold[,-1]
+colnames(labortableold) <- c("all", "self", "wage", "farm", "non-farm")
+kable(
+      labortableold, caption = "Wind direction and labor allocation, heterogeneity by age",
+      align = "ccccc", booktabs = TRUE, linesep = ""
+      ) %>%
+  footnote(
+           "Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education. * p<0.10 ** p<0.05 *** p<0.01", 
+           general_title = "",
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE
+           ) %>%
+  column_spec(1, width = "4cm") %>%
+  column_spec(c(2:6),width = "1.5cm") %>%
+  row_spec(c(10), hline_after = TRUE) %>%
+  row_spec(c(6,9), bold = TRUE) %>%
+  kable_classic_2()
+
+```
+
+
+
+
+
+
+
+---
+
+## Wind direction and growth of nightlights
+
+
+```{r ntltable, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+
+# Table
+colnames(ntltable) <- c("(1)", "(2)")
+kable(
+      ntltable, caption = "Wind direction and nightlight growth",
+      align = "cc", booktabs = TRUE, linesep = ""
+      ) %>%
+  footnote(
+           "Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01", 
+           general_title = "",
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE
+           ) %>%
+  column_spec(1, width = "3cm") %>%
+  column_spec(c(2:3),width = "2cm") %>%
+  row_spec(c(9), hline_after = TRUE) %>%
+  row_spec(c(5,8), bold = TRUE) %>%
+  kable_classic_2()
+
+```
+
+
+
+
+
+
+
+
+---
+
+## Conclusion
+
+
+
+
+
+
+
+
+
