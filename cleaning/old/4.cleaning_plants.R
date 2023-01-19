@@ -152,6 +152,7 @@ for (vil in 1:nrow(villages)){
 # Add india
 india_wind <- read_sf("data/spatial/shapefiles/state.shp")
 
+# NTOE: have since learned I could do this much easier just using lubridate. It is what it is. This still works.
 years <- c("2011", "2012", "2013", "2014", "2015")
 months <- c("01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12")
 month_days <- c("01", "02", "03", "04", "05", "06", "07", "08", "09")
