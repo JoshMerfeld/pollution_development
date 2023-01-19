@@ -6,6 +6,7 @@ rm(list = ls())
 
 library(tidyverse)
 library(lubridate)
+library(viridis)
 library(fixest)
 library(sf)
 
@@ -99,10 +100,35 @@ villages_overlap <- villages_overlap %>% mutate(shrid = paste0(pc11_s_id, "-", p
 pollution <- pollution %>% left_join(villages_overlap, by = "shrid")
 
 pollution <- pollution %>% group_by(shrid) %>%
-                              mutate(pm_abs_dev = abs(mean - mean(mean))) %>%
+                              mutate(pm_abs_dev = abs(mean - mean(mean)),
+                                     pm_dev = (mean - mean(mean)),
+                                     wind_dev = (wind - mean(wind))) %>%
+                              ungroup()
+pollution$month_int <- month(pollution$date)
+pollution <- pollution %>% group_by(shrid, month_int) %>%
+                              mutate(m_pm_dev = (mean - mean(mean)),
+                                     m_wind_dev = (wind - mean(wind))) %>%
                               ungroup()
 summary(pollution$pm_abs_dev)
-# mean 21.1
+summary(pollution$wind_dev)
+summary(pollution$m_wind_dev)
+summary(pollution$wind)
+
+
+
+# figures
+# Random 10 percent sample
+set.seed(12350)
+ggplot(data = pollution[sample(1:nrow(pollution), nrow(pollution)/10, replace = F),]) +
+      geom_smooth(aes(x = m_wind_dev, y = m_pm_dev), color = "#440154FF", se = FALSE, alpha = 0.75) +
+      labs(x = "wind",
+           y = "PM") +
+      theme_minimal()
+# won't save as RDS because it's simply too large
+ggsave("pollution_development/draft/tables/devplot.png")
+
+
+
 
 pol1 <- feols(mean ~ wind | village + month, data = pollution, cluster = c("village"))
 pol2 <- feols(mean ~ wind | village + month^distfe, data = pollution, cluster = c("village"))
@@ -439,7 +465,7 @@ df <- df %>% left_join(pollution, by = c("state_merge", "district_merge", "year"
 laborplot <- ggplot(data = df) +
                 geom_histogram(aes(x = date), binwidth = 7, color = "gray") + 
                 labs(x = "date",
-                     y = "households interviewed")
+                     y = "households interviewed") +
                 theme_minimal()
 saveRDS(laborplot, "pollution_development/draft/tables/laborplot.rds")
 

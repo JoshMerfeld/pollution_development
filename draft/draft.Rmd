@@ -4,7 +4,7 @@ author:
   - Joshua D. Merfeld^[KDI School of Public Policy and Management and IZA; merfeld@kdis.ac.kr]
 date: "`r Sys.Date()`"
 abstract: |
-  | \noindent The rapid increase in population in India from the 1990s through the 2010s led to the rapid construction of new coal power plants throughout the country. Using this roll-out combined with random changes in wind direction, I document negative effects of pollution from coal power plants on agricultural productivity throughout the country. Results suggest this decrease may be driven by a decline in labor allocation of the oldest half of my sample, though I cannot rule out direct effects of pollution on land productivity. These impacts spill over into aggregate economic growth, as well; nightlight growth is slower following years of higher exposure to pollution.
+  | \noindent I show that emissions from a common energy source lead to decreased productivity and growth. The rapid increase in population in India from the 1990s through the 2010s led to the rapid construction of new coal power plants throughout the country. Using this roll-out combined with random changes in wind direction, I document negative effects of pollution from coal power plants on agricultural productivity throughout the country. Results suggest this decrease may be driven by a decline in labor allocation of the oldest half of my sample, though I cannot rule out direct effects of pollution on land productivity. These impacts spill over into aggregate economic growth, as well; nightlight growth is slower following years of higher exposure to pollution.
   |
   | \textbf{\textit{Keywords}}: pollution, productivity, agriculture, labor, India
   | \textbf{\textit{JEL Codes}}: H40, I15, J22, O13, Q52, Q53
@@ -51,6 +51,7 @@ library(scales)
 library(RColorBrewer)
 library(kableExtra)
 library(ggpubr)
+library(ggthemes)
 library(rticles)
 library(stats)
 library(broom)
@@ -224,17 +225,17 @@ knitr::knit_hooks$set(plot=hook_plot_tex_footer)
 
 # Introduction
 
-Coal is one of the most common energy sources throughout the world. In 2021, energy generation from coal reached an all-time high,^[https://www.iea.org/reports/coal-fired-electricity] driven in part by rapid population growth throughout the world. Along with record energy production, coal plants also emit large amounts of pollution, leading to record coal-derived carbon dioxide emissions in 2021.^[*ibid.*]
+Coal is one of the most common energy sources throughout the world. In 2021, energy generation from coal reached an all-time high,^[www.iea.org/reports/coal-fired-electricity] driven in part by rapid population growth throughout the world. India is no exception to these trends. From 1990 to 2010, India's population grew by more than 40 percent.^[data.worldbank.org] This population growth led to a large increase in demand for power. While natural gas has become a popular alternative in much of the world, the Indian government met much of the increased demand through the construction of coal power plants. During those same two decades, power generation from all coal units of at least 30 megawatts increased by almost 140 percent, from 42.4 gigawatts to more than 100 gigawatts.^[globalenergymonitor.org/] There are no doubt positive effects from this increase in power generation; for example, electricity may lead to economic and productivity growth [@dinkelman2011effects;@kline2014local;@rud2012electricity;@van2017long], though electrification alone may not be a sufficient condition [@lee2020does].
 
-India is no exception to these trends. From 1990 to 2010, India's population grew by more than 40 percent.^[data.worldbank.org] This population growth led to a large increase in demand for power. While natural gas has become a popular alternative in much of the world, the Indian government met much of the increased demand through the construction of coal power plants. During those same two decades, power generation from all coal units of at least 30 megawatts increased by almost 140 percent, from 42.4 gigawatts to more than 100 gigawatts.^[https://globalenergymonitor.org/] There are no doubt positive effects from this increase in power generation; for example, electricity may lead to economic and productivity growth [@dinkelman2011effects;@kline2014local;@rud2012electricity;@van2017long], though electrification alone may not be a sufficient condition [@lee2020does].
-
-These improvements do not come without downsides, however, especially when it comes to power derived from coal. Pollutants from coal contribute to climate change and the phase out of coal energy is therefore a major climate goal [@iea2022]. Emissions from the production and burning of coal are also directly harmful to health and the environment, including pollutants like sulfur dioxide, nitrogen oxides, and mercury, to name but a few.^[https://www.eia.gov/energyexplained/coal/coal-and-the-environment.php] While the use of coal had been declining, recent events -- including Russia's invasion of Ukraine -- have led to an increase in the demand for coal.^[https://www.npr.org/2022/08/15/1117560560/a-rising-demand-for-coal-amidst-war-in-ukraine]
+These improvements do not come without downsides, however, especially when it comes to power derived from coal. Pollutants from coal contribute to climate change and the phase out of coal energy is therefore a major climate goal [@iea2022]. Emissions from the production and burning of coal are also directly harmful to health and the environment, including pollutants like sulfur dioxide, nitrogen oxides, and mercury, to name but a few.^[www.eia.gov/energyexplained/coal/coal-and-the-environment.php] While the use of coal had been declining, recent events -- including Russia's invasion of Ukraine -- have led to an increase in the demand for coal.^[www.npr.org/2022/08/15/1117560560/a-rising-demand-for-coal-amidst-war-in-ukraine]
 
 In this paper, I study the effects of emissions from coal power plants on agricultural productivity, labor allocation, and economic growth in India. Previous work has suggested that there may be harmful direct effects of air pollution [@heck1982assessment;@marshall1997hidden] and water pollution [@reddy2006impact] on agricultural productivity, including work showing that gold mines -- which release large amounts of pollutants into the surrounding environment -- lead to lower agricultural productivity in Ghana [@aragon2016polluting]. This paper, however, tackles the broader case of coal plants, which are a leading source of power throughout the world. I show that air pollution from these plants can lead to decreased agricultural productivity.
 
-I combine the roll out of coal plants in India with plausibly exogenous changes in wind direction -- in a similar spirit to @deryugina2019mortality -- to measure the effects of pollution from coal plants on key development outcomes. I first locate the location of coal plants in India by year. Using a village-level shapefile, I identify all villages that are located within 30km of a coal plant at any time during the sample period, which comprises the 1990s to the 2010s, with differences depending on data availability. I then download daily wind data and create an identifier for whether a village is located downwind from a coal plant on any given day, aggregating these daily values to different levels depending on the analysis. 
+Identifying the causal effects of pollution is difficult. For starters, the construction of coal plants is likely to be endogenous, though the relationship between construction and economic conditions is not a priori clear. On the one hand, governments may locate new plants in fast-growing areas, while on the other hand, they may decide to exact location of plants based on the political power of local citizens [@kopas2020environmental]. In the case of the data used here, for example, coal plants are constructed in areas with higher population and higher literacy (Table \@ref(tab:plantresultstable)). In terms of agriculture, higher productivity predicts more coal plants in a given year as well as the construction of a coal plant over the next decade, indicating possible bias when estimating OLS regressions of agricultural productivity on pollution levels. 
 
-After validating that wind direction is a strong predictor of particulate matter, I first document that the total number of days of being downwind from a coal power plant has a negative effect on overall agricultural productivity, using newly available estimates of India-wide agricultural (land) productivity. The within-village absolute deviation of wind exposure is around eight days, meaning that median changes in wind direction are responsible for fluctuations in agricultural productivity of around 2.4 percent, with changes of more than five percent from season to season being common. Using wind direction as an instrument for particulate matter, an increase of PM 2.5 by one microgram leads to an even larger decrease in agricultural productivity, at around 20 percent. This IV strategy is similar to that in @deryugina2019mortality, though they use general "high-pollution" wind directions while I concentrate only on wind directions from the location of a coal power plant.
+To identify the effects of air pollution on agricultural productivity, I instead combine the roll out of coal plants in India with plausibly exogenous changes in wind direction -- in a similar spirit to @deryugina2019mortality -- to measure the effects of pollution from coal plants on key development outcomes. I first locate the location of coal plants in India by year. Using a village-level shapefile, I identify all villages that are located within 30km of a coal plant at any time during the sample period, which comprises the 1990s to the 2010s, with differences depending on data availability. To measure exposure to emissions from coal plants, I calculate the direction from each coal plant to all villages within 30km. I then download daily wind data and create an identifier separately for each of the one-hundred-thousand-plus villages for whether a given village is located downwind from a coal plant on any given day. I then aggregate this exposure variable based on the desired analysis; for agricultural productivity, for example, I create an exposure variable measuring the total number of exposure days in the five-month agricultural season. Consistent with expectations, wind direction is a strong predictor of particulate matter at the monthly level. More days being located downwind from a coal power plant leads to higher average concentrations of particulate matter 2.5.
+
+I then document that the total number of days of being downwind from a coal power plant has a negative effect on overall agricultural productivity, using newly available estimates of India-wide agricultural (land) productivity. Just a single additional day of being downwind from a coal power plant leads to a decrease in predicted yields of 0.3 percent. The within-village absolute deviation of wind exposure is around eight days, meaning that median changes in wind direction are responsible for fluctuations in agricultural productivity of around 2.4 percent, with changes of more than five percent from season to season being common. Using wind direction as an instrument for particulate matter, an increase of PM 2.5 by one microgram per cubic meter leads to an even larger decrease in agricultural productivity, at around 20 percent. This IV strategy is similar to that in @deryugina2019mortality, though they use general "high-pollution" wind directions while I concentrate only on wind directions from the location of a coal power plant. The IV estimates indicate that the effect of pollution is more negative than na\"{i}ve OLS estimates indicate, which is consistent with the evidence on the construction of coal plants.
 
 These effects are apparently concentrated in villages that do not experience the most extreme exposure to pollution; villages with higher maximum exposure experience effects only around 10 percent as large as villages with lower maximum exposure. Additional heterogeneity analysis shows that, despite the results with respect to the maximum, the effects are increasing in *mean* exposure. I also show that the effects are largest in villages with the highest initial agricultural productivity and that pollution and rainfall shocks are compounding; higher exposure along with less rainfall increases the negative effect of either shock individually.
 
@@ -251,28 +252,30 @@ I also contribute to the more general literature on the effects of pollution on 
 The rest of the paper is organized as follows. I first discuss data and methodology. I break this section up into \autoref{data2}, which covers the multiple sources of data used in this paper; \autoref{identification}, which discusses the empirical strategy; and \autoref{validation}, which validates the wind direction variable using data on particulate matter. I present the main results in \autoref{results} before concluding in \autoref{conclusion}.
 
 
-# Data and methods \label{data}
+# Data and methods 
+\label{data}
 
-## Data \label{data2}
+## Data 
+\label{data2}
 
 The main goal of this paper is to examine whether exposure to exhaust from coal plants affects agricultural productivity, labor allocation, and economic growth. I use several sources of data, which I describe here and in Table \@ref(tab:data) in the appendix.
 
-The first set of data lists the location of coal plant across the globe. This data comes from Global Energy Monitor^[https://globalenergymonitor.org/projects/global-coal-plant-tracker/] and lists all units generating at least 30 megawatts of electricity. The data on coal plants includes the year of opening (and, if applicable, the year of retirement), the GPS (latitude/longitude) location of each plant, and the amount of power produced by the units at each plant. For this paper, I do not use the information on the capacity of the plant.
+The first set of data lists the location of coal plant across the globe. This data comes from Global Energy Monitor^[globalenergymonitor.org/projects/global-coal-plant-tracker/] and lists all units generating at least 30 megawatts of electricity. The data on coal plants includes the year of opening (and, if applicable, the year of retirement), the GPS (latitude/longitude) location of each plant, and the amount of power produced by the units at each plant. For this paper, I do not use the information on the capacity of the plant.
 
 ```{r plants, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Coal plants in India from 1990 to 2010", fig.footer = list("Note: The top figure shows the location of coal plants in 1990. The bottom figure shows the location of coal plants in 2010.")}
 
 plant1 <- ggplot() +
-                theme_minimal() +
-                geom_sf(data = india_shape2) +
-                geom_sf(data = plants1990, size = 0.75) +
+                theme_map() +
+                geom_sf(data = india_shape2, fill = NA, lwd = 0.01) +
+                geom_sf(data = plants1990, size = 0.75, color = "#440154FF") +
                 labs(x = "lon",
                      y = "lat",
                      subtitle = "Figure A: 1990")
 
 plant2 <- ggplot() +
-                theme_minimal() +
-                geom_sf(data = india_shape2) +
-                geom_sf(data = plants2010, size = 0.75) +
+                theme_map() +
+                geom_sf(data = india_shape2, fill = NA, lwd = 0.01) +
+                geom_sf(data = plants2010, size = 0.75, color = "#440154FF") +
                 labs(x = "lon",
                      y = "lat",
                      subtitle = "Figure B: 2010")
@@ -284,32 +287,42 @@ ggarrange(plant1, plant2)
 
 Figure \@ref(fig:plants) presents the location of coal plants in India for two specific years: 1990 and 2010. There is a clear increase in the prevalence of coal plants across the country over the two decades. Additionally, the overall capacity from coal plants increased from `r paste0(reportDecOne(sum(plants1990_capacity$capacity)))` gigawatts to `r paste0(reportDecOne(sum(plants2010_capacity$capacity)))` gigawats, an increase of `r paste0(reportPercent((sum(plants2010_capacity$capacity) - sum(plants1990_capacity$capacity))/sum(plants1990_capacity$capacity)))` percent in just 20 years. This increase is driven both by the rollout of new plants as well as the construction of new units at existing plants, the latter of which is not shown in Figure \@ref(fig:plants).
 
-The second dataset includes agricultural productivity for both the monsoon and winter seasons, from 2002 to 2018. To match other data, I only use the data up to 2013. This data comes from @gangopadhyay2022new and estimates land productivity (i.e. yield, in tons per hectare) for the major crops in India. They define the monsoon season as June to October and the winter season as November to March. I keep these definitions when matching across data below. This data is also publicly available from Nature's data-sharing website.^[https://springernature.figshare.com] Since the main regressions below use village fixed effects, any differences in cropping patterns across areas should not bias estimates on changes, as long as these patterns do not change markedly in response to pollution.
+The second dataset includes agricultural productivity for both the monsoon and winter seasons, from 2002 to 2018. To match other data, I only use the data up to 2013. This data comes from @gangopadhyay2022new and estimates land productivity (i.e. yield, in tons per hectare) for the major crops in India. They define the monsoon season as June to October and the winter season as November to March. I keep these definitions when matching across data below. This data is also publicly available from Nature's data-sharing website.^[springernature.figshare.com] Since the main regressions below use village fixed effects, any differences in cropping patterns across areas should not bias estimates on changes, as long as these patterns do not change markedly in response to pollution.
 
-The agricultural productivity data is available as raster files with a resolution of 500m. To aggregate this data up to a useful administrative unit, I use village-level shapefiles provided by @almn2021 and publicly available on the SHRUG platform.^[https://www.devdatalab.org/shrug_download/] I aggregate the agricultural productivity data to the village level by extracting mean productivity for each feature in the shapefile. I do this separately for each season -- monsoon and winter -- and each year, from 2002 to 2013.
+The agricultural productivity data is available as raster files with a resolution of 500m. To aggregate this data up to a useful administrative unit, I use village-level shapefiles provided by @almn2021 and publicly available on the SHRUG platform.^[www.devdatalab.org/shrug_download/] I aggregate the agricultural productivity data to the village level by extracting mean productivity for each feature in the shapefile. I do this separately for each season -- monsoon and winter -- and each year, from 2002 to 2013.
 
-To measure exposure to pollution from coal plants, I first locate all village centroids located within 30km from a coal plant in a given year. I choose 30km due to previous research on the effects of (air) pollution [@aragon2016polluting;@bencko1977health;@li2014health]. I then calculate the direction from coal plants to all village centroids within that 30km radius. To define exposure, I then pull daily wind direction data from the National Center for Atmospheric Research.^[https://climatedataguide.ucar.edu/] For each day, I document whether the wind is blowing towards each village centroid.^[I define "towards" as within five degrees to help take into account that I am using village centroids, using the x and y components of wind speed.] I then temporally aggregate this daily data depending on the temporal definition of the corresponding outcome. For example, agricultural productivity is defined across five months (e.g. the monsoon season is from June to October) so I count the total days a given village is exposed to wind blowing from _any_ coal plant within 30km during those five months.
+To measure exposure to pollution from coal plants, I first locate all village centroids located within 30km from a coal plant in a given year. I choose 30km due to previous research on the effects of (air) pollution [@aragon2016polluting;@bencko1977health;@li2014health]. I then calculate the direction from coal plants to all village centroids within that 30km radius. To define exposure, I then pull daily wind direction data from the National Center for Atmospheric Research.^[climatedataguide.ucar.edu/] For each day, I document whether the wind is blowing towards each village centroid.^[I define "towards" as within five degrees to help take into account that I am using village centroids, using the x and y components of wind speed.] I then temporally aggregate this daily data depending on the temporal definition of the corresponding outcome. For example, agricultural productivity is defined across five months (e.g. the monsoon season is from June to October) so I count the total days a given village is exposed to wind blowing from _any_ coal plant within 30km during those five months.
 
-```{r windexample, echo = FALSE, message = FALSE, warning = FALSE, fig.height = 8, fig.cap = "Wind direction and aggregation examples (2010-01-01)", fig.footer = list("Note: The left figure shows the average wind direction on January 1st, 2010. The points are the location of coal plants on that date. The right figure shows the distribution of pollution exposure in a specific district -- Guna district in Madhya Pradesh -- on the same date.")}
+```{r windexample, echo = FALSE, message = FALSE, warning = FALSE, fig.height = 8, fig.cap = "Wind direction and aggregation examples (2010-01-01)", fig.footer = list("Note: The top figure shows the average wind direction on January 1st, 2010, with zero degrees indicating north. The points are the location of coal plants on that date. The bottom figure shows the distribution of pollution exposure in a specific district -- Guna district in Madhya Pradesh -- on the same date.")}
 
 p1 <- ggplot() + 
-        theme_minimal() +
+        theme_map() +
         geom_sf(data = india_shape, fill = NA) +
         geom_tile(data = windexample, aes(x = x, y = y, fill = wind_example), alpha = 0.3) +
         scale_fill_viridis_c("wind direction\n(degrees)", option = "viridis") +
         geom_sf(data = plants2010, size = 0.5) +
         labs(x = "lon",
              y = "lat",
-             subtitle = "Figure A: Wind direction")
+             subtitle = "Figure A: Wind direction") +
+        theme(legend.position = c(0.6, 0.05),
+              legend.direction = "vertical",
+              legend.key.height = unit(0.4, 'cm'),
+              legend.text = element_text(size = 8),
+              legend.background=element_blank() )
 
 p2 <- ggplot() + 
-        theme_minimal() +
+        theme_map() +
         geom_sf(data = districts, fill = NA) +
         geom_sf(data = villages %>% filter(is.na(days_sum)==F), aes(fill = days_sum), lwd = NA) +
         scale_fill_viridis_c("exposure (days)", option = "viridis") +
         labs(x = "lon",
              y = "lat",
-             subtitle = "Figure B: Aggregation to district")
+             subtitle = "Figure B: Aggregation to district") +
+        theme(legend.position = c(0.5, 0.05),
+              legend.direction = "horizontal",
+              legend.key.width = unit(0.3, 'cm'),
+              legend.text = element_text(size = 8),
+              legend.background=element_blank() )
 
 ggarrange(p1, p2,
           nrow = 2)
@@ -318,7 +331,7 @@ ggarrange(p1, p2,
 
 The top panel in Figure \@ref(fig:windexample) is an example wind direction raster. The raster shows wind direction for the entirety of India on January 1st, 2010, as well as the location of coal power plants on that date. The prevailing winds on the date differ across the country and, though not shown in the figure, across days. This means that the overall exposure for a given area to coal plant emissions changes across time. I also pull data on particulate matter to help validate this proxy for exposure. This data comes from @hammer2020global and I also aggregate this to the village using the same method detailed above.
 
-To help understand some of the mechanisms driving the relationship between exposure to emissions and agricultural productivity, I also include household survey data. Unfortunately, I am not aware of any publicly available survey data that covers multiple years and has identifiers below the district level. For example, the ARIS-REDS data^[https://www.ncaer.org/project/additional-rural-incomes-survey-aris-rural-economic-demographic-survey-reds] includes GPS identifiers for one year, but that only allows GPS matching for a total of two years: 1999 and 2007/2008. The DHS, on the other hand, only has state-level identifiers (except for the newest two waves) and is also not a labor survey. Instead, I use the National Sample Survey (NSS) from the Ministry of Statistics and Programme Implementation. 
+To help understand some of the mechanisms driving the relationship between exposure to emissions and agricultural productivity, I also include household survey data. Unfortunately, I am not aware of any publicly available survey data that covers multiple years and has identifiers below the district level. For example, the ARIS-REDS data^[www.ncaer.org/project/additional-rural-incomes-survey-aris-rural-economic-demographic-survey-reds] includes GPS identifiers for one year, but that only allows GPS matching for a total of two years: 1999 and 2007/2008. The DHS, on the other hand, only has state-level identifiers (except for the newest two waves) and is also not a labor survey. Instead, I use the National Sample Survey (NSS) from the Ministry of Statistics and Programme Implementation. 
 
 The NSS is a nationally representative survey that was conducted every couple of years until relatively recently. Many rounds of the NSS also included a module on employment that asked about labor allocation over the previous seven days. I use the 61st, 62nd, 64th, 66th, and 68th rounds of the NSS, all of which include the employment module. The publicly available data also includes the date of survey, which allows me to match pollution exposure to the exact day of the survey. 
 
@@ -328,7 +341,8 @@ Finally, I use nightlights as a measure of economic growth [@henderson2012measur
 
 
 
-## Identification \label{identification}
+## Identification 
+\label{identification}
 
 To calculate the effects of exposure to pollution on different outcomes, I rely on fixed effects and the differential exposure driven by plausibly exogenous wind direction, conditional on total rainfall and average temperature. The regression is of the form
 \begin{gather} y_{it} = \alpha_{i} + \gamma_{t} + \beta wind_{it} + \delta rain_{it} + \psi temp_{it} + \varepsilon_{it}, \end{gather}
@@ -336,7 +350,6 @@ where $y_{it}$ is outcome $y$ for unit $i$ at time $t$, $\alpha$ is a geographic
 
 Identification relies on changes in wind direction across time for the same geographic units. In other words, conditional on the fixed effects and weather, I assume changes in wind direction are as good as random and uncorrelated with the outcome -- e.g. agricultural productivity -- except through exposure to pollution. One major threat to identification is that the building of a coal plant could lead to a spurious correlation between the exposure variable and the outcome. Specifically, since exposure is defined as zero prior to the building of a coal plant, the exposure variable itself might be endogenous even though wind direction is not. To help allay these concerns, I estimate additional regressions restricting the sample to only time periods after which a given location has a coal plant. I also present results using leads to show that future wind direction does not seem to predict current outcomes. 
 
-## Where do coal plants open?
 
 A large question looms with respect to identification: what are the characteristics of areas near the construction of new coal plants? While I examine the identifying assumptions in a panel context below, I begin with this static question here. Table \@ref(tab:plantresultstable) presents four separate regressions. The first two columns use 1991 census data -- downloaded from SHRUG -- and the second two columns use 2001 census data, all at the village level. The first column presents results from regressing a dummy for whether there is a coal plant within 30km in 1991 on several census variables. Villages with higher populations and higher literacy in 1991 are more likely to be near a coal plant at the time. Interestingly, however, they are less likely to have a paved road.
 
@@ -365,14 +378,9 @@ kable(
 
 The second column keeps the 1991 census data but changes the outcome variable to a dummy for whether there *will be* a coal plant constructed within 30km before 2001. This column restricts the sample to only villages that do not already have a coal plant within 30km in 1991. Population is no longer a significant predictor while the coefficients on literacy and the presence of a paved road have flipped.
 
-The last two columns are particularly relevant to the current results. They present similar results to those in the first two columns, but use the 2001 census data and a dummy for the presence of a coal plant in 2001 and 2011 in columns three and four, respectively. Importantly, I include agricultural productivity in the monsoon season of 2002 -- the earliest year available -- as an additional predictor. In 2001, agricultural productivity is a strong predictor for the presence of a coal plant. Moreover, it is also a significant predictor of the construction of a coal plant between 2001 and 2011 (column four). Given that the coefficient is positive, this indicates that coal plants are more likely to be built in areas with higher agricultural productivity. In other words, any selection in the overall location of coal plants would bias against finding negative effects of pollution on agricultural productivity.
+The last two columns are particularly relevant to the current results. They present similar results to those in the first two columns, but use the 2001 census data and a dummy for the presence of a coal plant in 2001 and 2011 in columns three and four, respectively. Importantly, I include agricultural productivity in the monsoon season of 2002 -- the earliest year available -- as an additional predictor. In 2001, agricultural productivity is a strong predictor for the presence of a coal plant. Moreover, it is also a significant predictor of the construction of a coal plant between 2001 and 2011 (column four). Given that the coefficient is positive, this indicates that coal plants are more likely to be built in areas with higher agricultural productivity. In other words, any selection in the overall location of coal plants would bias against finding negative effects of pollution on agricultural productivity. However, note that this is not the same as looking at wind direction, though comparing the OLS and IV results below leads to the same conclusion regarding selection. 
 
-However, note that this is not the same as looking at wind direction. I discuss this more in the results section below.
-
-
-## An example: validating wind direction \label{validation}
-
-Before moving on to the main results, it is worth taking the time to better understand the fixed effects strategy with an example. Consider the data used for the regressions presented in Table \@ref(tab:pollutiontable). The outcome variable is particulate matter -- specifically, $\mathrm{PM_{2.5}}$, which is particulate matter no larger than 2.5 micrometers in diameter -- which comes from @hammer2020global. $\mathrm{PM_{2.5}}$ is one of the harmful byproducts from coal plants, along with sulfur dioxide, different types of nitrogen oxides, and mercury.^[https://www.epa.gov/airmarkets/power-plants-and-neighboring-communities] This data is available at the monthly level, so in Table \@ref(tab:pollutiontable), I aggregate wind exposure to the monthly level, as well.
+It is worth taking the time to validate the use of wind direction as a measure of exposure to pollution. Consider the data used for the regressions presented in Table \@ref(tab:pollutiontable). The outcome variable is particulate matter -- specifically, $\mathrm{PM_{2.5}}$, which is particulate matter no larger than 2.5 micrometers in diameter -- which comes from @hammer2020global. $\mathrm{PM_{2.5}}$ is one of the harmful byproducts from coal plants, along with sulfur dioxide, different types of nitrogen oxides, and mercury.^[www.epa.gov/airmarkets/power-plants-and-neighboring-communities] This data is available at the monthly level, so in Table \@ref(tab:pollutiontable), I aggregate wind exposure to the monthly level, as well.
 
 ```{r pollutiontable, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
@@ -397,7 +405,7 @@ kable(
 
 ```
 
-Both the particulate matter data and the wind data is at the village level, which means the regressions in Table \@ref(tab:pollutiontable) are at the village level. As such, the geographic fixed effects are village fixed effects and the temporal fixed effects are month fixed effects. Since the exposure variable is at the village level and we follow villages over time, the standard errors are also clustered at the village level. 
+Both the particulate matter data and the wind data is at the village level, which means the regressions in Table \@ref(tab:pollutiontable) are at the village level. As such, the geographic fixed effects are village fixed effects and the temporal fixed effects are month fixed effects. Since the exposure variable is at the village level and we follow villages over time, the standard errors are also clustered at the village level. In columns two and four, I switch the month fixed effects for district-month fixed effects, which considers only villages in the same district in the same month.
 
 In addition to serving as an example, Table \@ref(tab:pollutiontable) also helps validate the use of wind direction as a proxy for exposure to pollution. The first two columns include all available years of data while the last two columns restrict estimation only to the years for which the agricultural productivity regressions are estimated. Across all four columns, the story is the same: when the wind is blowing in the direction of a village from a coal plant within 30 kilometers, estimated $\mathrm{PM_{2.5}}$ is substantially higher. The regressions indicate that one additional day of wind in the direction of the village increases mean $\mathrm{PM_{2.5}}$ for the month by between `r paste0(substr(pollutiontable[1,2],1,5))` and `r paste0(substr(pollutiontable[1,3],1,5))` $\mathrm{\mu g/m^3}$. 
 
@@ -405,7 +413,8 @@ To put these numbers into perspective, the World Health Organization's updated g
 
 
 
-# Results \label{results}
+# Results 
+\label{results}
 
 This section presents the main results of this paper. I present three sets of results: one set looking at agricultural productivity, another looking at labor allocation, and a final set looking at nightlights, which are a proxy for economic development. I go through each of these in turn.
 
@@ -551,15 +560,7 @@ The second robustness check includes leads for wind to see if they predict curre
 
 The previous set of results show a consistent negative effect of wind-driven pollution on agricultural productivity. A key question is the mechanism through which this happens; is this driven by changes in labor allocation/productivity or by changes in land productivity? While I cannot definitely prove the mechanism, I can shed some light on possibilities by looking at labor allocation decisions. Since these shocks generally happen after initial planting decisions, it seems unlikely that changes in land *allocation* could drive the results. 
 
-Table \@ref(tab:labortable) presents results for labor allocation over the last seven days using the National Sample Survey and the methodology described above. Since the labor recall is for seven days, labor allocation ranges from zero to seven, as does the wind variable. Recall that the data is at the district level, not the village level. However, it is also more temporally disaggregated, with rolling interviews throughout the year-long survey. Figure \@ref(fig:laborplot) in the appendix shows this temporal distribution across the five waves of the survey.
-
-There are some interesting results in Table \@ref(tab:labortable). The first two columns show a marginally significant decrease in overall labor allocation (where "labor" is defined as non-domestic self and wage employment). The third and fourth columns show that this overall decrease is predominantly from wage employment, not self employment. An additional day of wind over the last seven decreases wage employment by 0.034 days in the district. Mean wage employment is 1.458 days, meaning one day of wind decreases wage employment by 2.3 percent of the mean. Since much of the district is not covered by "treated" villages, this is actually a rather substantive effect on the villages involved.
-
-The last two columns split the effects by sector, into farm and non-farm employment. Although agricultural (land) productivity decreases when wind blows in the direction of villages, overall labor allocation to farm labor actually goes *up*, by around 4.5 percent of the mean of 0.784 days. Non-farm labor, on the other hand, goes down, by around 2.4 percent of the mean of 2.527 days.
-
-There are two possible explanations for this pattern of results. First, it could be that land productivity goes down, leading farmers to increase their farm labor allocation in an attempt to compensate for the decreased productivity. A second possibility is that pollution does not affect land productivity at all, at least not directly. In this scenario, the worsening air quality could lead to decreased labor productivity, meaning that "effective labor" essentially decreases when pollution is higher. Unfortunately, I am not able to disentangle these two possiblities with the data available.
-
-Table \@ref(tab:labortablemonsoon) and Table \@ref(tab:labortablewinter) in the appendix disaggregate these effects into the monsoon and winter seasons. Apparently, the entirety of the effect is driven by changes in labor allocation during the monsoon season. The dynamics across seasons apparently lead to large differences in the effects of pollution on labor allocation.
+Table \@ref(tab:labortable) presents results for labor allocation over the last seven days using the National Sample Survey and the methodology described above. Since the labor recall is for seven days, labor allocation ranges from zero to seven, as does the wind variable. Recall that the data is at the district level, not the village level. However, it is also more temporally disaggregated, with rolling interviews throughout the year-long survey. Figure \@ref(fig:laborplot) in the appendix shows this temporal distribution across the five waves of the survey. Since I can no longer include district-by-month fixed effects, I instead opt for district-level trends to help take into account aggregate temporal changes in outcomes.
 
 ```{r labortable, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
@@ -582,6 +583,14 @@ kable(
   kable_classic_2()
 
 ```
+
+There are some interesting results in Table \@ref(tab:labortable). The first two columns show a marginally significant decrease in overall labor allocation (where "labor" is defined as non-domestic self and wage employment). The third and fourth columns show that this overall decrease is predominantly from wage employment, not self employment. An additional day of wind over the last seven decreases wage employment by 0.034 days in the district. Mean wage employment is 1.458 days, meaning one day of wind decreases wage employment by 2.3 percent of the mean. Since much of the district is not covered by "treated" villages, this is actually a rather substantive effect on the villages involved.
+
+The last two columns split the effects by sector, into farm and non-farm employment. Although agricultural (land) productivity decreases when wind blows in the direction of villages, overall labor allocation to farm labor actually goes *up*, by around 4.5 percent of the mean of 0.784 days. Non-farm labor, on the other hand, goes down, by around 2.4 percent of the mean of 2.527 days.
+
+There are two possible explanations for this pattern of results. First, it could be that land productivity goes down, leading farmers to increase their farm labor allocation in an attempt to compensate for the decreased productivity. A second possibility is that pollution does not affect land productivity at all, at least not directly. In this scenario, the worsening air quality could lead to decreased labor productivity, meaning that "effective labor" essentially decreases when pollution is higher. Unfortunately, I am not able to disentangle these two possiblities with the data available.
+
+Table \@ref(tab:labortablemonsoon) and Table \@ref(tab:labortablewinter) in the appendix disaggregate these effects into the monsoon and winter seasons. Apparently, the entirety of the effect is driven by changes in labor allocation during the monsoon season. The dynamics across seasons apparently lead to large differences in the effects of pollution on labor allocation.
 
 Previous research has shown larger effects of pollution on the health of the oldest [@deryugina2019mortality]. The labor sample includes all adults between 15 and 60 years of age. To look at heterogeneity by age, I present an additional set of results interacting the wind variable with an indicator for whether an individual is over 37 years of age.^[This splits the sample into two equal bins of age: those who are 15-37 and those who are 38-60.] These results are in Table \@ref(tab:labortableold), which otherwise presents the same specifications in the last five columns as \@ref(tab:labortable). 
 
@@ -649,9 +658,14 @@ We see a strong, negative relationship between pollution (lagged wind) and night
 
 
 
-# Conclusion \label{conclusion}
+# Conclusion 
+\label{conclusion}
 
-This paper documents the negative effects of pollution on agricultural productivity in India. I find clear indications that pollution from coal plants leads to lower agricultural productivity. Importantly, I use exogenous changes in wind direction to measure exposure to pollution and show that these effects are robust to a range of alternative specifications. Results indicate that these effects may be driven by changes in labor allocation patterns, but I am unable to rule out direct effects on land productivity with the data available. Finally, these negative effects are also seen in aggregate economic development, with pollution leading to decreases in the growth of nightlights.
+The rapid growth of coal power plants has also led to increases in emissions from the burning of coal. In this paper, I show some of the negative effects associated with this burning: decreased agricultural productivity. I find clear indications that pollution from coal plants leads to lower agricultural productivity. Importantly, I use exogenous changes in wind direction to measure exposure to pollution and show that these effects are robust to a range of alternative specifications. 
+
+Results indicate that these effects may be driven by changes in labor allocation patterns. In addition, the negative labor effects are concentrated in older adults, which is consistent with previous research on the effects of pollution on health in adults. Despite this, I am unable to rule out direct effects on land productivity with the data available. In other words, 
+
+Finally, these negative effects are also seen in aggregate economic development, with pollution leading to decreases in the growth of nightlights. These effects, though small for an individual village, are quite large in overall terms, indicating that pollution from coal plants can have effects on overall economic development.
 
 These results suggest caution in building new power plants that emit substantial amounts of pollution. While the building of additional power generation facilities may be an economic necessity, the location of these facilities may be particular important for multiple aspects of economic activity, not just health and mortality.
 
