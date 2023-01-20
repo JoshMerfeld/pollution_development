@@ -239,6 +239,9 @@ saveRDS(yieldtable, "pollution_development/draft/tables/yieldtable.rds")
 
 
 
+
+
+
 yield1 <- feols(log(yield) ~ 1 | village^season + year | pm25 ~ wind, data = df, cluster = c("village"))
 yield2 <- feols(log(yield) ~ rain_z + temp_mean | village^season + year | pm25 ~ wind, data = df, cluster = c("village"))
 yield3 <- feols(log(yield) ~ rain_z + temp_mean | village^season + year^season^distfe | pm25 ~ wind, data = df, cluster = c("village"))
@@ -264,7 +267,7 @@ yieldtabletwo1 <- etable(
                         depvar = FALSE,
                         signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
                         digits = 3,
-                        fitstat = c("n"),
+                        fitstat = c("ivwald"),
                         coefstat = "se"
                         #extralines = list("Sub-sample" = c("all", "all", "monsoon", "winter"))
                         )
@@ -519,6 +522,43 @@ saveRDS(labortable, "pollution_development/draft/tables/labortable.rds")
 
 
 
+# WAGES
+df$f_wages_all <- df$f_wages
+df$f_wages_all[is.na(df$f_wages_all)==T] <- 0
+df$nf_wages_all <- df$nf_wages
+df$nf_wages_all[is.na(df$nf_wages_all)==T] <- 0
+
+labor2 <- feols(log(f_wages/days_f) ~ wind + ..ctrl | district[year] + year,
+                  data = df %>% filter(f_wages_all>0),
+                  cluster = "district")
+labor3 <- feols(log(nf_wages/days_nf) ~ wind + ..ctrl | district[year] + year,
+                  data = df %>% filter(nf_wages_all>0),
+                  cluster = "district")
+labor4 <- feols(log((f_wages_all + nf_wages_all)/(days_f + days_nf)) ~ wind + ..ctrl | district[year] + year,
+                  data = df %>% filter(f_wages_all>0 | nf_wages_all>0),
+                  cluster = "district")
+
+
+labortable <- etable(
+                      labor2, labor3, labor4,
+                      se.below = TRUE,
+                      depvar = FALSE,
+                      signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+                      digits = 3,
+                      fitstat = c("n"),
+                      coefstat = "se",
+                      group = list(controls = "poly"), drop = "educ"
+                      )
+labortable <- labortable[-c(9:10),]
+labortable <- as.matrix(labortable)
+rownames(labortable) <- c("wind", "", "controls", "fixed effects:",
+                          "district", "year", "varying slopes:", "year (by district)", 
+                          "observations")
+labortable[c(4,7),] <- " "
+saveRDS(labortable, "pollution_development/draft/tables/wagestable.rds")
+
+
+
 
 
 
@@ -619,6 +659,17 @@ setFixest_fml(..ctrl = ~ poly(female, 1) + poly(age, 2) + educ)
 df <- df %>% mutate(old = as.numeric(age>37.5),
                     wind_old = wind*old)
 
+summary(df$days_wage[df$age<37.5])
+summary(df$days_self[df$age<37.5])
+summary(df$days_f[df$age<37.5])
+summary(df$days_nf[df$age<37.5])
+
+
+summary(df$days_wage[df$age>37.5])
+summary(df$days_self[df$age>37.5])
+summary(df$days_f[df$age>37.5])
+summary(df$days_nf[df$age>37.5])
+
 labor1 <- feols((days_self + days_wage) ~ wind+ wind_old | district[year] + year,
                   data = df,
                   cluster = "district")
@@ -656,6 +707,126 @@ rownames(labortable) <- c("wind", "", "wind times age>=38", "", "controls", "fix
                           "observations")
 labortable[c(6,9),] <- " "
 saveRDS(labortable, "pollution_development/draft/tables/labortableold.rds")
+
+
+
+
+
+
+
+
+labor2 <- feols((days_self + days_wage) ~ wind + wind_old + ..ctrl | district^year^month_int,
+                  data = df,
+                  cluster = "district")
+labor3 <- feols(days_self ~ wind + wind_old + ..ctrl | district^year^month_int,
+                  data = df,
+                  cluster = "district")
+labor4 <- feols(days_wage ~ wind + wind_old + ..ctrl | district^year^month_int,
+                  data = df,
+                  cluster = "district")
+labor5 <- feols(days_f ~ wind + wind_old + ..ctrl | district^year^month_int,
+                  data = df,
+                  cluster = "district")
+labor6 <- feols(days_nf ~ wind + wind_old + ..ctrl | district^year^month_int,
+                  data = df,
+                  cluster = "district")
+
+
+labortable <- etable(
+                     labor2, labor3, labor4, labor5, labor6,
+                      se.below = TRUE,
+                      depvar = FALSE,
+                      signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+                      digits = 3,
+                      fitstat = c("n"),
+                      coefstat = "se",
+                      group = list(controls = "poly"), drop = "educ"
+                      )
+labortable <- labortable[-c(8:9),]
+labortable <- as.matrix(labortable)
+rownames(labortable) <- c("wind", "", "wind times age>=38", "", "controls", "fixed effects:",
+                          "district-year-month",
+                          "observations")
+labortable[c(6),] <- " "
+saveRDS(labortable, "pollution_development/draft/tables/labortableoldstate.rds")
+
+
+
+
+
+
+
+
+
+
+labor1 <- feols((days_self + days_wage) ~ wind+ wind_old | district[year] + year,
+                  data = df %>% filter(rural==1),
+                  cluster = "district")
+labor2 <- feols((days_self + days_wage) ~ wind + wind_old + ..ctrl | district[year] + year,
+                  data = df %>% filter(rural==1),
+                  cluster = "district")
+labor3 <- feols(days_self ~ wind + wind_old + ..ctrl | district[year] + year,
+                  data = df %>% filter(rural==1),
+                  cluster = "district")
+labor4 <- feols(days_wage ~ wind + wind_old + ..ctrl | district[year] + year,
+                  data = df %>% filter(rural==1),
+                  cluster = "district")
+labor5 <- feols(days_f ~ wind + wind_old + ..ctrl | district[year] + year,
+                  data = df %>% filter(rural==1),
+                  cluster = "district")
+labor6 <- feols(days_nf ~ wind + wind_old + ..ctrl | district[year] + year,
+                  data = df %>% filter(rural==1),
+                  cluster = "district")
+
+
+labortable <- etable(
+                      labor1, labor2, labor3, labor4, labor5, labor6,
+                      se.below = TRUE,
+                      depvar = FALSE,
+                      signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+                      digits = 3,
+                      fitstat = c("n"),
+                      coefstat = "se",
+                      group = list(controls = "poly"), drop = "educ"
+                      )
+
+
+
+
+
+
+labor1 <- feols((days_self + days_wage) ~ wind+ wind_old | district[year] + year,
+                  data = df %>% filter(rural==0),
+                  cluster = "district")
+labor2 <- feols((days_self + days_wage) ~ wind + wind_old + ..ctrl | district[year] + year,
+                  data = df %>% filter(rural==0),
+                  cluster = "district")
+labor3 <- feols(days_self ~ wind + wind_old + ..ctrl | district[year] + year,
+                  data = df %>% filter(rural==0),
+                  cluster = "district")
+labor4 <- feols(days_wage ~ wind + wind_old + ..ctrl | district[year] + year,
+                  data = df %>% filter(rural==0),
+                  cluster = "district")
+labor5 <- feols(days_f ~ wind + wind_old + ..ctrl | district[year] + year,
+                  data = df %>% filter(rural==0),
+                  cluster = "district")
+labor6 <- feols(days_nf ~ wind + wind_old + ..ctrl | district[year] + year,
+                  data = df %>% filter(rural==0 ),
+                  cluster = "district")
+
+
+labortable <- etable(
+                      labor1, labor2, labor3, labor4, labor5, labor6,
+                      se.below = TRUE,
+                      depvar = FALSE,
+                      signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+                      digits = 3,
+                      fitstat = c("n"),
+                      coefstat = "se",
+                      group = list(controls = "poly"), drop = "educ"
+                      )
+
+
 
 
 

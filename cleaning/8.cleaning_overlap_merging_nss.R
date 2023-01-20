@@ -70,6 +70,11 @@ df_labor <- df_labor %>% mutate(state_merge = as.numeric(state_merge),
 df_labor <- df_labor %>% filter(is.na(merge)==F)
 
 
+
+pollution <- read_csv(paste0("data/clean/pm25/all_combined.csv"))
+pollution <- pollution %>% rename(pm25 = mean)
+
+
 # Going to go through the dates and process date by date
 df_labor_merged <- c()
 for (day in 1:length(date_vec)){
@@ -116,12 +121,8 @@ write.csv(df_labor_merged, "data/clean/nss/merged_week.csv")
 
 
 
-
-pollution <- read_csv(paste0("data/clean/pm25/all_combined.csv"))
-pollution <- pollution %>% rename(pm25 = mean)
-df_labor_merged <- read_csv("data/clean/nss/merged_week.csv")
-
 # And also pm; all years covering the nss data
+df_labor_merged <- read_csv("data/clean/nss/merged_week.csv")
 pollution_merged <- c()
 for (y in year(min(df_labor_merged$date)):year(max(df_labor_merged$date))){
   for (m in 1:12){

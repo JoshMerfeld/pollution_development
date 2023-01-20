@@ -29,8 +29,9 @@ df_hh <- df_hh %>% mutate(hid = paste(Sector, State_region, District, Stratum, S
                           district61 = DISTRICT_CODE,
                           weight_combined = WEIGHT_COMBINED,
                           weight_subround = WEIGHT_SUB_ROUND,
-                          weight_subsample = WEIGHT_SUB_SAMPLE) %>%
-                    select(hid, state61, district61, date, weight_combined, weight_subround, weight_subsample)
+                          weight_subsample = WEIGHT_SUB_SAMPLE,
+                          rural = as.numeric(Sector==1)) %>%
+                    select(hid, state61, district61, date, weight_combined, weight_subround, weight_subsample, rural)
 df_hh <- df_hh[complete.cases(df_hh),]
 
 # To join, with concordance files, need to do some changes
@@ -326,8 +327,9 @@ df_hh <- df_hh %>% mutate(hid = hhid,
                           date = as.Date(paste0("20", substr(S10B2_v02i, 5, 6), "-", substr(S10B2_v02i, 3, 4), "-", substr(S10B2_v02i, 1, 2)), "%Y-%m-%d"),
                           state62 = state,
                           district62 = district,
-                          weight_combined = weight) %>%
-                    select(hid, state62, district62, date, weight_combined)
+                          weight_combined = weight,
+                          rural = as.numeric(sector==1)) %>%
+                    select(hid, state62, district62, date, weight_combined, rural)
 df_hh <- df_hh[complete.cases(df_hh),]
 
 # To join, with concordance files, need to do some changes
@@ -620,8 +622,9 @@ df_hh <- df_hh %>% mutate(hid = key_Hhold,
                           district64 = District,
                           weight_combined = wgt_combined,
                           weight = wgt,
-                          weight_subsample = wgt_ss) %>%
-                    select(hid, state64, district64, date, weight_combined, weight, weight_subsample)
+                          weight_subsample = wgt_ss,
+                          rural = as.numeric(Sector==1)) %>%
+                    select(hid, state64, district64, date, weight_combined, weight, weight_subsample, rural)
 df_hh <- df_hh[complete.cases(df_hh),]
 
 # To join, with concordance files, need to do some changes
@@ -911,8 +914,9 @@ df_hh <- df_hh %>% mutate(hid = paste(fsu, sector, state, district, stratum, sub
                           state66 = state,
                           district66 = district,
                           weight = mlt,
-                          weight_subsample = mlt_sr) %>%
-                    select(hid, state66, district66, date, weight, weight_subsample)
+                          weight_subsample = mlt_sr,
+                          rural = as.numeric(sector==1)) %>%
+                    select(hid, state66, district66, date, weight, weight_subsample, rural)
 df_hh <- df_hh[complete.cases(df_hh),]
 
 # Some changes to state
@@ -1210,8 +1214,9 @@ df_hh <- df_hh %>% mutate(hid = paste(fsu, sector, state, district, stratum, sub
                           state68 = state_new,
                           district68 = district,
                           weight = mlt,
-                          weight_subsample = mlt_sr) %>%
-                    select(hid, state68, district68, date, weight, weight_subsample)
+                          weight_subsample = mlt_sr,
+                          rural = as.numeric(sector==1)) %>%
+                    select(hid, state68, district68, date, weight, weight_subsample, rural)
 df_hh <- df_hh[complete.cases(df_hh),]
 
 
