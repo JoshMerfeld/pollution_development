@@ -86,24 +86,40 @@ for (day in 1:length(date_vec)){
   village_wind <- villages %>% left_join(village_wind, by = "shrid")
   # Missings as zero
   village_wind$days_sum[is.na(village_wind$days_sum)==T] <- 0
+  # there are a couple mistakes in terms of duplicate ids. fix those
+  village_wind <- village_wind %>% group_by(shrid) %>% filter(row_number()==1) %>% ungroup()
   # And also pm
   pollution_merge <- pollution %>% filter(year==year(date_vec[day]) & month==month(date_vec[day]))
-  village_wind <- village_wind %>% left_join(pollution, by = "shrid")
+  # there are a couple mistakes in terms of duplicate ids. fix those
+  pollution_merge <- pollution_merge %>% group_by(shrid) %>% filter(row_number()==1) %>% ungroup()
+  pollution_merge <- pollution_merge %>% select(shrid, pm25)
+  village_wind <- village_wind %>% left_join(pollution_merge, by = "shrid")
   
+  # monthly wind
+  village_month_wind <- read_csv(paste0("data/clean/wind_ntl/months/y", year(date_vec[day]), "m", month(date_vec[day]), ".csv")) %>% as_tibble()
+  # there are a couple mistakes in terms of duplicate ids. fix those
+  village_month_wind <- village_month_wind %>% group_by(shrid) %>% filter(row_number()==1) %>% ungroup()
+  # rename
+  colnames(village_month_wind) <- c("shrid", "month_sum")
+  village_month_wind <- village_month_wind %>% select(shrid, month_sum)
+  village_wind <- village_wind %>% left_join(village_month_wind, by = "shrid")
   
   # Weighted mean by AREA. Any parts of the district without villages are ZEROS
   village_wind <- village_wind %>% 
                   group_by(state, district) %>%
-                  mutate(days_sum = weighted.mean(days_sum, area_weight),
-                         pm25_sum = weighted.mean(pm25, area_weight),
+                  mutate(days_sum = weighted.mean(days_sum, area_weight, na.rm = T),
+                         month_sum = weighted.mean(month_sum, area_weight, na.rm = T),
+                         pm25_sum = weighted.mean(pm25, area_weight, na.rm = T),
                          state_merge = as.numeric(state),
                          district_merge = as.numeric(district),
-                         tot_weight = sum(area_weight),
+                         tot_weight = sum(area_weight, na.rm = T),
                          days_sum = days_sum*tot_weight,
-                         pm25_sum = days_sum*tot_weight) %>% # Last one adjusts for the zeros for areas not here
+                         month_sum = month_sum*tot_weight,
+                         #pm25_sum = days_sum*tot_weight
+                         ) %>% # Last one adjusts for the zeros for areas not here (not pm, though, since it is the entire district)
                   filter(row_number()==1) %>%
                   ungroup() %>%
-                  select(state_merge, district_merge, days_sum, pm25_sum)
+                  select(state_merge, district_merge, days_sum, pm25_sum, month_sum)
   
   
   temp <- df_labor %>% filter(date==date_vec[day])
@@ -115,6 +131,12 @@ for (day in 1:length(date_vec)){
 }
 df_labor_merged <- df_labor_merged %>% mutate(distfe = paste0("s", state_merge, "-d", district_merge))
 write.csv(df_labor_merged, "data/clean/nss/merged_week.csv")
+
+
+
+
+
+
 
 
 

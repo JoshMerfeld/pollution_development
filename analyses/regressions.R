@@ -58,7 +58,8 @@ plantresultstable <- etable(
                           se.below = TRUE,
                           depvar = FALSE,
                           signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
-                          digits = 3,
+                          digits = "r3",
+                          digits.stats = "r3",
                           fitstat = c("n"),
                           coefstat = "se",
                           extralines = list("Sub-sample" = c("all", "no plant", "all", "no plant"))
@@ -140,7 +141,8 @@ pollutiontable <- etable(
                           se.below = TRUE,
                           depvar = FALSE,
                           signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
-                          digits = 3,
+                          digits = "r3",
+                          digits.stats = "r3",
                           fitstat = c("n"),
                           coefstat = "se"
                           )
@@ -223,7 +225,8 @@ yieldtable <- etable(
                       se.below = TRUE,
                       depvar = FALSE,
                       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
-                      digits = 3,
+                      digits = "r3",
+                      digits.stats = "r3",
                       fitstat = c("n"),
                       coefstat = "se"
                       #extralines = list("Sub-sample" = c("all", "all", "all", "monsoon", "winter"))
@@ -255,7 +258,8 @@ yieldtabletwo <- etable(
                         se.below = TRUE,
                         depvar = FALSE,
                         signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
-                        digits = 3,
+                        digits = "r3",
+                        digits.stats = "r3",
                         fitstat = c("n"),
                         coefstat = "se"
                         #extralines = list("Sub-sample" = c("all", "all", "monsoon", "winter"))
@@ -266,7 +270,8 @@ yieldtabletwo1 <- etable(
                         se.below = TRUE,
                         depvar = FALSE,
                         signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
-                        digits = 3,
+                        digits = "r3",
+                        digits.stats = "r3",
                         fitstat = c("ivwald"),
                         coefstat = "se"
                         #extralines = list("Sub-sample" = c("all", "all", "monsoon", "winter"))
@@ -304,7 +309,8 @@ yieldtable <- etable(
                       se.below = TRUE,
                       depvar = FALSE,
                       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
-                      digits = 3,
+                      digits = "r3",
+                      digits.stats = "r3",
                       fitstat = c("n"),
                       coefstat = "se"
                       #extralines = list("Sub-sample" = c("all", "all", "all", "monsoon", "winter"))
@@ -344,7 +350,8 @@ yieldtablehet <- etable(
                         se.below = TRUE,
                         depvar = FALSE,
                         signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
-                        digits = 3,
+                        digits = "r3",
+                        digits.stats = "r3",
                         fitstat = c("n"),
                         coefstat = "se"
                         )
@@ -374,7 +381,8 @@ yieldtableleads <- etable(
                         se.below = TRUE,
                         depvar = FALSE,
                         signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
-                        digits = 3,
+                        digits = "r3",
+                        digits.stats = "r3",
                         fitstat = c("n"),
                         coefstat = "se"
                         )
@@ -423,7 +431,8 @@ yieldtable <- etable(
                       se.below = TRUE,
                       depvar = FALSE,
                       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
-                      digits = 3,
+                      digits = "r3",
+                      digits.stats = "r3",
                       fitstat = c("n"),
                       coefstat = "se"
                       #extralines = list("Sub-sample" = c("all", "all", "all", "monsoon", "winter"))
@@ -460,8 +469,8 @@ df <- df %>% mutate(
                     wind = days_sum,
                     district = distfe
                     )
-pollution <- read_csv(paste0("data/clean/pm25/nss_merge.csv"))
-df <- df %>% left_join(pollution, by = c("state_merge", "district_merge", "year", "month_int"))
+# pollution <- read_csv(paste0("data/clean/pm25/nss_merge.csv"))
+# df <- df %>% left_join(pollution, by = c("state_merge", "district_merge", "year", "month_int"))
 
 
 
@@ -480,22 +489,22 @@ setFixest_fml(..ctrl = ~ poly(female, 1) + poly(age, 2) + educ)
 
 
 
-labor1 <- feols((days_self + days_wage) ~ wind | district[year] + year,
+labor1 <- feols((days_self + days_wage) ~ wind | district + month^state_merge,
                   data = df,
                   cluster = "district")
-labor2 <- feols((days_self + days_wage) ~ wind + ..ctrl | district[year] + year,
+labor2 <- feols((days_self + days_wage) ~ wind + ..ctrl | district + month^state_merge,
                   data = df,
                   cluster = "district")
-labor3 <- feols(days_self ~ wind + ..ctrl | district[year] + year,
+labor3 <- feols(days_self ~ wind + ..ctrl | district + month^state_merge,
                   data = df,
                   cluster = "district")
-labor4 <- feols(days_wage ~ wind + ..ctrl | district[year] + year,
+labor4 <- feols(days_wage ~ wind + ..ctrl | district + month^state_merge,
                   data = df,
                   cluster = "district")
-labor5 <- feols(days_f ~ wind + ..ctrl | district[year] + year,
+labor5 <- feols(days_f ~ wind + ..ctrl | district + month^state_merge,
                   data = df,
                   cluster = "district")
-labor6 <- feols(days_nf ~ wind + ..ctrl | district[year] + year,
+labor6 <- feols(days_nf ~ wind + ..ctrl | district + month^state_merge,
                   data = df,
                   cluster = "district")
 
@@ -505,18 +514,762 @@ labortable <- etable(
                       se.below = TRUE,
                       depvar = FALSE,
                       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
-                      digits = 3,
+                      digits = "r3",
+                      digits.stats = "r3",
                       fitstat = c("n"),
                       coefstat = "se",
                       group = list(controls = "poly"), drop = "educ"
                       )
-labortable <- labortable[-c(9:10),]
+labortable <- labortable[-c(7:8),]
+labortable <- as.matrix(labortable)
+labortable[c(4),] <- " "
+# Add means of DV
+means.row <- c(
+               format(mean(df$days_self + df$days_wage), digits = 3, nsmall = 3),
+               format(mean(df$days_self + df$days_wage), digits = 3, nsmall = 3),
+               format(mean(df$days_self), digits = 3, nsmall = 3),
+               format(mean(df$days_wage), digits = 3, nsmall = 3),
+               format(mean(df$days_f), digits = 3, nsmall = 3),
+               format(mean(df$days_nf), digits = 3, nsmall = 3)
+               )
+means.row <- matrix(means.row, nrow = 1)
+colnames(means.row) <- c("labor1", "labor2", "labor3", "labor4", "labor5", "labor6")
+labortable <- rbind(labortable[1:(nrow(labortable)-1),], means.row, labortable[nrow(labortable),])
+rownames(labortable) <- c("wind", "", "controls", "fixed effects:",
+                          "district", "state-month",
+                          "DV mean", "observations")
+saveRDS(labortable, "pollution_development/draft/tables/labortable.rds")
+
+
+
+
+
+
+
+
+
+labor1 <- feols((days_self + days_wage) ~ wind | district + month^state_merge,
+                  data = df %>% filter(rural==1),
+                  cluster = "district")
+labor2 <- feols((days_self + days_wage) ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(rural==1),
+                  cluster = "district")
+labor3 <- feols(days_self ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(rural==1),
+                  cluster = "district")
+labor4 <- feols(days_wage ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(rural==1),
+                  cluster = "district")
+labor5 <- feols(days_f ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(rural==1),
+                  cluster = "district")
+labor6 <- feols(days_nf ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(rural==1),
+                  cluster = "district")
+
+
+labortable <- etable(
+                      labor1, labor2, labor3, labor4, labor5, labor6,
+                      se.below = TRUE,
+                      depvar = FALSE,
+                      signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+                      digits = "r3",
+                      digits.stats = "r3",
+                      fitstat = c("n"),
+                      coefstat = "se",
+                      group = list(controls = "poly"), drop = "educ"
+                      )
+labortable <- labortable[-c(7:8),]
 labortable <- as.matrix(labortable)
 rownames(labortable) <- c("wind", "", "controls", "fixed effects:",
-                          "district", "year", "varying slopes:", "year (by district)", 
+                          "district", "state-month",
                           "observations")
-labortable[c(4,7),] <- " "
-saveRDS(labortable, "pollution_development/draft/tables/labortable.rds")
+labortable[c(4),] <- " "
+# Add means of DV
+means.row <- c(
+               format(mean(df$days_self[df$rural==1] + df$days_wage[df$rural==1]), digits = 3, nsmall = 3),
+               format(mean(df$days_self[df$rural==1] + df$days_wage[df$rural==1]), digits = 3, nsmall = 3),
+               format(mean(df$days_self[df$rural==1]), digits = 3, nsmall = 3),
+               format(mean(df$days_wage[df$rural==1]), digits = 3, nsmall = 3),
+               format(mean(df$days_f[df$rural==1]), digits = 3, nsmall = 3),
+               format(mean(df$days_nf[df$rural==1]), digits = 3, nsmall = 3)
+               )
+means.row <- matrix(means.row, nrow = 1)
+colnames(means.row) <- c("labor1", "labor2", "labor3", "labor4", "labor5", "labor6")
+labortable <- rbind(labortable[1:(nrow(labortable)-1),], means.row, labortable[nrow(labortable),])
+rownames(labortable) <- c("wind", "", "controls", "fixed effects:",
+                          "district", "state-month",
+                          "DV mean", "observations")
+saveRDS(labortable, "pollution_development/draft/tables/labortablerural.rds")
+
+
+
+
+
+
+
+
+
+
+labor1 <- feols((days_self + days_wage) ~ wind | district + month^state_merge,
+                  data = df %>% filter(rural==0),
+                  cluster = "district")
+labor2 <- feols((days_self + days_wage) ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(rural==0),
+                  cluster = "district")
+labor3 <- feols(days_self ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(rural==0),
+                  cluster = "district")
+labor4 <- feols(days_wage ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(rural==0),
+                  cluster = "district")
+labor5 <- feols(days_f ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(rural==0),
+                  cluster = "district")
+labor6 <- feols(days_nf ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(rural==0),
+                  cluster = "district")
+
+
+labortable <- etable(
+                      labor1, labor2, labor3, labor4, labor5, labor6,
+                      se.below = TRUE,
+                      depvar = FALSE,
+                      signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+                      digits = "r3",
+                      digits.stats = "r3",
+                      fitstat = c("n"),
+                      coefstat = "se",
+                      group = list(controls = "poly"), drop = "educ"
+                      )
+labortable <- labortable[-c(7:8),]
+labortable <- as.matrix(labortable)
+rownames(labortable) <- c("wind", "", "controls", "fixed effects:",
+                          "district", "state-month",
+                          "observations")
+labortable[c(4),] <- " "
+# Add means of DV
+means.row <- c(
+               format(mean(df$days_self[df$rural==0] + df$days_wage[df$rural==0]), digits = 3, nsmall = 3),
+               format(mean(df$days_self[df$rural==0] + df$days_wage[df$rural==0]), digits = 3, nsmall = 3),
+               format(mean(df$days_self[df$rural==0]), digits = 3, nsmall = 3),
+               format(mean(df$days_wage[df$rural==0]), digits = 3, nsmall = 3),
+               format(mean(df$days_f[df$rural==0]), digits = 3, nsmall = 3),
+               format(mean(df$days_nf[df$rural==0]), digits = 3, nsmall = 3)
+               )
+means.row <- matrix(means.row, nrow = 1)
+colnames(means.row) <- c("labor1", "labor2", "labor3", "labor4", "labor5", "labor6")
+labortable <- rbind(labortable[1:(nrow(labortable)-1),], means.row, labortable[nrow(labortable),])
+rownames(labortable) <- c("wind", "", "controls", "fixed effects:",
+                          "district", "state-month",
+                          "DV mean", "observations")
+saveRDS(labortable, "pollution_development/draft/tables/labortableurban.rds")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+labor1 <- feols((days_self + days_wage) ~ wind | district + month^state_merge,
+                  data = df %>% filter(rural==1, age>45),
+                  cluster = "district")
+labor2 <- feols((days_self + days_wage) ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(rural==1, age>45),
+                  cluster = "district")
+labor3 <- feols(days_self ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(rural==1, age>45),
+                  cluster = "district")
+labor4 <- feols(days_wage ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(rural==1, age>45),
+                  cluster = "district")
+labor5 <- feols(days_f ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(rural==1, age>45),
+                  cluster = "district")
+labor6 <- feols(days_nf ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(rural==1, age>45),
+                  cluster = "district")
+
+
+labortable <- etable(
+                      labor1, labor2, labor3, labor4, labor5, labor6,
+                      se.below = TRUE,
+                      depvar = FALSE,
+                      signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+                      digits = "r3",
+                      digits.stats = "r3",
+                      fitstat = c("n"),
+                      coefstat = "se",
+                      group = list(controls = "poly"), drop = "educ"
+                      )
+labortable <- labortable[-c(7:8),]
+labortable <- as.matrix(labortable)
+rownames(labortable) <- c("wind", "", "controls", "fixed effects:",
+                          "district", "state-month",
+                          "observations")
+labortable[c(4),] <- " "
+# Add means of DV
+means.row <- c(
+               format(mean(df$days_self[df$rural==1 & df$age>45] + df$days_wage[df$rural==1 & df$age>45]), digits = 3, nsmall = 3),
+               format(mean(df$days_self[df$rural==1 & df$age>45] + df$days_wage[df$rural==1 & df$age>45]), digits = 3, nsmall = 3),
+               format(mean(df$days_self[df$rural==1 & df$age>45]), digits = 3, nsmall = 3),
+               format(mean(df$days_wage[df$rural==1 & df$age>45]), digits = 3, nsmall = 3),
+               format(mean(df$days_f[df$rural==1 & df$age>45]), digits = 3, nsmall = 3),
+               format(mean(df$days_nf[df$rural==1 & df$age>45]), digits = 3, nsmall = 3)
+               )
+means.row <- matrix(means.row, nrow = 1)
+colnames(means.row) <- c("labor1", "labor2", "labor3", "labor4", "labor5", "labor6")
+labortable <- rbind(labortable[1:(nrow(labortable)-1),], means.row, labortable[nrow(labortable),])
+rownames(labortable) <- c("wind", "", "controls", "fixed effects:",
+                          "district", "state-month",
+                          "DV mean", "observations")
+saveRDS(labortable, "pollution_development/draft/tables/labortableruralold.rds")
+
+
+
+
+
+
+
+labor1 <- feols((days_self + days_wage) ~ wind | district + month^state_merge,
+                  data = df %>% filter(rural==1, age<=45),
+                  cluster = "district")
+labor2 <- feols((days_self + days_wage) ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(rural==1, age<=45),
+                  cluster = "district")
+labor3 <- feols(days_self ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(rural==1, age<=45),
+                  cluster = "district")
+labor4 <- feols(days_wage ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(rural==1, age<=45),
+                  cluster = "district")
+labor5 <- feols(days_f ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(rural==1, age<=45),
+                  cluster = "district")
+labor6 <- feols(days_nf ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(rural==1, age<=45),
+                  cluster = "district")
+
+
+labortable <- etable(
+                      labor1, labor2, labor3, labor4, labor5, labor6,
+                      se.below = TRUE,
+                      depvar = FALSE,
+                      signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+                      digits = "r3",
+                      digits.stats = "r3",
+                      fitstat = c("n"),
+                      coefstat = "se",
+                      group = list(controls = "poly"), drop = "educ"
+                      )
+labortable <- labortable[-c(7:8),]
+labortable <- as.matrix(labortable)
+rownames(labortable) <- c("wind", "", "controls", "fixed effects:",
+                          "district", "state-month",
+                          "observations")
+labortable[c(4),] <- " "
+# Add means of DV
+means.row <- c(
+               format(mean(df$days_self[df$rural==1 & df$age<=45] + df$days_wage[df$rural==1 & df$age<=45]), digits = 3, nsmall = 3),
+               format(mean(df$days_self[df$rural==1 & df$age<=45] + df$days_wage[df$rural==1 & df$age<=45]), digits = 3, nsmall = 3),
+               format(mean(df$days_self[df$rural==1 & df$age<=45]), digits = 3, nsmall = 3),
+               format(mean(df$days_wage[df$rural==1 & df$age<=45]), digits = 3, nsmall = 3),
+               format(mean(df$days_f[df$rural==1 & df$age<=45]), digits = 3, nsmall = 3),
+               format(mean(df$days_nf[df$rural==1 & df$age<=45]), digits = 3, nsmall = 3)
+               )
+means.row <- matrix(means.row, nrow = 1)
+colnames(means.row) <- c("labor1", "labor2", "labor3", "labor4", "labor5", "labor6")
+labortable <- rbind(labortable[1:(nrow(labortable)-1),], means.row, labortable[nrow(labortable),])
+rownames(labortable) <- c("wind", "", "controls", "fixed effects:",
+                          "district", "state-month",
+                          "DV mean", "observations")
+saveRDS(labortable, "pollution_development/draft/tables/labortableruralyoung.rds")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+labor1 <- feols((days_self + days_wage) ~ wind | district + month^state_merge,
+                  data = df %>% filter(month_int %in% c(11,12,1,2,3)),
+                  cluster = "district")
+labor2 <- feols((days_self + days_wage) ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(month_int %in% c(11,12,1,2,3)),
+                  cluster = "district")
+labor3 <- feols(days_self ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(month_int %in% c(11,12,1,2,3)),
+                  cluster = "district")
+labor4 <- feols(days_wage ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(month_int %in% c(11,12,1,2,3)),
+                  cluster = "district")
+labor5 <- feols(days_f ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(month_int %in% c(11,12,1,2,3)),
+                  cluster = "district")
+labor6 <- feols(days_nf ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(month_int %in% c(11,12,1,2,3)),
+                  cluster = "district")
+
+
+labortable <- etable(
+                      labor1, labor2, labor3, labor4, labor5, labor6,
+                      se.below = TRUE,
+                      depvar = FALSE,
+                      signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+                      digits = "r3",
+                      digits.stats = "r3",
+                      fitstat = c("n"),
+                      coefstat = "se",
+                      group = list(controls = "poly"), drop = "educ"
+                      )
+labortable <- labortable[-c(7:8),]
+labortable <- as.matrix(labortable)
+rownames(labortable) <- c("wind", "", "controls", "fixed effects:",
+                          "district", "state-month",
+                          "observations")
+labortable[c(4),] <- " "
+# Add means of DV
+means.row <- c(
+               format(mean(df$days_self[df$month_int %in% c(11,12,1,2,3)] + df$days_wage[df$month_int %in% c(11,12,1,2,3)]), digits = 3, nsmall = 3),
+               format(mean(df$days_self[df$month_int %in% c(11,12,1,2,3)] + df$days_wage[df$month_int %in% c(11,12,1,2,3)]), digits = 3, nsmall = 3),
+               format(mean(df$days_self[df$month_int %in% c(11,12,1,2,3)]), digits = 3, nsmall = 3),
+               format(mean(df$days_wage[df$month_int %in% c(11,12,1,2,3)]), digits = 3, nsmall = 3),
+               format(mean(df$days_f[df$month_int %in% c(11,12,1,2,3)]), digits = 3, nsmall = 3),
+               format(mean(df$days_nf[df$month_int %in% c(11,12,1,2,3)]), digits = 3, nsmall = 3)
+               )
+means.row <- matrix(means.row, nrow = 1)
+colnames(means.row) <- c("labor1", "labor2", "labor3", "labor4", "labor5", "labor6")
+labortable <- rbind(labortable[1:(nrow(labortable)-1),], means.row, labortable[nrow(labortable),])
+rownames(labortable) <- c("wind", "", "controls", "fixed effects:",
+                          "district", "state-month",
+                          "DV mean", "observations")
+saveRDS(labortable, "pollution_development/draft/tables/labortablewinter.rds")
+
+
+
+
+
+
+
+
+
+
+
+
+
+labor1 <- feols((days_self + days_wage) ~ wind | district + month^state_merge,
+                  data = df %>% filter(month_int %in% c(6,7,8,9,10)),
+                  cluster = "district")
+labor2 <- feols((days_self + days_wage) ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(month_int %in% c(6,7,8,9,10)),
+                  cluster = "district")
+labor3 <- feols(days_self ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(month_int %in% c(6,7,8,9,10)),
+                  cluster = "district")
+labor4 <- feols(days_wage ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(month_int %in% c(6,7,8,9,10)),
+                  cluster = "district")
+labor5 <- feols(days_f ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(month_int %in% c(6,7,8,9,10)),
+                  cluster = "district")
+labor6 <- feols(days_nf ~ wind + ..ctrl | district + month^state_merge,
+                  data = df %>% filter(month_int %in% c(6,7,8,9,10)),
+                  cluster = "district")
+
+
+labortable <- etable(
+                      labor1, labor2, labor3, labor4, labor5, labor6,
+                      se.below = TRUE,
+                      depvar = FALSE,
+                      signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+                      digits = "r3",
+                      digits.stats = "r3",
+                      fitstat = c("n"),
+                      coefstat = "se",
+                      group = list(controls = "poly"), drop = "educ"
+                      )
+labortable <- labortable[-c(7:8),]
+labortable <- as.matrix(labortable)
+rownames(labortable) <- c("wind", "", "controls", "fixed effects:",
+                          "district", "state-month",
+                          "observations")
+labortable[c(4),] <- " "
+# Add means of DV
+means.row <- c(
+               format(mean(df$days_self[df$month_int %in% c(6,7,8,9,10,11)] + df$days_wage[df$month_int %in% c(6,7,8,9,10,11)]), digits = 3, nsmall = 3),
+               format(mean(df$days_self[df$month_int %in% c(6,7,8,9,10,11)] + df$days_wage[df$month_int %in% c(6,7,8,9,10,11)]), digits = 3, nsmall = 3),
+               format(mean(df$days_self[df$month_int %in% c(6,7,8,9,10,11)]), digits = 3, nsmall = 3),
+               format(mean(df$days_wage[df$month_int %in% c(6,7,8,9,10,11)]), digits = 3, nsmall = 3),
+               format(mean(df$days_f[df$month_int %in% c(6,7,8,9,10,11)]), digits = 3, nsmall = 3),
+               format(mean(df$days_nf[df$month_int %in% c(6,7,8,9,10,11)]), digits = 3, nsmall = 3)
+               )
+means.row <- matrix(means.row, nrow = 1)
+colnames(means.row) <- c("labor1", "labor2", "labor3", "labor4", "labor5", "labor6")
+labortable <- rbind(labortable[1:(nrow(labortable)-1),], means.row, labortable[nrow(labortable),])
+rownames(labortable) <- c("wind", "", "controls", "fixed effects:",
+                          "district", "state-month",
+                          "DV mean", "observations")
+saveRDS(labortable, "pollution_development/draft/tables/labortablemonsoon.rds")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+labor1 <- feols((days_self + days_wage) ~ 1 | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df,
+                  cluster = "district")
+labor2 <- feols((days_self + days_wage) ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df,
+                  cluster = "district")
+labor3 <- feols(days_self ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df,
+                  cluster = "district")
+labor4 <- feols(days_wage ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df,
+                  cluster = "district")
+labor5 <- feols(days_f ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df,
+                  cluster = "district")
+labor6 <- feols(days_nf ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df,
+                  cluster = "district")
+
+
+labortable <- etable(
+                      labor1, labor2, labor3, labor4, labor5, labor6,
+                      se.below = TRUE,
+                      depvar = FALSE,
+                      signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+                      digits = "r3",
+                      digits.stats = "r3",
+                      fitstat = c("ivwald1.p", "n"),
+                      coefstat = "se",
+                      group = list(controls = "poly"), drop = "educ"
+                      )
+labortable <- labortable[-c(7:8),]
+labortable <- as.matrix(labortable)
+rownames(labortable) <- c("wind", "", "controls", "fixed effects:",
+                          "district", "state-month", 
+                          "wald (IV, p)", "observations")
+labortable[c(4),] <- " "
+saveRDS(labortable, "pollution_development/draft/tables/labortableIV.rds")
+
+
+
+
+
+
+
+
+# First do female
+# control variables
+setFixest_fml(..ctrl = ~ poly(age, 2) + educ)
+
+
+labor1 <- feols((days_self + days_wage) ~ 1 | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(female==1),
+                  cluster = "district")
+labor2 <- feols((days_self + days_wage) ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(female==1),
+                  cluster = "district")
+labor3 <- feols(days_self ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(female==1),
+                  cluster = "district")
+labor4 <- feols(days_wage ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(female==1),
+                  cluster = "district")
+labor5 <- feols(days_f ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(female==1),
+                  cluster = "district")
+labor6 <- feols(days_nf ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(female==1),
+                  cluster = "district")
+
+
+
+labortable <- etable(
+                      labor1, labor2, labor3, labor4, labor5, labor6,
+                      se.below = TRUE,
+                      depvar = FALSE,
+                      signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+                      digits = "r3",
+                      digits.stats = "r3",
+                      fitstat = c("ivwald1.p", "n"),
+                      coefstat = "se",
+                      group = list(controls = "poly"), drop = "educ"
+                      )
+labortable <- labortable[-c(7:8),]
+labortable <- as.matrix(labortable)
+rownames(labortable) <- c("pm25", "", "controls", "fixed effects:",
+                          "district", "state-month", 
+                          "wald (IV, p)", "observations")
+labortable[c(4),] <- " "
+saveRDS(labortable, "pollution_development/draft/tables/labortableIVfemale.rds")
+
+
+
+
+
+
+
+
+labor1 <- feols((days_self + days_wage) ~ 1 | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(female==0),
+                  cluster = "district")
+labor2 <- feols((days_self + days_wage) ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(female==0),
+                  cluster = "district")
+labor3 <- feols(days_self ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(female==0),
+                  cluster = "district")
+labor4 <- feols(days_wage ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(female==0),
+                  cluster = "district")
+labor5 <- feols(days_f ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(female==0),
+                  cluster = "district")
+labor6 <- feols(days_nf ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(female==0),
+                  cluster = "district")
+
+
+
+labortable <- etable(
+                      labor1, labor2, labor3, labor4, labor5, labor6,
+                      se.below = TRUE,
+                      depvar = FALSE,
+                      signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+                      digits = "r3",
+                      digits.stats = "r3",
+                      fitstat = c("ivwald1.p", "n"),
+                      coefstat = "se",
+                      group = list(controls = "poly"), drop = "educ"
+                      )
+labortable <- labortable[-c(7:8),]
+labortable <- as.matrix(labortable)
+rownames(labortable) <- c("pm25", "", "controls", "fixed effects:",
+                          "district", "state-month", 
+                          "wald (IV, p)", "observations")
+labortable[c(4),] <- " "
+saveRDS(labortable, "pollution_development/draft/tables/labortableIVmale.rds")
+
+
+
+
+
+
+
+
+
+
+labor1 <- feols((days_self + days_wage) ~ 1 | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(month_int %in% c(6,7,8,9,10) & female==1),
+                  cluster = "district")
+labor2 <- feols((days_self + days_wage) ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(month_int %in% c(6,7,8,9,10) & female==1),
+                  cluster = "district")
+labor3 <- feols(days_self ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(month_int %in% c(6,7,8,9,10) & female==1),
+                  cluster = "district")
+labor4 <- feols(days_wage ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(month_int %in% c(6,7,8,9,10) & female==1),
+                  cluster = "district")
+labor5 <- feols(days_f ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(month_int %in% c(6,7,8,9,10) & female==1),
+                  cluster = "district")
+labor6 <- feols(days_nf ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(month_int %in% c(6,7,8,9,10) & female==1),
+                  cluster = "district")
+
+
+
+labortable <- etable(
+                      labor1, labor2, labor3, labor4, labor5, labor6,
+                      se.below = TRUE,
+                      depvar = FALSE,
+                      signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+                      digits = "r3",
+                      digits.stats = "r3",
+                      fitstat = c("ivwald1.p", "n"),
+                      coefstat = "se",
+                      group = list(controls = "poly"), drop = "educ"
+                      )
+labortable <- labortable[-c(7:8),]
+labortable <- as.matrix(labortable)
+rownames(labortable) <- c("pm25", "", "controls", "fixed effects:",
+                          "district", "state-month", 
+                          "wald (IV, p)", "observations")
+labortable[c(4),] <- " "
+saveRDS(labortable, "pollution_development/draft/tables/labortableIVfemalemonsoon.rds")
+
+
+
+
+
+
+
+
+labor1 <- feols((days_self + days_wage) ~ 1 | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(month_int %in% c(6,7,8,9,10) & female==0),
+                  cluster = "district")
+labor2 <- feols((days_self + days_wage) ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(month_int %in% c(6,7,8,9,10) & female==0),
+                  cluster = "district")
+labor3 <- feols(days_self ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(month_int %in% c(6,7,8,9,10) & female==0),
+                  cluster = "district")
+labor4 <- feols(days_wage ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(month_int %in% c(6,7,8,9,10) & female==0),
+                  cluster = "district")
+labor5 <- feols(days_f ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(month_int %in% c(6,7,8,9,10) & female==0),
+                  cluster = "district")
+labor6 <- feols(days_nf ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(month_int %in% c(6,7,8,9,10) & female==0),
+                  cluster = "district")
+
+
+
+labortable <- etable(
+                      labor1, labor2, labor3, labor4, labor5, labor6,
+                      se.below = TRUE,
+                      depvar = FALSE,
+                      signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+                      digits = "r3",
+                      digits.stats = "r3",
+                      fitstat = c("ivwald1.p", "n"),
+                      coefstat = "se",
+                      group = list(controls = "poly"), drop = "educ"
+                      )
+labortable <- labortable[-c(7:8),]
+labortable <- as.matrix(labortable)
+rownames(labortable) <- c("pm25", "", "controls", "fixed effects:",
+                          "district", "state-month", 
+                          "wald (IV, p)", "observations")
+labortable[c(4),] <- " "
+saveRDS(labortable, "pollution_development/draft/tables/labortableIVmalemonsoon.rds")
+
+
+
+
+
+
+
+
+
+
+labor1 <- feols((days_self + days_wage) ~ 1 | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(month_int %in% c(11,12,1,2,3) & female==1),
+                  cluster = "district")
+labor2 <- feols((days_self + days_wage) ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(month_int %in% c(11,12,1,2,3) & female==1),
+                  cluster = "district")
+labor3 <- feols(days_self ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(month_int %in% c(11,12,1,2,3) & female==1),
+                  cluster = "district")
+labor4 <- feols(days_wage ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(month_int %in% c(11,12,1,2,3) & female==1),
+                  cluster = "district")
+labor5 <- feols(days_f ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(month_int %in% c(11,12,1,2,3) & female==1),
+                  cluster = "district")
+labor6 <- feols(days_nf ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(month_int %in% c(11,12,1,2,3) & female==1),
+                  cluster = "district")
+
+
+
+labortable <- etable(
+                      labor1, labor2, labor3, labor4, labor5, labor6,
+                      se.below = TRUE,
+                      depvar = FALSE,
+                      signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+                      digits = "r3",
+                      digits.stats = "r3",
+                      fitstat = c("ivwald1.p", "n"),
+                      coefstat = "se",
+                      group = list(controls = "poly"), drop = "educ"
+                      )
+labortable <- labortable[-c(7:8),]
+labortable <- as.matrix(labortable)
+rownames(labortable) <- c("pm25", "", "controls", "fixed effects:",
+                          "district", "state-month", 
+                          "wald (IV, p)", "observations")
+labortable[c(4),] <- " "
+saveRDS(labortable, "pollution_development/draft/tables/labortableIVfemalewinter.rds")
+
+
+
+
+
+
+
+
+labor1 <- feols((days_self + days_wage) ~ 1 | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(month_int %in% c(11,12,1,2,3) & female==0),
+                  cluster = "district")
+labor2 <- feols((days_self + days_wage) ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(month_int %in% c(11,12,1,2,3) & female==0),
+                  cluster = "district")
+labor3 <- feols(days_self ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(month_int %in% c(11,12,1,2,3) & female==0),
+                  cluster = "district")
+labor4 <- feols(days_wage ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(month_int %in% c(11,12,1,2,3) & female==0),
+                  cluster = "district")
+labor5 <- feols(days_f ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(month_int %in% c(11,12,1,2,3) & female==0),
+                  cluster = "district")
+labor6 <- feols(days_nf ~ ..ctrl | district + month^state_merge | pm25 ~ wind*as_factor(month_int),
+                  data = df %>% filter(month_int %in% c(11,12,1,2,3) & female==0),
+                  cluster = "district")
+
+
+
+labortable <- etable(
+                      labor1, labor2, labor3, labor4, labor5, labor6,
+                      se.below = TRUE,
+                      depvar = FALSE,
+                      signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+                      digits = "r3",
+                      digits.stats = "r3",
+                      fitstat = c("ivwald1.p", "n"),
+                      coefstat = "se",
+                      group = list(controls = "poly"), drop = "educ"
+                      )
+labortable <- labortable[-c(7:8),]
+labortable <- as.matrix(labortable)
+rownames(labortable) <- c("pm25", "", "controls", "fixed effects:",
+                          "district", "state-month", 
+                          "wald (IV, p)", "observations")
+labortable[c(4),] <- " "
+saveRDS(labortable, "pollution_development/draft/tables/labortableIVmalewinter.rds")
+
+
+
 
 
 
@@ -544,7 +1297,8 @@ labortable <- etable(
                       se.below = TRUE,
                       depvar = FALSE,
                       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
-                      digits = 3,
+                      digits = "r3",
+                      digits.stats = "r3",
                       fitstat = c("n"),
                       coefstat = "se",
                       group = list(controls = "poly"), drop = "educ"
@@ -592,7 +1346,8 @@ labortable <- etable(
                       se.below = TRUE,
                       depvar = FALSE,
                       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
-                      digits = 3,
+                      digits = "r3",
+                      digits.stats = "r3",
                       fitstat = c("n"),
                       coefstat = "se",
                       group = list(controls = "poly"), drop = "educ"
@@ -634,7 +1389,8 @@ labortable <- etable(
                       se.below = TRUE,
                       depvar = FALSE,
                       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
-                      digits = 3,
+                      digits = "r3",
+                      digits.stats = "r3",
                       fitstat = c("n"),
                       coefstat = "se",
                       group = list(controls = "poly"), drop = "educ"
@@ -695,7 +1451,8 @@ labortable <- etable(
                       se.below = TRUE,
                       depvar = FALSE,
                       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
-                      digits = 3,
+                      digits = "r3",
+                      digits.stats = "r3",
                       fitstat = c("n"),
                       coefstat = "se",
                       group = list(controls = "poly"), drop = "educ"
@@ -737,7 +1494,8 @@ labortable <- etable(
                       se.below = TRUE,
                       depvar = FALSE,
                       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
-                      digits = 3,
+                      digits = "r3",
+                      digits.stats = "r3",
                       fitstat = c("n"),
                       coefstat = "se",
                       group = list(controls = "poly"), drop = "educ"
@@ -784,7 +1542,8 @@ labortable <- etable(
                       se.below = TRUE,
                       depvar = FALSE,
                       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
-                      digits = 3,
+                      digits = "r3",
+                      digits.stats = "r3",
                       fitstat = c("n"),
                       coefstat = "se",
                       group = list(controls = "poly"), drop = "educ"
@@ -820,7 +1579,8 @@ labortable <- etable(
                       se.below = TRUE,
                       depvar = FALSE,
                       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
-                      digits = 3,
+                      digits = "r3",
+                      digits.stats = "r3",
                       fitstat = c("n"),
                       coefstat = "se",
                       group = list(controls = "poly"), drop = "educ"
@@ -870,25 +1630,32 @@ ntl <- panel(ntl, ~ shrid + year, duplicate.method = "first")
 
 
 
-ntl1 <- feols(log(total_light + 1) ~ l(wind, 1) | village[year] + year,
+ntl1 <- feols(log(total_light + 1) ~ 1 | village[year] + year | l(pm25, 1) ~ l(wind, 1),
               data = ntl,
               cluster = "village")
-ntl2 <- feols(log(total_light + 1) ~ l(wind, 1) + l(rain_z, 1) | village[year] + year,
+ntl2 <- feols(log(total_light + 1) ~ l(rain_z, 1) | village[year] + year | l(pm25, 1) ~ l(wind, 1),
+              data = ntl,
+              cluster = "village")
+ntl3 <- feols(log(total_light + 1) ~ 1 | village[year] + year | l(pm25, -1) ~ l(wind, -1),
+              data = ntl,
+              cluster = "village")
+ntl4 <- feols(log(total_light + 1) ~ l(rain_z, 1) | village[year] + year| l(pm25, -1) ~ l(wind, -1),
               data = ntl,
               cluster = "village")
 
 ntltable <- etable(
-                    ntl1, ntl2,
+                    ntl1, ntl2, ntl3, ntl4,
                     se.below = TRUE,
                     depvar = FALSE,
                     signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
-                    digits = 3,
+                    digits = "r3",
+                    digits.stats = "r3",
                     fitstat = c("n"),
                     coefstat = "se"
                     )
-ntltable <- ntltable[-c(10, 11),]
+ntltable <- ntltable[-c(3, 4, 12, 13),]
 ntltable <- as.matrix(ntltable)
-rownames(ntltable) <- c("wind (lagged)", "", "rain (z, lagged)", "",
+rownames(ntltable) <- c("wind (lag)", "", "wind (lead)", "",
                         "fixed effects:", "village", "year", 
                         "varying slopes:", "year (by village)",
                         "observations")
@@ -929,7 +1696,8 @@ ntltable <- etable(
                     se.below = TRUE,
                     depvar = FALSE,
                     signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
-                    digits = 3,
+                    digits = "r3",
+                    digits.stats = "r3",
                     fitstat = c("n"),
                     coefstat = "se"
                     )

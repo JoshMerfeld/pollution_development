@@ -4,7 +4,7 @@
     <title>Pollution, agricultural productivity, and development: Evidence from coal in plants in India</title>
     <meta charset="utf-8" />
     <meta name="author" content="Joshua D. Merfeld   KDI School and IZA" />
-    <meta name="date" content="2023-01-18" />
+    <meta name="date" content="2023-02-08" />
     <script src="slides_files/header-attrs/header-attrs.js"></script>
     <script src="slides_files/kePrint/kePrint.js"></script>
     <link href="slides_files/lightable/lightable.css" rel="stylesheet" />
@@ -21,7 +21,7 @@ class: center, middle, inverse, title-slide
 ### Joshua D. Merfeld <br> KDI School and IZA
 ]
 .date[
-### 2023-01-18
+### 2023-02-08
 ]
 
 ---
@@ -31,11 +31,207 @@ class: center, middle, inverse, title-slide
 
 
 
+&lt;style type="text/css"&gt;
+    /* Table width = 100% max-width */
+
+    &lt;!-- .remark-slide table{ --&gt;
+    &lt;!--     width: 100%; --&gt;
+    &lt;!-- } --&gt;
+
+    /* Change the background color to white for shaded rows (even rows) */
+
+    .remark-slide thead, .remark-slide tr:nth-child(n) {
+        background-color: white;
+    }
+    
+    tfoot {
+      font-size: 80%;
+    }
+&lt;/style&gt;
+
+
+
+
+
+## Coal and energy worldwide
+
+- Coal one of most common energy sources worldwide
+  - Reached an all-time high in 2021 &lt;small&gt;&lt;small&gt;(www.iea.org/reports/coal-fired-electricity)&lt;/small&gt;&lt;/small&gt;
+
+![]("../../../pollution_development/draft/tables/energy.png")
+
+
+
+
+
+
+
+---
+
+## Coal and energy in India
+
+![]("../../../pollution_development/draft/tables/energy.png")
+
+
+
+
+
+---
+
+## Coal and energy in India
+
+- From 1990 to 2010: coal generation from 42.4 gigawatts to more than 100
+- Obvious benefits to more power &lt;small&gt;&lt;small&gt;(Dinkelman 2011; Kline and Moretti 2014; Rud 2012; Van de Walle et al. 2017)&lt;/small&gt;&lt;/small&gt;
+
+
+
+
+
+
+
+
+
+---
+
+## Downsides, too
+
+- But power generation can have downsides, too
+  - Especially true near plants: pollution a major concern
+- Climate change and pollutants like SO2, mercury, etc. &lt;small&gt;&lt;small&gt;(www.eia.gov/energyexplained/coal/coal-and-the-environment.php)&lt;/small&gt;&lt;/small&gt;
+- Long literature on negative effects of pollution 
+  - Health &lt;small&gt;&lt;small&gt;(Arceo, Hanna, and Oliva 2016; Brunekreef and Holgate 2002; Deryugina et al. 2019; Kampa and Castanas 2008; Pope III and Dockery 2006)&lt;/small&gt;&lt;/small&gt;
+  - Productivity/labor allocation &lt;small&gt;&lt;small&gt;(Chang et al. 2019; Ebenstein, Lavy, and Roth 2016; Hanna and Oliva 2015; He, Liu, and Salvo 2019; Wen and Burke 2022)&lt;/small&gt;&lt;/small&gt;
+
+
+
+
+---
+
+## This paper
+
+- Effects of pollution from coal plants on agricultural productivity in India
+  - Previous evidence from gold mines (Aragon and Rud 2016) and workers in California (Graff Zivin and Neidell 2012)
+- Higher exposure to pollution leads to lower agricultural productivity
+  - Exposure defined as wind direction from coal plants towards villages
+  - One additional day of exposure per season: decrease of 0.3 percent (yields)
+
+
+
+---
+
+## This paper
+
+- Adults decrease labor allocation
+  - Driven by large decrease in older half of sample; younger half increases allocation to farm labor
+- More pollution in previous year also leads to lower nightlight growth
+  - 25th to 75th percentile of exposure leads to decrease in nightlights of 0.7 percent
+
+
+
+
+
+---
+
+## Data sources
+
+&lt;table style='NAborder-bottom: 0; margin-left: auto; margin-right: auto; font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;' class="table lightable-classic-2"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; source &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; geographic coverage &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; temporal coverage &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 2cm; "&gt; shapefile &lt;/td&gt;
+   &lt;td style="text-align:center;width: 4.5cm; "&gt; Asher et al. (2021) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 3.5cm; "&gt; India &lt;/td&gt;
+   &lt;td style="text-align:center;width: 3.5cm; "&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 2cm; "&gt; coal plants &lt;/td&gt;
+   &lt;td style="text-align:center;width: 4.5cm; "&gt; Global Energy Monitor &lt;/td&gt;
+   &lt;td style="text-align:center;width: 3.5cm; "&gt; global &lt;/td&gt;
+   &lt;td style="text-align:center;width: 3.5cm; "&gt; yearly &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 2cm; "&gt; wind &lt;/td&gt;
+   &lt;td style="text-align:center;width: 4.5cm; "&gt; NCAR &lt;/td&gt;
+   &lt;td style="text-align:center;width: 3.5cm; "&gt; global &lt;/td&gt;
+   &lt;td style="text-align:center;width: 3.5cm; "&gt; daily &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 2cm; "&gt; pollution &lt;/td&gt;
+   &lt;td style="text-align:center;width: 4.5cm; "&gt; Hammer et al. (2020) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 3.5cm; "&gt; global &lt;/td&gt;
+   &lt;td style="text-align:center;width: 3.5cm; "&gt; monthly &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 2cm; "&gt; agriculture &lt;/td&gt;
+   &lt;td style="text-align:center;width: 4.5cm; "&gt; Angopadhyay et al. (2022) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 3.5cm; "&gt; India &lt;/td&gt;
+   &lt;td style="text-align:center;width: 3.5cm; "&gt; two seasons/year &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 2cm; "&gt; nightlights &lt;/td&gt;
+   &lt;td style="text-align:center;width: 4.5cm; "&gt; Asher et al. (2021) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 3.5cm; "&gt; India &lt;/td&gt;
+   &lt;td style="text-align:center;width: 3.5cm; "&gt; yearly &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 2cm; "&gt; weather &lt;/td&gt;
+   &lt;td style="text-align:center;width: 4.5cm; "&gt; TerraClimate &lt;/td&gt;
+   &lt;td style="text-align:center;width: 3.5cm; "&gt; global &lt;/td&gt;
+   &lt;td style="text-align:center;width: 3.5cm; "&gt; monthly &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 2cm; "&gt; labor &lt;/td&gt;
+   &lt;td style="text-align:center;width: 4.5cm; "&gt; National Sample Survey (NSS) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 3.5cm; "&gt; India &lt;/td&gt;
+   &lt;td style="text-align:center;width: 3.5cm; "&gt; daily interviews &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;tfoot&gt;&lt;tr&gt;&lt;td style="padding: 0; " colspan="100%"&gt;
+&lt;sup&gt;&lt;/sup&gt; Global Energy Monitor: globalenergymonitor.org/projects/global-coal-plant-tracker. NCAR: climatedataguide.ucar.edu/. TerraClimate: www.climatologylab.org/terraclimate.html&lt;/td&gt;&lt;/tr&gt;&lt;/tfoot&gt;
+&lt;/table&gt;
+
+
+
+
+
+---
+
+## General idea
+- Coal plants open in a given year
+- Plot wind direction each day
+  - Exposure means wind blowing from coal plant to village (within 30km)
+  - Aggregate up to desired level (e.g. season, month, week)
+
+
+
+
+
+---
 
 ## Coal plants over time
 
 &lt;img src="slides_files/figure-html/plants-1.gif" width="100%" /&gt;
 
+
+
+
+
+
+
+
+---
+
+
+## Wind direction - first 100 days of 2010 in Guna district (MP)
+
+&lt;img src="slides_files/figure-html/windbase-1.png" width="100%" /&gt;
 
 
 
@@ -60,7 +256,6 @@ class: center, middle, inverse, title-slide
 
 
 &lt;table style='NAborder-bottom: 0; font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;' class=" lightable-classic-2"&gt;
-&lt;caption&gt;Local characteristics and the construction of coal plants&lt;/caption&gt;
  &lt;thead&gt;
 &lt;tr&gt;
 &lt;th style="empty-cells: hide;border-bottom:hidden;" colspan="1"&gt;&lt;/th&gt;
@@ -159,10 +354,9 @@ class: center, middle, inverse, title-slide
 
 ---
 
-## Validating wind direction
+## Validating wind direction - particulate matter and exposure
 
 &lt;table style='NAborder-bottom: 0; font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;' class=" lightable-classic-2"&gt;
-&lt;caption&gt;Wind direction and particulate matter&lt;/caption&gt;
  &lt;thead&gt;
 &lt;tr&gt;
 &lt;th style="empty-cells: hide;border-bottom:hidden;" colspan="1"&gt;&lt;/th&gt;
@@ -244,7 +438,6 @@ class: center, middle, inverse, title-slide
 
 
 &lt;table style='NAborder-bottom: 0; font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;' class=" lightable-classic-2"&gt;
-&lt;caption&gt;Wind direction and agricultural productivity&lt;/caption&gt;
  &lt;thead&gt;
 &lt;tr&gt;
 &lt;th style="empty-cells: hide;border-bottom:hidden;" colspan="1"&gt;&lt;/th&gt;
@@ -377,9 +570,10 @@ class: center, middle, inverse, title-slide
 
 ## Effects of PM on agricultural productivity
 
+- Likely endogenous
+  - Upward biased?
 
-&lt;table style='NAborder-bottom: 0; font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;' class=" lightable-classic-2"&gt;
-&lt;caption&gt;Particulate matter (PM 2.5) and agricultural productivity&lt;/caption&gt;
+&lt;table class=" lightable-classic-2" style='font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;'&gt;
  &lt;thead&gt;
 &lt;tr&gt;
 &lt;th style="empty-cells: hide;border-bottom:hidden;" colspan="1"&gt;&lt;/th&gt;
@@ -414,38 +608,6 @@ class: center, middle, inverse, title-slide
    &lt;td style="text-align:center;width: 2cm; "&gt; (3.7e-5) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; rain (z) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.030*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.008*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.075*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.007*** &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.0004) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.001) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.002) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.0005) &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; mean temp (10s) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.0003*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.007*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.002*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.008*** &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (5.63e-5) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.0004) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.0001) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (9.79e-5) &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; font-weight: bold;"&gt; fixed effects: &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
@@ -494,8 +656,6 @@ class: center, middle, inverse, title-slide
    &lt;td style="text-align:center;width: 2cm; "&gt; 1,114,270 &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
-&lt;tfoot&gt;&lt;tr&gt;&lt;td style="padding: 0; " colspan="100%"&gt;
-&lt;sup&gt;&lt;/sup&gt; Note: Standard errors are in parentheses and are clustered at the village level. * p&amp;lt;0.10 ** p&amp;lt;0.05 *** p&amp;lt;0.01&lt;/td&gt;&lt;/tr&gt;&lt;/tfoot&gt;
 &lt;/table&gt;
 
 
@@ -503,6 +663,21 @@ class: center, middle, inverse, title-slide
 
 
 
+
+
+
+
+
+
+---
+
+## Effects of PM on agricultural productivity
+
+- We are really interested in the effect of _pollution_, not wind
+- Use wind as instrument? Assumes...
+  - Conditional on fixed effects and weather...
+  - Wind only affects agriculture through pollution
+- Reasonable?
 
 
 
@@ -518,8 +693,7 @@ class: center, middle, inverse, title-slide
 ## Effects of PM on agricultural productivity, IV estimates
 
 
-&lt;table style='NAborder-bottom: 0; font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;' class=" lightable-classic-2"&gt;
-&lt;caption&gt;Pollution and agricultural productivity, IV estimates&lt;/caption&gt;
+&lt;table class=" lightable-classic-2" style='font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;'&gt;
  &lt;thead&gt;
 &lt;tr&gt;
 &lt;th style="empty-cells: hide;border-bottom:hidden;" colspan="1"&gt;&lt;/th&gt;
@@ -554,38 +728,6 @@ class: center, middle, inverse, title-slide
    &lt;td style="text-align:center;width: 2cm; "&gt; (0.003) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; rain (z) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.011*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -4.24e-5 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.078*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.042*** &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.003) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.002) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.002) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.004) &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; mean temp (10s) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.005*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.007*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.002*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.008*** &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.0003) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.0004) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.0001) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.0001) &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; font-weight: bold;"&gt; fixed effects: &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
@@ -626,14 +768,6 @@ class: center, middle, inverse, title-slide
    &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; observations &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 2,387,417 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 2,371,221 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 2,371,221 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 1,256,951 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 1,114,270 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; font-weight: bold;"&gt; first stage: &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
@@ -657,45 +791,48 @@ class: center, middle, inverse, title-slide
    &lt;td style="text-align:center;width: 2cm; "&gt; (0.002) &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; "&gt; (0.004) &lt;/td&gt;
   &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; rain (z) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -1.68*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.239*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.225*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -1.37*** &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.011) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.017) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.015) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.010) &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; mean temp (10s) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.192*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.002 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.021*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.007*** &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.0009) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.004) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.001) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.002) &lt;/td&gt;
-  &lt;/tr&gt;
 &lt;/tbody&gt;
-&lt;tfoot&gt;&lt;tr&gt;&lt;td style="padding: 0; " colspan="100%"&gt;
-&lt;sup&gt;&lt;/sup&gt; Note: Standard errors are in parentheses and are clustered at the village level. * p&amp;lt;0.10 ** p&amp;lt;0.05 *** p&amp;lt;0.01&lt;/td&gt;&lt;/tr&gt;&lt;/tfoot&gt;
 &lt;/table&gt;
 
 
 
+
+---
+
+## Robustness checks
+
+- Leads of wind direction
+- Only post coal plant opening
+
+
+
+
+---
+
+## Taking stock
+
+- We see clear negative effects of pollution on productivity
+  - Absolute deviation of exposure is approx. 8 days, meaning 2-3 percent change in productivity
+  - Using AD of PM, it's above 20 percent change
+- Key question: what is the driver?
+  - Land?
+  - Labor?
+- Hard to look explicitly at land, so let's look at labor
+
+
+---
+
+## National Sample Survey (NSS)
+
+&lt;img src="slides_files/figure-html/nss-1.png" width="100%" /&gt;
+
+
+---
+
+## Problem: only have district identifiers, so aggregate up
+
+
+&lt;img src="slides_files/figure-html/aggregation-1.png" width="100%" /&gt;
 
 
 
@@ -707,7 +844,6 @@ class: center, middle, inverse, title-slide
 
 
 &lt;table style='NAborder-bottom: 0; font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;' class=" lightable-classic-2"&gt;
-&lt;caption&gt;Wind direction and labor allocation, heterogeneity by age&lt;/caption&gt;
  &lt;thead&gt;
   &lt;tr&gt;
    &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
@@ -815,6 +951,31 @@ class: center, middle, inverse, title-slide
 
 
 
+---
+
+## Large negative effects on older half
+
+- Older half of sample decreases overall labor allocation
+  - Driven by self-employment and nonfarm employment
+- Younger half actually increases allocation!
+- Consistent with health effects only on older adults, though not conclusive
+
+
+
+
+
+---
+
+## Effects on aggregate growth?
+
+- We know pollution affects productivity and labor allocation
+- Might it also affect growth?
+- Proxy for growth with nightlights
+  - Look at previous year's exposure and current year's nightlights
+  - "Growth" of nightlights
+  - Village FE
+
+
 
 
 
@@ -824,7 +985,6 @@ class: center, middle, inverse, title-slide
 
 
 &lt;table style='NAborder-bottom: 0; font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;' class=" lightable-classic-2"&gt;
-&lt;caption&gt;Wind direction and nightlight growth&lt;/caption&gt;
  &lt;thead&gt;
   &lt;tr&gt;
    &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
@@ -899,7 +1059,42 @@ class: center, middle, inverse, title-slide
 
 ## Conclusion
 
+- Large growth in coal power in India
+  - Other countries, as well
+- Increase in electricity, but downsides as well
+  - Pollution!
+- We already have plenty of evidence on effects of pollution on health
 
+
+
+
+
+
+---
+
+## Conclusion
+
+- Paper presents evidence that villages downwind from coal plants suffer in terms of agricultural productivity
+  - Identification relies on within-village changes across seasons
+- Wind exposure fluctuations lead to changes in agricultural productivity of around 2.4 percent based on mean absolute deviation
+  - Instrumenting for particulate matter, effects are even larger (more than 20 percent)
+- Clear changes in labor allocation
+  - Oldest half of sample
+- Slower growth of nightlights
+
+
+
+
+
+
+---
+
+## Conclusion
+
+- Overall cost/benefit way beyond scope of paper
+- Instead, results point to importance of the location of pollution sources
+  - Downwind villages suffer
+- 30km radius indicates relatively long-range effects
 
 
 

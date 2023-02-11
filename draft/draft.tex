@@ -117,14 +117,14 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
-  pdftitle={Pollution, agricultural productivity, and development: Evidence from coal in plants in India},
+  pdftitle={Pollution, agricultural productivity, and development: Evidence from coal plants in India},
   pdfauthor={Joshua D. Merfeld},
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
 
-\title{Pollution, agricultural productivity, and development: Evidence from coal in plants in India\footnote{I thank Marc Bellemare and David Sungho Park for comments and suggestions that greatly improved the quality of the paper. The usual disclaimer applies. All scripts used in this paper are publicly available on my GitHub page: github.com/JoshMerfeld/pollution\_development}}
+\title{Pollution, agricultural productivity, and development: Evidence from coal plants in India\footnote{I thank Marc Bellemare and David Sungho Park for comments and suggestions that greatly improved the quality of the paper. The usual disclaimer applies. All scripts used in this paper are publicly available on my GitHub page: github.com/JoshMerfeld/pollution\_development}}
 \author{Joshua D. Merfeld\footnote{KDI School of Public Policy and Management and IZA; \href{mailto:merfeld@kdis.ac.kr}{\nolinkurl{merfeld@kdis.ac.kr}}}}
-\date{2023-01-20}
+\date{2023-02-10}
 
 \begin{document}
 \maketitle
@@ -157,7 +157,7 @@ These effects are apparently concentrated in villages that do not experience the
 
 Robustness checks show that this effect is concentrated in the years after the construction of the power plant, which helps decrease concerns around endogeneity since, conditional on the village fixed effect and weather (rainfall and temperature), wind direction across years and seasons is exogenous. Additionally, leads for wind direction do not predict current agricultural productivity, again supporting the identifying assumptions.
 
-While I am not able to explicitly test effects on land productivity, I look at how adults allocate labor over the last seven days using the National Sample Survey and creating a district-level exposure measure based on the timing of the survey for each household. An additional day of wind over the previous week decreases overall labor allocation by 0.027 days. However, the overall results show stark heterogeneity based on age; the older half of the sample greatly decreases labor allocation in response to pollution exposure while the younger half increases overall labor allocation. Older adults decrease labor allocation to both farm and non-farm labor, while younger adults increase labor allocated to farm labor. This is suggestive evidence of productivity effects being driven by the health and productivity effects on individuals, since older adults are more susceptible to pollution and they also greatly decrease non-farm employment, which presumably will no suffer any possible direct effects of pollution on productivity. The preponderance of results seems to indicate that effects on labor are the most likely mechanism.
+While I am not able to explicitly test effects on land productivity, I look at how adults allocate labor over the last seven days using the National Sample Survey and creating a district-level exposure measure based on the timing of the survey for each household. An additional day of wind over the previous week decreases overall labor allocation by 0.055 days. However, the overall results show stark heterogeneity based on age; the older half of the sample greatly decreases labor allocation in response to pollution exposure while the younger half increases overall labor allocation. Older adults decrease labor allocation to both farm and non-farm labor, while younger adults increase labor allocated to farm labor. This is suggestive evidence of productivity effects being driven by the health and productivity effects on individuals, since older adults are more susceptible to pollution and they also greatly decrease non-farm employment, which presumably will no suffer any possible direct effects of pollution on productivity. The preponderance of results seems to indicate that effects on labor are the most likely mechanism.
 
 The final set of results explores whether there are impacts of pollution on aggregate economic development. Using nightlights, I show that lagged wind -- i.e.~pollution exposure in the prior year -- has a negative impact on economic development as proxied by nightlights. Going from the 25th percentile to the 75th percentile of wind exposure is synonymous with a decrease in the growth of nightlights within a village by around 0.7 percent. While this is a relatively small magnitude, it is worth noting that there are more than 100,000 villages in this sample. While the effect for a single village might be small, the overall, aggregate effect on growth is quite substantial. To put this number in perspective, Castelló-Climent, Chaudhary, and Mukhopadhyay (2018) argue that a standard-deviation increase in the share of adults with a university education leads to 12 percent higher nightlights in India, while Storeygard (2016) shows that a four-fold increase in oil prices over six years leads to seven percent lower nightlights at a distance of around 500km from the nearest large port in sub-Saharan Africa. In other words, the 0.7 percent change in nightlights is quite large given this is annual variation.
 
@@ -214,9 +214,7 @@ Finally, I use nightlights as a measure of economic growth (Henderson, Storeygar
 
 \label{identification}
 
-To calculate the effects of exposure to pollution on different outcomes, I rely on fixed effects and the differential exposure driven by plausibly exogenous wind direction, conditional on total rainfall and average temperature. The regression is of the form
-\begin{gather} y_{it} = \alpha_{i} + \gamma_{t} + \beta wind_{it} + \delta rain_{it} + \psi temp_{it} + \varepsilon_{it}, \end{gather}
-where \(y_{it}\) is outcome \(y\) for unit \(i\) at time \(t\), \(\alpha\) is a geographic fixed effects, \(\gamma_t\) is time fixed effects, \(wind_{it}\) is exposure to pollution -- defined using wind direction -- \(rain_{it}\) is total rainfall during the season, and \(temp_{it}\) is average temperature during the season. Although I use \(i\) and \(t\) as subscripts for the fixed effects, note that these change depending on the unit of analysis and the outcome. I explicitly state the level of fixed effects in the tables and results below.
+To calculate the effects of exposure to pollution on different outcomes, I rely on fixed effects and the differential exposure driven by plausibly exogenous wind direction, conditional on total rainfall and average temperature. The regression is of the form \begin{gather} y_{it} = \alpha_{i} + \gamma_{t} + \beta wind_{it} + \delta rain_{it} + \psi temp_{it} + \varepsilon_{it}, \end{gather} where \(y_{it}\) is outcome \(y\) for unit \(i\) at time \(t\), \(\alpha\) is a geographic fixed effects, \(\gamma_t\) is time fixed effects, \(wind_{it}\) is exposure to pollution -- defined using wind direction -- \(rain_{it}\) is total rainfall during the season, and \(temp_{it}\) is average temperature during the season. Although I use \(i\) and \(t\) as subscripts for the fixed effects, note that these change depending on the unit of analysis and the outcome. I explicitly state the level of fixed effects in the tables and results below.
 
 Identification relies on changes in wind direction across time for the same geographic units. In other words, conditional on the fixed effects and weather, I assume changes in wind direction are as good as random and uncorrelated with the outcome -- e.g.~agricultural productivity -- except through exposure to pollution. One major threat to identification is that the building of a coal plant could lead to a spurious correlation between the exposure variable and the outcome. Specifically, since exposure is defined as zero prior to the building of a coal plant, the exposure variable itself might be endogenous even though wind direction is not. To help allay these concerns, I estimate additional regressions restricting the sample to only time periods after which a given location has a coal plant. I also present results using leads to show that future wind direction does not seem to predict current outcomes.
 
@@ -336,7 +334,7 @@ observations & 2,387,417 & 2,371,221 & 2,371,221 & 1,256,951 & 1,114,270\\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[para]
-\item Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01
+\item Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions is estimated agricultural yield, defined as tons per hectare. * p<0.10 ** p<0.05 *** p<0.01
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -370,7 +368,7 @@ observations & 2,387,417 & 2,371,221 & 2,371,221 & 1,256,951 & 1,114,270\\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[para]
-\item Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01
+\item Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions is estimated agricultural yield, defined as tons per hectare. * p<0.10 ** p<0.05 *** p<0.01
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -418,7 +416,7 @@ mean temp (10s) &  & -0.192*** & 0.002 & -0.021*** & -0.007***\\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[para]
-\item Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01
+\item Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions is estimated agricultural yield, defined as tons per hectare. * p<0.10 ** p<0.05 *** p<0.01
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -458,7 +456,7 @@ observations & 1,112,082 & 1,259,139 & 2,371,221 & 2,371,221 & 2,367,248\\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[para]
-\item Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01
+\item Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions is estimated agricultural yield, defined as tons per hectare. The first two columns split the sample based on the *maximum* observed exposure. * p<0.10 ** p<0.05 *** p<0.01
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -487,27 +485,33 @@ Table \ref{tab:labortable} presents results for labor allocation over the last s
 
 \begin{table}
 
-\caption{\label{tab:labortable}Wind direction and labor allocation}
+\caption{\label{tab:labortablerural}Wind direction and labor allocation, rural only}
 \centering
 \begin{threeparttable}
 \begin{tabular}[t]{>{\raggedright\arraybackslash}p{3cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}}
 \toprule
   & all & all & self & wage & farm & non-farm\\
 \midrule
-wind & -0.021 & -0.027* & 0.008 & -0.034** & 0.035* & -0.061**\\
- & (0.015) & (0.015) & (0.017) & (0.016) & (0.019) & (0.025)\\
+\textbf{rural} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
+wind & -0.112*** & -0.118*** & -0.050* & -0.068** & -0.002 & -0.116***\\
+ & (0.036) & (0.029) & (0.030) & (0.031) & (0.028) & (0.034)\\
+DV mean & 3.499 & 3.499 & 2.172 & 1.327 & 1.260 & 2.240\\
+observations & 529,562 & 529,466 & 529,466 & 529,466 & 529,466 & 529,466\\
+\midrule
+\textbf{urban} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
+wind & -0.020 & -0.030 & -0.011 & -0.019 & 0.023* & -0.053\\
+ & (0.033) & (0.041) & (0.039) & (0.031) & (0.014) & (0.048)\\
+DV mean & 3.040 & 3.040 & 1.393 & 1.647 & 0.101 & 2.939\\
+observations & 369,483 & 369,390 & 369,390 & 369,390 & 369,390 & 369,390\\
+\midrule
 controls & No & Yes & Yes & Yes & Yes & Yes\\
 \textbf{fixed effects:} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
 district & Yes & Yes & Yes & Yes & Yes & Yes\\
-year & Yes & Yes & Yes & Yes & Yes & Yes\\
-\textbf{varying slopes:} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
-year (by district) & Yes & Yes & Yes & Yes & Yes & Yes\\
-\midrule
-observations & 899,045 & 898,856 & 898,856 & 898,856 & 898,856 & 898,856\\
+state-month & Yes & Yes & Yes & Yes & Yes & Yes\\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[para]
-\item Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education. * p<0.10 ** p<0.05 *** p<0.01
+\item Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education. The outcome in each regression is days worked in the previous seven days. * p<0.10 ** p<0.05 *** p<0.01
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -521,35 +525,6 @@ There are two possible explanations for this pattern of results. First, it could
 Table \ref{tab:labortablemonsoon} and Table \ref{tab:labortablewinter} in the appendix disaggregate these effects into the monsoon and winter seasons. Apparently, the entirety of the effect is driven by changes in labor allocation during the monsoon season. The dynamics across seasons apparently lead to large differences in the effects of pollution on labor allocation.
 
 One way to provide suggestive evidence of mechanisms is to explore heterogeneity in the effects. Previous research has shown larger effects of pollution on the health of the oldest (Deryugina et al. 2019). The labor sample includes all adults between 15 and 60 years of age. To look at heterogeneity by age, I present an additional set of results interacting the wind variable with an indicator for whether an individual is over 37 years of age.\footnote{This splits the sample into two equal bins of age: those who are 15-37 and those who are 38-60.} These results are in Table \ref{tab:labortableold}, which otherwise presents the same specifications in the last five columns as \ref{tab:labortable}.
-
-\begin{table}
-
-\caption{\label{tab:labortableold}Wind direction and labor allocation, heterogeneity by age}
-\centering
-\begin{threeparttable}
-\begin{tabular}[t]{>{\raggedright\arraybackslash}p{4cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}}
-\toprule
-  & all & self & wage & farm & non-farm\\
-\midrule
-wind & 0.061*** & 0.096*** & -0.034 & 0.068*** & -0.006\\
- & (0.023) & (0.022) & (0.024) & (0.020) & (0.030)\\
-wind times age>=38 & -0.207*** & -0.207*** & -0.0001 & -0.078*** & -0.129***\\
- & (0.037) & (0.033) & (0.040) & (0.020) & (0.030)\\
-controls & Yes & Yes & Yes & Yes & Yes\\
-\textbf{fixed effects:} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
-district & Yes & Yes & Yes & Yes & Yes\\
-year & Yes & Yes & Yes & Yes & Yes\\
-\textbf{varying slopes:} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
-year (by district) & Yes & Yes & Yes & Yes & Yes\\
-\midrule
-observations & 898,856 & 898,856 & 898,856 & 898,856 & 898,856\\
-\bottomrule
-\end{tabular}
-\begin{tablenotes}[para]
-\item Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education. * p<0.10 ** p<0.05 *** p<0.01
-\end{tablenotes}
-\end{threeparttable}
-\end{table}
 
 Table \ref{tab:labortableold} presents a very clear set of results: the effects are always larger (more negative) for older adults. Particularly interestingly, we now see that the mean-zero effect on self employment in the previous table is driven by two stark contrasts: a large increase for the younger group and a large decrease for the older group. For the youngest group, this increase appears in farm labor, indicating likely increases in farm self-employment. The oldest, on the other hand, have large decreases in both farm and non-farm labor, with larger decreases in the latter.
 
@@ -575,25 +550,25 @@ Pollution leads to lower agricultural productivity as well as changes in labor a
 \caption{\label{tab:ntltable}Wind direction and nightlight growth}
 \centering
 \begin{threeparttable}
-\begin{tabular}[t]{>{\raggedright\arraybackslash}p{3cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}}
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{3cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}}
 \toprule
-  & (1) & (2)\\
+  & (1) & (2) & (3) & (4)\\
 \midrule
-wind (lagged) & -0.080*** & -0.083***\\
- & (0.015) & (0.015)\\
-rain (z, lagged) &  & -0.035***\\
- &  & (0.002)\\
-\textbf{fixed effects:} & \textbf{} & \textbf{}\\
-village & Yes & Yes\\
-year & Yes & Yes\\
-\textbf{varying slopes:} & \textbf{} & \textbf{}\\
-year (by village) & Yes & Yes\\
+wind (lag) & -0.024*** & -0.024*** &  & \\
+ & (0.003) & (0.003) &  & \\
+wind (lead) &  &  & -0.001 & -0.001\\
+ &  &  & (0.002) & (0.002)\\
+\textbf{fixed effects:} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
+village & Yes & Yes & Yes & Yes\\
+year & Yes & Yes & Yes & Yes\\
+\textbf{varying slopes:} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
+year (by village) & Yes & Yes & Yes & Yes\\
 \midrule
-observations & 2,146,715 & 2,146,715\\
+observations & 1,694,535 & 1,694,535 & 1,807,504 & 1,807,504\\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[para]
-\item Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01
+\item Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions is logged nightlights. Rainfall is included in columns (2) and (4). * p<0.10 ** p<0.05 *** p<0.01
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -763,7 +738,7 @@ Wen, Jeff, and Marshall Burke. 2022. {``{Lower test scores from wildfire smoke e
 \section*{Appendix A}\label{appendix-a}}
 \addcontentsline{toc}{section}{Appendix A}
 
-\setcounter{table}{0} \renewcommand{\thetable}{A\arabic{table}} \setcounter{figure}{0} \renewcommand{\thefigure}{A\arabic{figure}} 
+\beginappendix
 \FloatBarrier
 
 \begin{table}[H]
@@ -792,6 +767,7 @@ weather & TerraClimate & global & monthly\\
 
 \FloatBarrier
 \newpage
+
 \begin{table}[H]
 
 \caption{\label{tab:yieldtablepostplant}Wind direction and agricultural productivity, post-coal plant only}
@@ -819,13 +795,14 @@ observations & 1,886,956 & 1,872,177 & 1,872,177 & 996,509 & 875,668\\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[para]
-\item Note: Standard errors are in parentheses and are clustered at the village level. The sample is restricted to village-years after a coal plant was built near the village. * p<0.10 ** p<0.05 *** p<0.01
+\item Note: Standard errors are in parentheses and are clustered at the village level. The sample is restricted to village-years after a coal plant was built near the village. The outcome in all regressions estimated agricultural yield (tons per hectare). * p<0.10 ** p<0.05 *** p<0.01
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
 
 \FloatBarrier
 \newpage
+
 \begin{table}
 
 \caption{\label{tab:yieldtableleads}Agricultural productivity and pollution leads}
@@ -854,19 +831,21 @@ observations & 1,976,205 & 1,976,205\\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[para]
-\item Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01
+\item Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions estimated agricultural yield (tons per hectare). * p<0.10 ** p<0.05 *** p<0.01
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
 
 \FloatBarrier
 \newpage
+
 \begin{figure}
 \includegraphics{draft_files/figure-latex/laborplot-1} \caption[Timing of household surveys for the National Sample Survey]{Timing of household surveys for the National Sample Survey}\label{fig:laborplot}\floatfoot*{Note: The histogram shows the distribution of survey dates for the four waves of the National Sample Survey (NSS) for the five waves used in this paper.}
 \end{figure}
 
 \FloatBarrier
 \newpage
+
 \begin{table}
 
 \caption{\label{tab:labortablemonsoon}Wind direction and labor allocation, monsoon season only}
@@ -876,16 +855,15 @@ observations & 1,976,205 & 1,976,205\\
 \toprule
   & all & all & self & wage & farm & non-farm\\
 \midrule
-wind & -0.021 & -0.033 & 0.038 & -0.071** & 0.072** & -0.105**\\
- & (0.028) & (0.029) & (0.034) & (0.033) & (0.036) & (0.046)\\
+wind & -0.120*** & -0.119** & -0.067 & -0.052 & 0.025 & -0.144**\\
+ & (0.046) & (0.046) & (0.042) & (0.045) & (0.036) & (0.062)\\
 controls & No & Yes & Yes & Yes & Yes & Yes\\
 \textbf{fixed effects:} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
 district & Yes & Yes & Yes & Yes & Yes & Yes\\
-year & Yes & Yes & Yes & Yes & Yes & Yes\\
-\textbf{varying slopes:} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
-year (by district) & Yes & Yes & Yes & Yes & Yes & Yes\\
-\midrule
+state-month & Yes & Yes & Yes & Yes & Yes & Yes\\
+\textbf{DV mean} & \textbf{3.324} & \textbf{3.324} & \textbf{1.883} & \textbf{1.441} & \textbf{0.810} & \textbf{2.513}\\
 observations & 359,652 & 359,576 & 359,576 & 359,576 & 359,576 & 359,576\\
+\midrule
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[para]
@@ -896,6 +874,7 @@ observations & 359,652 & 359,576 & 359,576 & 359,576 & 359,576 & 359,576\\
 
 \FloatBarrier
 \newpage
+
 \begin{table}
 
 \caption{\label{tab:labortablewinter}Wind direction and labor allocation, winter season only}
@@ -905,26 +884,26 @@ observations & 359,652 & 359,576 & 359,576 & 359,576 & 359,576 & 359,576\\
 \toprule
   & all & all & self & wage & farm & non-farm\\
 \midrule
-wind & 0.003 & 0.002 & 0.011 & -0.009 & 0.024 & -0.022\\
- & (0.029) & (0.026) & (0.028) & (0.025) & (0.034) & (0.039)\\
+wind & -0.012 & -0.032 & -0.026 & -0.006 & -0.020 & -0.012\\
+ & (0.040) & (0.037) & (0.040) & (0.028) & (0.030) & (0.036)\\
 controls & No & Yes & Yes & Yes & Yes & Yes\\
 \textbf{fixed effects:} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
 district & Yes & Yes & Yes & Yes & Yes & Yes\\
-year & Yes & Yes & Yes & Yes & Yes & Yes\\
-\textbf{varying slopes:} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
-year (by district) & Yes & Yes & Yes & Yes & Yes & Yes\\
-\midrule
+state-month & Yes & Yes & Yes & Yes & Yes & Yes\\
+\textbf{DV mean} & \textbf{3.339} & \textbf{3.339} & \textbf{1.865} & \textbf{1.474} & \textbf{0.790} & \textbf{2.550}\\
 observations & 375,956 & 375,883 & 375,883 & 375,883 & 375,883 & 375,883\\
+\midrule
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[para]
-\item Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education. * p<0.10 ** p<0.05 *** p<0.01
+\item Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education. The outcome in each regression is days worked in the previous seven days. * p<0.10 ** p<0.05 *** p<0.01
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
 
 \FloatBarrier
 \newpage
+
 \begin{table}
 
 \caption{\label{tab:labortableoldstate}Wind direction and labor allocation, heterogeneity by age}
@@ -946,13 +925,14 @@ observations & 898,856 & 898,856 & 898,856 & 898,856 & 898,856\\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[para]
-\item Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education. * p<0.10 ** p<0.05 *** p<0.01
+\item Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education. The outcome in each regression is days worked in the previous seven days. * p<0.10 ** p<0.05 *** p<0.01
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
 
 \FloatBarrier
 \newpage
+
 \begin{table}
 
 \caption{\label{tab:wagestable}Wind direction and wages}
@@ -975,7 +955,7 @@ observations & 16,534 & 149,973 & 133,526\\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[para]
-\item Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education. * p<0.10 ** p<0.05 *** p<0.01
+\item Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education. The outcome in each regression is the daily wage (log Rs per day). * p<0.10 ** p<0.05 *** p<0.01
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
