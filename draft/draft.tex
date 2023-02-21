@@ -124,7 +124,7 @@
 
 \title{Pollution, agricultural productivity, and development: Evidence from coal plants in India\footnote{I thank Marc Bellemare and David Sungho Park for comments and suggestions that greatly improved the quality of the paper. The usual disclaimer applies. All scripts used in this paper are publicly available on my GitHub page: github.com/JoshMerfeld/pollution\_development}}
 \author{Joshua D. Merfeld\footnote{KDI School of Public Policy and Management and IZA; \href{mailto:merfeld@kdis.ac.kr}{\nolinkurl{merfeld@kdis.ac.kr}}}}
-\date{2023-02-10}
+\date{2023-02-11}
 
 \begin{document}
 \maketitle
@@ -432,27 +432,20 @@ The first two columns split the sample based on maximum exposure; villages with 
 \begin{threeparttable}
 \begin{tabular}[t]{>{\raggedright\arraybackslash}p{3cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}}
 \toprule
-\multicolumn{1}{c}{ } & \multicolumn{1}{c}{>p(50)} & \multicolumn{1}{c}{<=p(50)} & \multicolumn{3}{c}{all} \\
-\cmidrule(l{3pt}r{3pt}){2-2} \cmidrule(l{3pt}r{3pt}){3-3} \cmidrule(l{3pt}r{3pt}){4-6}
-  & (1) & (2) & (3) & (4) & (5)\\
+\multicolumn{1}{c}{ } & \multicolumn{2}{c}{exposure} & \multicolumn{2}{c}{yield} & \multicolumn{1}{c}{ } \\
+\cmidrule(l{3pt}r{3pt}){2-3} \cmidrule(l{3pt}r{3pt}){4-5}
+  & >p(50) & <=p(50) & >p(50) & <=p(50) & \\
 \midrule
-wind & -0.003*** & -0.033*** & -0.004*** & 0.0006 & 0.000\\
- & (0.0002) & (0.002) & (0.0003) & (0.0005) & (0.001)\\
-rain (z) & 0.028*** & 0.032*** & 0.028*** & 0.028*** & 0.028***\\
- & (0.0006) & (0.0005) & (0.0004) & (0.0004) & (0.0004)\\
-mean temp (10s) & -0.001*** & 0.0006*** & -0.0004*** & -0.0004*** & -0.0004***\\
- & (7.66e-5) & (7.9e-5) & (5.55e-5) & (5.56e-5) & (5.49e-5)\\
-wind x rain &  &  & 0.0005*** &  & \\
- &  &  & (6.74e-5) &  & \\
-wind squared &  &  &  & -0.0002*** & \\
- &  &  &  & (3.58e-5) & \\
-wind x starting yield &  &  &  &  & -0.001**\\
- &  &  &  &  & (0.0006)\\
+pm & -0.074*** & -0.012*** & -0.006*** & -0.066*** & -0.021***\\
+ & (0.004) & (0.002) & (0.001) & (0.006) & (0.001)\\
+pm (10s) times rain &  &  &  &  & 0.005***\\
+ &  &  &  &  & (0.000)\\
+weather & yes & yes & yes & yes & yes\\
 \textbf{fixed effects:} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
 village-season & Yes & Yes & Yes & Yes & Yes\\
 year & Yes & Yes & Yes & Yes & Yes\\
 \midrule
-observations & 1,112,082 & 1,259,139 & 2,371,221 & 2,371,221 & 2,367,248\\
+observations & 650,770 & 1,720,451 & 1,192,644 & 1,178,577 & 2,371,221\\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[para]
@@ -485,7 +478,7 @@ Table \ref{tab:labortable} presents results for labor allocation over the last s
 
 \begin{table}
 
-\caption{\label{tab:labortablerural}Wind direction and labor allocation, rural only}
+\caption{\label{tab:labortablerural}Wind direction and labor allocation, by location}
 \centering
 \begin{threeparttable}
 \begin{tabular}[t]{>{\raggedright\arraybackslash}p{3cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}}
@@ -558,6 +551,7 @@ wind (lag) & -0.024*** & -0.024*** &  & \\
  & (0.003) & (0.003) &  & \\
 wind (lead) &  &  & -0.001 & -0.001\\
  &  &  & (0.002) & (0.002)\\
+weather & no & yes & no & yes\\
 \textbf{fixed effects:} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
 village & Yes & Yes & Yes & Yes\\
 year & Yes & Yes & Yes & Yes\\

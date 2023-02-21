@@ -540,8 +540,8 @@ The first two columns split the sample based on maximum exposure; villages with 
 ```{r yieldtablehet, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
 # Table
-yieldtablehet[1,5] <- "0.000"
-colnames(yieldtablehet) <- c("(1)", "(2)", "(3)", "(4)", "(5)")
+colnames(yieldtablehet) <- c(">p(50)", "<=p(50)", ">p(50)", "<=p(50)", "")
+yieldtablehet[7:8,] <- "Yes"
 kable(
       yieldtablehet, caption = "Heterogeneity in the effects of pollution on productivity",
       align = "ccccc", booktabs = TRUE, linesep = ""
@@ -554,9 +554,9 @@ kable(
            ) %>%
   column_spec(1, width = "3cm") %>%
   column_spec(c(2:6),width = "2cm") %>%
-  row_spec(c(15), hline_after = TRUE) %>%
-  row_spec(c(13), bold = TRUE) %>%
-  add_header_above(c(" ", ">p(50)" = 1, "<=p(50)" = 1, "all" = 3)) %>%
+  row_spec(c(8), hline_after = TRUE) %>%
+  row_spec(c(6), bold = TRUE) %>%
+  add_header_above(c(" ", "exposure" = 2, "yield" = 2, " " = 1)) %>%
   kable_classic_2()
 
 ```
@@ -598,7 +598,7 @@ rownames(mat2) <- c("urban")
 labortablerural <- rbind(mat1, labortablerural[c(1:2, 7:8),], mat2, labortableurban[-c(3:6),], labortableurban[c(3:6),])
 
 kable(
-      labortablerural, caption = "Wind direction and labor allocation, rural only",
+      labortablerural, caption = "Wind direction and labor allocation, by location",
       align = "cccccc", booktabs = TRUE, linesep = ""
       ) %>%
   footnote(
@@ -654,6 +654,10 @@ Pollution leads to lower agricultural productivity as well as changes in labor a
 
 # Table
 colnames(ntltable) <- c("(1)", "(2)", "(3)", "(4)")
+newrow <- matrix(c("no", "yes", "no", "yes"), nrow = 1)
+colnames(newrow) <- c("(1)", "(2)", "(3)", "(4)")
+rownames(newrow) <- "weather"
+ntltable <- rbind(ntltable[1:4,], newrow, ntltable[5:nrow(ntltable),])
 kable(
       ntltable, caption = "Wind direction and nightlight growth",
       align = "cccc", booktabs = TRUE, linesep = ""
@@ -666,8 +670,8 @@ kable(
            ) %>%
   column_spec(1, width = "3cm") %>%
   column_spec(c(2:5),width = "2cm") %>%
-  row_spec(c(9), hline_after = TRUE) %>%
-  row_spec(c(5,8), bold = TRUE) %>%
+  row_spec(c(10), hline_after = TRUE) %>%
+  row_spec(c(6,9), bold = TRUE) %>%
   kable_classic_2()
 
 ```
