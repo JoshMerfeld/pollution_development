@@ -187,10 +187,14 @@ yieldtable <- readRDS("pollution_development/draft/tables/yieldtable.rds")
 yieldtablepm <- readRDS("pollution_development/draft/tables/yieldtablepm.rds")
 yieldtabletwo <- readRDS("pollution_development/draft/tables/yieldtabletwo.rds")
 yieldtablehet <- readRDS("pollution_development/draft/tables/yieldtablehet.rds")
+yieldtablehet1st <- readRDS("pollution_development/draft/tables/yieldtablehet1st.rds")
+yieldtablemonthly <- readRDS("pollution_development/draft/tables/yieldtablemonthly.rds")
 pmeffects <- readRDS("pollution_development/draft/tables/yieldtablePM.rds")
 labortable <- readRDS("pollution_development/draft/tables/labortable.rds")
 labortablerural <- readRDS("pollution_development/draft/tables/labortablerural.rds")
 labortableurban <- readRDS("pollution_development/draft/tables/labortableurban.rds")
+labortableruralyoung <- readRDS("pollution_development/draft/tables/labortableruralyoung.rds")
+labortableruralold <- readRDS("pollution_development/draft/tables/labortableruralold.rds")
 wagestable <- readRDS("pollution_development/draft/tables/wagestable.rds")
 labortablemonsoon <- readRDS("pollution_development/draft/tables/labortablemonsoon.rds")
 labortablewinter <- readRDS("pollution_development/draft/tables/labortablewinter.rds")
@@ -200,6 +204,7 @@ ntltable <- readRDS("pollution_development/draft/tables/ntltable.rds")
 yieldtableleads <- readRDS("pollution_development/draft/tables/yieldtableleads.rds")
 yieldtablepostplant <- readRDS("pollution_development/draft/tables/yieldtablepostplant.rds")
 laborplot <- readRDS("pollution_development/draft/tables/laborplot.rds")
+monthplot <- readRDS("pollution_development/draft/tables/monthplot.rds")
 
 plants1990_capacity <- plants %>% filter(year_built<=1990 & (year_retired>1990 | is.na(year_retired)==TRUE))
 plants2010_capacity <- plants %>% filter(year_built<=2010 & (year_retired>2010 | is.na(year_retired)==TRUE))
@@ -502,13 +507,17 @@ kable(
 
 ```
 
-Of course, it is not wind, per se, that we are interested in. Instead, we are actually interested in better understanding the effects of exposure to pollution on agricultural productivity. Table \@ref(tab:yieldtablepm) presents the same regressions as Table \@ref(fig:yieldtable), with a key difference: instead of wind exposure, it uses average concentration of $\mathrm{PM_{2.5}}$ -- from @hammer2020global -- during the season as the key explanatory variable. I rescale particulate matter by dividing by one thousand to help with presentation of the coefficients. Several interesting patterns emerge. In the first column we see no relationship between particulate matter and agricultural productivity, while there is actually a positive relationship in columns two, four, and five. There is a small, negative relationship between pollution and productivity in column three.
+Of course, it is not wind, per se, that we are interested in. Instead, we are actually interested in better understanding the effects of exposure to pollution on agricultural productivity. Table \@ref(tab:yieldtablepm) presents the same regressions as Table \@ref(fig:yieldtable), with a key difference: instead of wind exposure, it uses average concentration of $\mathrm{PM_{2.5}}$ -- from @hammer2020global -- during the season as the key explanatory variable. 
+
+Several interesting patterns emerge. We only observe a negative relationship between particulate matter and agricultural productivity in column three; the coefficient in column two is actually positive. Breaking out the effects into the monsoon and winter seasons, we also see a positive relationship between pollution and agricultural productivity.
 
 Recall, however, the results from above: coal plants were placed in places with higher average agricultural productivity. This means that the simple regressions in \@ref(tab:yieldtablepm) might actually be biased upwards: although pollution might negatively affect productivity, pollution is higher in more productive areas due to the endogenous placement of coal plants in the study areas. To recover the actual effect of pollution, we need an instrument. If, conditional on the fixed effects and weather variables, wind direction is exogenous and only affects agricultural productivity through pollution -- which seems reasonable since it is hard to imagine what other variables it might affect -- then it is a valid instrument for pollution.
 
 I present the IV results in Table \@ref(tab:yieldtabletwo), with the second-stage results in the top panel and the first-stage results in the bottom panel. The first-stage results make clear how strong of an instrument wind is; the t-statistic in column one, for example, is almost 48 while it is still well above 10 in column three, which translates to a first-stage F-statistic of 195, meeting even the higher bar for the first-stage F-test argued for by @lee2022valid. Also note that the coefficients are quite different from those in Table \@ref(tab:pollutiontable) because the unit of analysis in Table \@ref(tab:yieldtabletwo) is the season, while in Table \@ref(tab:pollutiontable) the unit of analysis is the month.
 
-The second-stage results first indicate that $\mathrm{PM_{2.5}}$ is a very strong predictor of agricultural productivity. The smallest coefficient -- that for the monsoon season in column (4) -- and the mean absolute deviation for $\mathrm{PM_{2.5}}$ point to a change in agricultural productivity of around 23 percent, which is much higher than the wind results documented above. This makes sense, of course, since the IV is essentially scaling up the effects of wind. The comparison of the results to those in the previous table also confirm the concerns around endogenous placement of coal plants. The coefficients in Table \@ref(tab:yieldtabletwo) are always more negative than those in Table \@ref(tab:yieldtablepm), and sometimes substantially so. In other words, the simple regression of agricultural productivity on pollution results in coefficients on pollution that are upwards biased, since coal plants are placed in more productive areas. The IV strategy corrects this bias and leads to a robust, negative relationship between pollution and agricultural productivity.
+The second-stage results first indicate that $\mathrm{PM_{2.5}}$ is a very strong predictor of agricultural productivity. The smallest coefficient -- that for the monsoon season in column (4) -- and the mean absolute deviation for $\mathrm{PM_{2.5}}$ point to a change in agricultural productivity of around 23 percent, which is much higher than the wind results documented above. This makes sense, of course, since the IV is essentially scaling up the effects of wind. 
+
+The comparison of the results to those in the previous table also confirm the concerns around endogenous placement of coal plants. The coefficients in Table \@ref(tab:yieldtabletwo) are always more negative than those in Table \@ref(tab:yieldtablepm), and sometimes substantially so. In other words, the simple regression of agricultural productivity on pollution results in coefficients on pollution that are upwards biased, since higher levels of pollution occur in more productive areas, on average. The IV strategy corrects this bias and leads to a robust, negative relationship between pollution and agricultural productivity.
 
 ```{r yieldtabletwo, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
@@ -533,27 +542,36 @@ kable(
 
 ```
 
-Having established that exposure to pollution has a negative effect on agricultural productivity, I now move to heterogeneity in these effects. Table \@ref(tab:yieldtablehet) presents four different analyses: effects of exposure by maximum exposure, multiplicative effects of shocks, the possibility of non-linearities, and the differential effects of exposure based on initial agricultural productivity.
 
-The first two columns split the sample based on maximum exposure; villages with maximum exposure above the median are included in column (1) while those below the median are in column (2). Interestingly, the largest effects are seen on villages in the lower half of the distribution. Apparently, smaller maximum effects lead to larger overall effects of pollution exposure on agricultural productivity. In other words, it is not the places where wind is most likely to blow from a coal plant that experience the largest decrease in productivity in response to an additional day of wind-driven pollution.
+## Heterogeneity
+
+Having established that exposure to pollution has a negative effect on agricultural productivity, I now move to heterogeneity in these effects. Table \@ref(tab:yieldtablehet) presents three different analyses: heterogeneity by median exposure, heterogeneity by initial yield, and possible multiplicative effects of shocks. All regressions use the IV strategy detailed above and I include the F statistic from the first stage regressions (of which there are two in the last column) at the bottom of the table. Table \@ref(tab:yieldtablehet1st) in the appendix presents the first-stage results for all columns.
+
+The first two columns split the sample based on median exposure. In other words, for each village, I calculate the median exposure (based on wind) and then use this single value for each village to split the sample into villages above and below median exposure. The coefficient in the first column is 2.5 times larger than the coefficient in the second column, indicating much larger effects of pollution in places where it is more common. One possible explanation is that exposure is cumulative, leading to larger and larger effects. I return to this in column five.
+
+Columns two and three split the sample based on median yield at the very beginning of the sample (the first year available, 2002-2003). Column three presents results for villages above the median while column four presents results for villages below the median. The largest effects are apparently concentrated in the lower half of the distribution. Perhaps more productive areas are more likely to have ways to combat the effects of shocks -- e.g. by adjusting the use of other inputs -- or maybe less productive areas are inherently more susceptible to the effects of pollution, perhaps due to direct effects on land productivity.
+
+Given ongoing changes in the climate, a key question is how welfare will change as shocks become more and more common. In the last column looks at possible multiplicative effects of shocks by interacting pollution with rainfall and seeing whether the effects compound one another. Since there are now two endogenous regressors, I instrument for both using wind exposure and an interaction between wind exposure and rainfall. 
+
+
 
 ```{r yieldtablehet, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
 # Table
 colnames(yieldtablehet) <- c(">p(50)", "<=p(50)", ">p(50)", "<=p(50)", "")
-yieldtablehet[7:8,] <- "Yes"
+rownames(yieldtablehet)[c(1, 3)] <- c("PM 2.5", "PM time rain")
 kable(
       yieldtablehet, caption = "Heterogeneity in the effects of pollution on productivity",
       align = "ccccc", booktabs = TRUE, linesep = ""
       ) %>%
   footnote(
-           "Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions is estimated agricultural yield, defined as tons per hectare. The first two columns split the sample based on the *maximum* observed exposure. * p<0.10 ** p<0.05 *** p<0.01", 
+           "Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions is estimated agricultural yield, defined as tons per hectare. The first two columns split the sample based on the median exposure (by village). The second two columns split the sample based on initial -- the first year available -- agricultural productivity. * p<0.10 ** p<0.05 *** p<0.01", 
            general_title = "",
            threeparttable = TRUE,
            footnote_as_chunk = TRUE
            ) %>%
-  column_spec(1, width = "3cm") %>%
-  column_spec(c(2:6),width = "2cm") %>%
+  column_spec(1, width = "4.5cm") %>%
+  column_spec(c(2:6),width = "1.8cm") %>%
   row_spec(c(8), hline_after = TRUE) %>%
   row_spec(c(6), bold = TRUE) %>%
   add_header_above(c(" ", "exposure" = 2, "yield" = 2, " " = 1)) %>%
@@ -561,19 +579,20 @@ kable(
 
 ```
 
-Column three looks add the possible multiplicative effects of rainfall shocks and pollution shocks on agricultural productivity. In previous tables, rainfall always entered the regression positively -- as we would expect -- indicating that higher rainfall in a given season leads to higher agricultural productivity. However, an interesting question is whether rainfall and pollution shocks might interact. The positive coefficient on the interaction term between days of wind and rainfall during the agricultural season indicates that there is a multiplicative effect of shocks; when wind days are higher (bad) and rainfall is lower (bad), the overall negative effects are even worse than when just one shock happens. Considering that climate change is leading to more variable rainfall and more negative rainfall shocks, these results are potentially worrisome, especially for smallholders.
 
-Column four adds a quadratic in wind to see if the negative effects of pollution on agricultural productivity are increase or decreasing in wind. In column four, the coefficient on the linear term is 0.0006 while the coefficient on the quadratic term is -0.0002, meaning that the effect of wind is decreasing for any days of wind over three The negative coefficient also indicates that this negative effect is consistently decreasing, meaning the effect gets worse as average wind days gets higher. Note that this is somewhat different from the regressions in the first two columns, which split the sample by the *maximum* days of wind observed in the sample, not the mean.
+The coefficient on the level term for pollution is negative. Since rainfall is defined as a z score, this represents the effect of pollution only when rainfall is at its mean value for a given season. The interaction term, on the other hand, is positive. Since higher values of rainfall are generally good, this positive coefficient represents a compounding effect of pollution and rainfall; when rainfall is low (bad), the effects of particulate matter on agricultural productivity is larger (more negative). Another way to think about this, however, is that higher values of rainfall dampen the effects of pollution shocks. This could have very profound effects on welfare, since this essentially increases the variance of agricultural productivity across years (which is already increasing due to climate change).
 
-In the final column I add to the regression an interaction between wind and initial agricultural productivity (defined in 2002, the first year observed in the productivity data). The linear term drops out of the regression since it is invariant within villages, leaving just the interaction term. The negative coefficient on the interaction term of -0.001 indicates that the effect of pollution is more negative in areas where agricultural productivity is higher. Note that agricultural productivity is defined in logs, so this can be interpreted as a percentage effect, not a level effect. Apparently, wind-driven pollution is particularly detrimental to agricultural productivity in the most productive places.
+
 
 ## Robustness checks
 
 I present two separate robustness checks in the appendix. The first set of analyses attempts to separate the possible endogenous location of coal plants from outcomes. Specifically, prior to the opening of a new coal plant in an area, all villages receive a zero for wind. This means that, even if wind direction is exogenous, the opening of the coal plant could lead to correlations between the error term and the wind variable.
 
-Although the results with district-year-season help mitigate this concern, Table \@ref(tab:yieldtablepostplant) in the appendix checks this possibility in a different way. Specifically, I restrict the sample to only village-years *after* the introduction of a coal plant. This drops any pre-plant-opening observations -- all of which are mechanically zeros for wind -- to prevent endogeneity due to the opening. The coefficients in Table \@ref(tab:yieldtablepostplant) show that the overall effects are essentially unchanged, with just a small change in coefficient magnitude (driven mostly by rounding).
+Although the results with district-year-season help mitigate this concern, Table \@ref(tab:yieldtablepostplant) in the appendix checks this possibility in a different way. Specifically, I restrict the sample to only village-years *after* the introduction of a coal plant. This drops any pre-plant-opening observations -- all of which are mechanically zeros for wind -- to prevent endogeneity due to the opening. The coefficients in Table \@ref(tab:yieldtablepostplant) show that the overall effects are essentially unchanged across any specifications. Comparing changes in coefficients can also help reduce any effects driven by other polluting industries located near coal plants; since the pre-opening exposure variable is zero, the coefficients in Table \@ref(tab:yieldtablepostplant) would likely increase in magnitude if the effects were driven by non-coal pollution.
 
-The second robustness check includes leads for wind to see if they predict current year productivity. I present these results in \@ref(tab:yieldtableleads). The second column includes district-year-season fixed effects, while the first does not. The results make clear the importance of including trends or district-year fixed effects. In the first column, leads seem to predict productivity. However, this relationship disappears in the second column, indicating that the previous results with district-year fixed effects are likely the most reliable.
+The second robustness check includes leads and lags for wind to see if they predict current year productivity. I present these results in \@ref(tab:yieldtableleads). The first column is the reduced form effect and shows that only current wind predicts productivity; leads and lags have no impact. We see similar results in column two -- the IV results -- with a negative coefficient for current pollution, only. However, the standard errors are much larger than the main results -- around five times as large -- making it hard to come to any conclusions.
+
+
 
 ## Labor allocation
 
@@ -598,7 +617,7 @@ rownames(mat2) <- c("urban")
 labortablerural <- rbind(mat1, labortablerural[c(1:2, 7:8),], mat2, labortableurban[-c(3:6),], labortableurban[c(3:6),])
 
 kable(
-      labortablerural, caption = "Wind direction and labor allocation, by location",
+      labortablerural, caption = "Wind direction and labor allocation by rural status",
       align = "cccccc", booktabs = TRUE, linesep = ""
       ) %>%
   footnote(
@@ -615,9 +634,6 @@ kable(
 
 ```
 
-
-
-
 There are some interesting results in Table \@ref(tab:labortable). The first two columns show a marginally significant decrease in overall labor allocation (where "labor" is defined as non-domestic self and wage employment). The third and fourth columns show that this overall decrease is predominantly from wage employment, not self employment. An additional day of wind over the last seven decreases wage employment by 0.034 days in the district. Mean wage employment is 1.458 days, meaning one day of wind decreases wage employment by 2.3 percent of the mean. Since much of the district is not covered by "treated" villages, this is actually a rather substantive effect on the villages involved.
 
 The last two columns split the effects by sector, into farm and non-farm employment. Although agricultural (land) productivity decreases when wind blows in the direction of villages, overall labor allocation to farm labor actually goes *up*, by around 4.5 percent of the mean of 0.784 days. Non-farm labor, on the other hand, goes down, by around 2.4 percent of the mean of 2.527 days.
@@ -631,6 +647,39 @@ One way to provide suggestive evidence of mechanisms is to explore heterogeneity
 [^13]: This splits the sample into two equal bins of age: those who are 15-37 and those who are 38-60.
 
 Table \@ref(tab:labortableold) presents a very clear set of results: the effects are always larger (more negative) for older adults. Particularly interestingly, we now see that the mean-zero effect on self employment in the previous table is driven by two stark contrasts: a large increase for the younger group and a large decrease for the older group. For the youngest group, this increase appears in farm labor, indicating likely increases in farm self-employment. The oldest, on the other hand, have large decreases in both farm and non-farm labor, with larger decreases in the latter.
+
+```{r labortableruralage, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+
+# Table
+colnames(labortableruralyoung) <- c("all", "all", "self", "wage", "farm", "non-farm")
+colnames(labortableruralold) <- c("all", "all", "self", "wage", "farm", "non-farm")
+
+mat1 <- matrix(c("", "", "", "", "", ""), nrow = 1)
+colnames(mat1) <- c("all", "all", "self", "wage", "farm", "non-farm")
+rownames(mat1) <- c("younger than 35")
+mat2 <- matrix(c("", "", "", "", "", ""), nrow = 1)
+colnames(mat2) <- c("all", "all", "self", "wage", "farm", "non-farm")
+rownames(mat2) <- c("45 or older")
+
+labortableruralyoung <- rbind(mat1, labortableruralyoung[c(1:2, 7:8),], mat2, labortableruralold[-c(3:6),], labortableruralold[c(3:6),])
+
+kable(
+      labortableruralyoung, caption = "Wind direction and labor allocation by age (rural only)",
+      align = "cccccc", booktabs = TRUE, linesep = ""
+      ) %>%
+  footnote(
+           "Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education. The outcome in each regression is days worked in the previous seven days. * p<0.10 ** p<0.05 *** p<0.01", 
+           general_title = "",
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE
+           ) %>%
+  column_spec(1, width = "3cm") %>%
+  column_spec(c(2:7),width = "1.5cm") %>%
+  row_spec(c(5,10), hline_after = TRUE) %>%
+  row_spec(c(1,6,12), bold = TRUE) %>%
+  kable_classic_2()
+
+```
 
 To put some of these changes in context, an additional day of exposure to pollution from wind increases self-employment for the younger half of the sample by around six percent of the mean and increases farm employment for the younger half by almost 10 percent of the mean. For the older half, on the other hand, an additional day of exposure decreases self-employment and non-farm employment by around five percent of their means.
 
@@ -646,32 +695,28 @@ The overall pattern of results stays the same when we shift the focus. Overall l
 
 Finally, Table \@ref(tab:wagestable) in the appendix shows that there are no significant changes in daily wages, though the overall direction of wage changes would be ambiguous, anyway. While reduced productivity might lead to lower wages, decreased labor supply could also put upward pressure on wages.
 
-## Nightlights
+## Month-specific exposure
 
 Pollution leads to lower agricultural productivity as well as changes in labor allocation. This leads to an obvious question: might higher levels of pollution also directly affect economic growth? To explore this question, I look at changes in nightlights relative to changes in pollution. It seems reasonable to think that pollution might affect nightlights with a lag, so I include the lag of pollution rather than contemporaneous pollution.
 
-```{r ntltable, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+```{r yieldtablemonthly, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
 # Table
-colnames(ntltable) <- c("(1)", "(2)", "(3)", "(4)")
-newrow <- matrix(c("no", "yes", "no", "yes"), nrow = 1)
-colnames(newrow) <- c("(1)", "(2)", "(3)", "(4)")
-rownames(newrow) <- "weather"
-ntltable <- rbind(ntltable[1:4,], newrow, ntltable[5:nrow(ntltable),])
+
 kable(
-      ntltable, caption = "Wind direction and nightlight growth",
-      align = "cccc", booktabs = TRUE, linesep = ""
+      yieldtablemonthly, caption = "Month-specific exposure",
+      align = "cc", booktabs = TRUE, linesep = ""
       ) %>%
   footnote(
-           "Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions is logged nightlights. Rainfall is included in columns (2) and (4). * p<0.10 ** p<0.05 *** p<0.01", 
+           "Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions is logged nightlights. * p<0.10 ** p<0.05 *** p<0.01", 
            general_title = "",
            threeparttable = TRUE,
            footnote_as_chunk = TRUE
            ) %>%
   column_spec(1, width = "3cm") %>%
-  column_spec(c(2:5),width = "2cm") %>%
-  row_spec(c(10), hline_after = TRUE) %>%
-  row_spec(c(6,9), bold = TRUE) %>%
+  column_spec(c(2:3),width = "2cm") %>%
+  row_spec(c(13), hline_after = TRUE) %>%
+  row_spec(c(11), bold = TRUE) %>%
   kable_classic_2()
 
 ```
@@ -714,8 +759,8 @@ These results, of course, do not address possible positive effects of the buildi
 ```
 ```{r data, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
-data <- matrix(NA, nrow = 7, ncol = 3)
-rownames(data) <- c("shapefile", "coal plants", "wind", "pollution", "agriculture", "nightlights", "weather")
+data <- matrix(NA, nrow = 8, ncol = 3)
+rownames(data) <- c("shapefile", "coal plants", "wind", "pollution", "agriculture", "nightlights", "weather", "labor")
 colnames(data) <- c("source", "geographic coverage", "temporal coverage")
 data[1,1] <- "Asher et al. (2021)"
 data[2,1] <- "Global Energy Monitor"
@@ -724,13 +769,15 @@ data[4,1] <- "Hammer et al. (2020)"
 data[5,1] <- "Angopadhyay et al. (2022)"
 data[6,1] <- "Asher et al. (2021)"
 data[7,1] <- "TerraClimate"
+data[8,1] <- "National Sample Survey (NSS)"
 data[1,2] <- "India"
 data[2,2] <- "global"
 data[3,2] <- "global"
 data[4,2] <- "global"
-data[5,2] <- "global"
+data[5,2] <- "India"
 data[6,2] <- "India"
 data[7,2] <- "global"
+data[8,2] <- "India"
 data[1,3] <- " "
 data[2,3] <- "yearly"
 data[3,3] <- "daily"
@@ -738,6 +785,7 @@ data[4,3] <- "monthly"
 data[5,3] <- "two seasons/year"
 data[6,3] <- "yearly"
 data[7,3] <- "monthly"
+data[8,3] <- "daily interviews"
 
 # Table
 kable(
@@ -751,9 +799,36 @@ kable(
            footnote_as_chunk = TRUE
            ) %>%
   column_spec(1, width = "2cm") %>%
-  column_spec(2,width = "4.5cm") %>%
-  column_spec(c(3:4),width = "3.5cm") %>%
+  column_spec(2,width = "5cm") %>%
+  column_spec(c(3:4),width = "3cm") %>%
   kable_styling(latex_options = "HOLD_position") %>%
+  kable_classic_2()
+
+```
+
+```{=tex}
+\FloatBarrier
+\newpage
+```
+```{r yieldtablehet1st, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+
+# Table
+colnames(yieldtablehet1st) <- c("PM", "PM", "PM", "PM", "PM", "PM*rain")
+kable(
+      yieldtablehet1st, caption = "Heterogeneity in the effects of pollution on productivity, first-stage results",
+      align = "cccccc", booktabs = TRUE, linesep = ""
+      ) %>%
+  footnote(
+           "Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions is estimated agricultural yield, defined as tons per hectare. The first two columns split the sample based on the median exposure (by village). The second two columns split the sample based on initial -- the first year available -- agricultural productivity. * p<0.10 ** p<0.05 *** p<0.01", 
+           general_title = "",
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE
+           ) %>%
+  column_spec(1, width = "2.8cm") %>%
+  column_spec(c(2:7),width = "1.7cm") %>%
+  row_spec(c(8), hline_after = TRUE) %>%
+  row_spec(c(6), bold = TRUE) %>%
+  add_header_above(c(" ", "(1)" = 1, "(2)" = 1, "(3)" = 1, "(4)" = 1, "(5)" = 2)) %>%
   kable_classic_2()
 
 ```
@@ -778,8 +853,8 @@ kable(
            ) %>%
   column_spec(1, width = "3cm") %>%
   column_spec(c(2:6),width = "2cm") %>%
-  row_spec(7, bold = TRUE) %>%
-  row_spec(11, hline_after = TRUE) %>%
+  row_spec(c(7, 13), bold = TRUE) %>%
+  row_spec(c(11:12), hline_after = TRUE) %>%
   add_header_above(c(" ", "all" = 3, "monsoon" = 1, "winter" = 1)) %>%
   kable_styling(latex_options = "HOLD_position") %>%
   kable_classic_2()
@@ -790,6 +865,7 @@ kable(
 \FloatBarrier
 \newpage
 ```
+
 ```{r yieldtableleads, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
 # Table
@@ -806,11 +882,13 @@ kable(
            ) %>%
   column_spec(1, width = "3cm") %>%
   column_spec(c(2:3),width = "2cm") %>%
-  row_spec(c(14), hline_after = TRUE) %>%
-  row_spec(c(11), bold = TRUE) %>%
+  row_spec(c(16), hline_after = TRUE) %>%
+  row_spec(c(14), bold = TRUE) %>%
   kable_classic_2()
 
 ```
+
+
 
 ```{=tex}
 \FloatBarrier
@@ -928,3 +1006,14 @@ kable(
 ```
 
 
+
+```{=tex}
+\FloatBarrier
+\newpage
+```
+```{r monthplot, echo = FALSE, message = FALSE, warning = FALSE, fig.cap = "Average farm days by season, rural only", fig.footer = list("Note: The line graph shows the mean number of farm days worked per week based on the month of the relevant agricultural season. The monsoon season is defined as June (month 1) to October (month 5) while the rainy season is defined as November (month 1) to March (month 5) of the following year. The data is from the NSS.")}
+
+monthplot
+
+
+```

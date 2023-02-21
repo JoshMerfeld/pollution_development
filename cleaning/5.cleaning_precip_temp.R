@@ -74,7 +74,20 @@ for (year in 1990:2020){
   file.remove(file)
   print(year)
 }
-  
 
+ntl_temp <- c()
+for (year in 1990:2020){
+   tmax <- read_csv(paste0("data/clean/terra/tmax", year, ".csv"))
+   tmin <- read_csv(paste0("data/clean/terra/tmin", year, ".csv"))
+   tmax[,2:13] <- (tmax[,2:13] + tmin[,2:13])/2
+   tmax <- tmax %>%
+            mutate(temp = rowMeans(tmax[,2:13]),
+                   year = year) %>%
+            dplyr::select(shrid, temp, year)
+   
+   
+   ntl_temp <- rbind(ntl_temp, tmax)
+}
+write_csv(ntl_temp, paste0("data/clean/village_temp.csv"))
   
   

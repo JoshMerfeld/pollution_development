@@ -1,5 +1,5 @@
 ---
-title: "Pollution, agricultural productivity, and development: Evidence from coal in plants in India"
+title: "Pollution, agricultural productivity, and development: Evidence from coal plants in India"
 subtitle: 
 author: 
   - "Joshua D. Merfeld <br> KDI School and IZA"
@@ -182,14 +182,20 @@ yieldtabletwo <- readRDS("pollution_development/draft/tables/yieldtabletwo.rds")
 yieldtablehet <- readRDS("pollution_development/draft/tables/yieldtablehet.rds")
 pmeffects <- readRDS("pollution_development/draft/tables/yieldtablePM.rds")
 labortable <- readRDS("pollution_development/draft/tables/labortable.rds")
+labortablerural <- readRDS("pollution_development/draft/tables/labortablerural.rds")
+labortableurban <- readRDS("pollution_development/draft/tables/labortableurban.rds")
+labortableruralyoung <- readRDS("pollution_development/draft/tables/labortableruralyoung.rds")
+labortableruralold <- readRDS("pollution_development/draft/tables/labortableruralold.rds")
+wagestable <- readRDS("pollution_development/draft/tables/wagestable.rds")
 labortablemonsoon <- readRDS("pollution_development/draft/tables/labortablemonsoon.rds")
 labortablewinter <- readRDS("pollution_development/draft/tables/labortablewinter.rds")
 labortableold <- readRDS("pollution_development/draft/tables/labortableold.rds")
+labortableoldstate <- readRDS("pollution_development/draft/tables/labortableoldstate.rds")
 ntltable <- readRDS("pollution_development/draft/tables/ntltable.rds")
 yieldtableleads <- readRDS("pollution_development/draft/tables/yieldtableleads.rds")
 yieldtablepostplant <- readRDS("pollution_development/draft/tables/yieldtablepostplant.rds")
 laborplot <- readRDS("pollution_development/draft/tables/laborplot.rds")
-
+yieldtablemonthly <- readRDS("pollution_development/draft/tables/yieldtablemonthly.rds")
 
 ```
 
@@ -494,7 +500,7 @@ kable(
 
 ---
 
-## Validating wind direction - particulate matter and exposure
+## Validating wind direction - particulate matter and exposure, monthly level
 
 ```{r pollutiontable, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
@@ -662,6 +668,36 @@ kable(
 - Only post coal plant opening
 
 
+---
+
+## Agricultural productivity and pollution leads/lags
+
+```{r yieldtableleads, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+
+# Table
+colnames(yieldtableleads) <- c("wind", "IV - PM (log)")
+yieldtableleads[1:6,2] <- yieldtableleads[7:12,2]
+yieldtableleads <- yieldtableleads[-c(7:12),]
+yieldtableleads <- yieldtableleads[-c(7:10),]
+rownames(yieldtableleads)[c(1,3,5)] <- c("lag", "current", "lead")
+kable(
+      yieldtableleads,
+      align = "cc", booktabs = TRUE, linesep = ""
+      ) %>%
+  footnote(
+           "Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions estimated agricultural yield (tons per hectare). * p<0.10 ** p<0.05 *** p<0.01", 
+           general_title = "",
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE
+           ) %>%
+  column_spec(1, width = "3cm") %>%
+  column_spec(c(2:3),width = "2cm") %>%
+  kable_classic_2()
+
+```
+
+
+
 
 
 ---
@@ -740,28 +776,37 @@ ggplot() +
 
 ---
 
-## Wind direction and labor allocation, by age
+## Wind direction and labor allocation, by rural status
 
 
-```{r labortableold, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+
+```{r labortablerural, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
 # Table
-labortableold <- labortableold[,-1]
-colnames(labortableold) <- c("all", "self", "wage", "farm", "non-farm")
+colnames(labortablerural) <- c("all", "all", "self", "wage", "farm", "non-farm")
+colnames(labortableurban) <- c("all", "all", "self", "wage", "farm", "non-farm")
+
+mat1 <- matrix(c("", "", "", "", "", ""), nrow = 1)
+colnames(mat1) <- c("all", "all", "self", "wage", "farm", "non-farm")
+rownames(mat1) <- c("rural")
+mat2 <- matrix(c("", "", "", "", "", ""), nrow = 1)
+colnames(mat2) <- c("all", "all", "self", "wage", "farm", "non-farm")
+rownames(mat2) <- c("urban")
+
+labortablerural2 <- rbind(mat1, labortablerural[c(1:2, 7:8),], mat2, labortableurban[-c(3:6),], labortableurban[c(3:6),])
+
 kable(
-      labortableold,
-      align = "ccccc", booktabs = TRUE, linesep = ""
+      labortablerural2[-c(nrow(labortablerural2)-2, nrow(labortablerural2)-1, nrow(labortablerural2)),],
+      align = "cccccc", booktabs = TRUE, linesep = ""
       ) %>%
   footnote(
-           "Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education. * p<0.10 ** p<0.05 *** p<0.01", 
+           "Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education. The outcome in each regression is days worked in the previous seven days. * p<0.10 ** p<0.05 *** p<0.01", 
            general_title = "",
            threeparttable = TRUE,
            footnote_as_chunk = TRUE
            ) %>%
-  column_spec(1, width = "4cm") %>%
-  column_spec(c(2:6),width = "1.5cm") %>%
-  row_spec(c(10), hline_after = TRUE) %>%
-  row_spec(c(6,9), bold = TRUE) %>%
+  column_spec(1, width = "3cm") %>%
+  column_spec(c(2:7),width = "1.5cm") %>%
   kable_classic_2()
 
 ```
@@ -771,12 +816,90 @@ kable(
 
 ---
 
-## Large negative effects on older half
+## Wind direction and labor allocation, by age (rural only)
 
-- Older half of sample decreases overall labor allocation
-  - Driven by self-employment and nonfarm employment
-- Younger half actually increases allocation!
-- Consistent with health effects only on older adults, though not conclusive
+
+
+```{r labortableruralage, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+
+# Table
+colnames(labortableruralyoung) <- c("all", "all", "self", "wage", "farm", "non-farm")
+colnames(labortableruralold) <- c("all", "all", "self", "wage", "farm", "non-farm")
+
+mat1 <- matrix(c("", "", "", "", "", ""), nrow = 1)
+colnames(mat1) <- c("all", "all", "self", "wage", "farm", "non-farm")
+rownames(mat1) <- c("younger than 35")
+mat2 <- matrix(c("", "", "", "", "", ""), nrow = 1)
+colnames(mat2) <- c("all", "all", "self", "wage", "farm", "non-farm")
+rownames(mat2) <- c("45 or older")
+
+labortableruralyoung2 <- rbind(mat1, labortableruralyoung[c(1:2, 7:8),], mat2, labortableruralold[-c(3:6),], labortableruralold[c(3:6),])
+
+kable(
+      labortableruralyoung2[-c(nrow(labortableruralyoung2)-2, nrow(labortableruralyoung2)-1, nrow(labortableruralyoung2)),],
+      align = "cccccc", booktabs = TRUE, linesep = ""
+      ) %>%
+  footnote(
+           "Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education. The outcome in each regression is days worked in the previous seven days. * p<0.10 ** p<0.05 *** p<0.01", 
+           general_title = "",
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE
+           ) %>%
+  column_spec(1, width = "3cm") %>%
+  column_spec(c(2:7),width = "1.5cm") %>%
+  kable_classic_2()
+
+```
+
+
+
+
+
+
+
+---
+
+## One last check
+
+- Farm labor most common in July 
+- Have monthly values of wind and pollution...
+  - Heterogeneity by month of the season?
+  - Monsoon season only
+  
+
+
+
+
+
+
+---
+
+## Heterogeneity by month of the monsoon season
+
+
+
+```{r yieldtablemonthly, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+
+# Table
+colnames(yieldtablemonthly) <- c("(1)", "(2)")
+
+kable(
+      yieldtablemonthly[c(1:10, nrow(yieldtablemonthly)),],
+      align = "cc", booktabs = TRUE, linesep = ""
+      ) %>%
+  footnote(
+           "Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions estimated agricultural yield (tons per hectare). * p<0.10 ** p<0.05 *** p<0.01", 
+           general_title = "",
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE
+           ) %>%
+  column_spec(1, width = "3cm") %>%
+  column_spec(c(2:3),width = "1.5cm") %>%
+  kable_classic_2()
+
+```
+
+
 
 
 
@@ -805,6 +928,7 @@ kable(
 ```{r ntltable, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
 # Table
+ntltable <- ntltable[,c(1,3)]
 colnames(ntltable) <- c("(1)", "(2)")
 kable(
       ntltable,

@@ -36,6 +36,7 @@ rm(villages_centroids)
 
 
 
+
 for (year in 2002:2013){
   
   # MONSOON --------------------------------------------------------------------
@@ -66,11 +67,15 @@ for (year in 2002:2013){
   
 }
 
+# date of coal plant opening
+dist_matrix <- read.csv(paste0("data/clean/wind_ntl/dist_matrix_angles.csv"))
 
 # The months for monsoon are Jun to Oct
 # The months for Winter are Nov to Mar
 # 2002 to 2013
 for (year in 2002:2013){
+  # Is there a single coal plant within 30 km that year?
+  
   # Monsoon is this year only
   rainfall <- read_csv(paste0("data/clean/terra/precip", year, ".csv"))
   rainfall <- rainfall[, c(1, 7:11)]
@@ -229,21 +234,41 @@ for (year in 2002:2013){
   # Monsoon is this year only
   village_wind <- read_csv(paste0("data/clean/wind_ntl/months/y", year, "m1.csv")) %>% as_tibble()
   villages <- village_wind %>% dplyr::select(shrid)
-  month_temp <- 1
-  for (month in 6:10){
+  month_temp <- 0
+  for (month in 5:10){
     village_wind <- read_csv(paste0("data/clean/wind_ntl/months/y", year, "m", month, ".csv")) %>% as_tibble()
     colnames(village_wind) <- c("shrid", paste0("m", month_temp))
     villages <- villages %>% left_join(village_wind, by = "shrid")
     month_temp <- month_temp + 1
   }
   villages$season <- "monsoon"
-  villages <- villages %>% mutate(days_sums = rowSums(villages[,2:6]))
+  villages <- villages %>% mutate(days_sums = rowSums(villages[,3:7]))
   # Just make sure (should already be named this)
-  colnames(villages) <- c("shrid", "m1", "m2", "m3", "m4", "m5", "season", "days_sums")
+  colnames(villages) <- c("shrid", "m0", "m1", "m2", "m3", "m4", "m5", "season", "days_sums")
   
+  # Now values for plants NOT OPEN
+  village_wind <- read_csv(paste0("data/clean/wind_ntl_NOT/months/y", year, "m1.csv")) %>% as_tibble()
+  villages_TEMP <- village_wind %>% dplyr::select(shrid)
+  month_temp <- 0
+  for (month in 5:10){
+    village_wind <- read_csv(paste0("data/clean/wind_ntl_NOT/months/y", year, "m", month, ".csv")) %>% as_tibble()
+    colnames(village_wind) <- c("shrid", paste0("m", month_temp, "NOT"))
+    villages_TEMP <- villages_TEMP %>% left_join(village_wind, by = "shrid")
+    month_temp <- month_temp + 1
+  }
+  villages_TEMP$season <- "monsoon"
+  villages_TEMP <- villages_TEMP %>% mutate(days_sums_NOT = rowSums(villages[,3:7]))
+  # Just make sure (should already be named this)
+  colnames(villages_TEMP) <- c("shrid", "m0_NOT", "m1_NOT", "m2_NOT", "m3_NOT", "m4_NOT", "m5_NOT", "season", "days_sums_NOT")
+  
+  # join with villages
+  villages <- villages %>% left_join(villages_TEMP, by = c("shrid", "season"))
+  
+  
+  # Winter season
   villages2 <- villages %>% dplyr::select(shrid)
-  month_temp <- 1
-  for (month in 11:12){
+  month_temp <- 0
+  for (month in 10:12){
     village_wind <- read_csv(paste0("data/clean/wind_ntl/months/y", year, "m", month, ".csv")) %>% as_tibble()
     colnames(village_wind) <- c("shrid", paste0("m", month_temp))
     villages2 <- villages2 %>% left_join(village_wind, by = "shrid")
@@ -256,10 +281,34 @@ for (year in 2002:2013){
     month_temp <- month_temp + 1
   }
   villages2$season <- "winter"
-  villages2 <- villages2 %>% mutate(days_sums = rowSums(villages2[,2:6]))
+  villages2 <- villages2 %>% mutate(days_sums = rowSums(villages2[,3:7]))
   # Just make sure (should already be named this)
-  colnames(villages2) <- c("shrid", "m1", "m2", "m3", "m4", "m5", "season", "days_sums")
+  colnames(villages2) <- c("shrid", "m0", "m1", "m2", "m3", "m4", "m5", "season", "days_sums")
   
+  # Now values for plants NOT YET OPEN
+  villages_TEMP <- villages %>% dplyr::select(shrid)
+  month_temp <- 0
+  for (month in 10:12){
+    village_wind <- read_csv(paste0("data/clean/wind_ntl_NOT/months/y", year, "m", month, ".csv")) %>% as_tibble()
+    colnames(village_wind) <- c("shrid", paste0("m", month_temp, "NOT"))
+    villages_TEMP <- villages_TEMP %>% left_join(village_wind, by = "shrid")
+    month_temp <- month_temp + 1
+  }
+  for (month in 1:3){
+    village_wind <- read_csv(paste0("data/clean/wind_ntl_NOT/months/y", year + 1, "m", month, ".csv")) %>% as_tibble()
+    colnames(village_wind) <- c("shrid", paste0("m", month_temp, "NOT"))
+    villages_TEMP <- villages_TEMP %>% left_join(village_wind, by = "shrid")
+    month_temp <- month_temp + 1
+  }
+  villages_TEMP$season <- "winter"
+  villages_TEMP <- villages_TEMP %>% mutate(days_sums = rowSums(villages_TEMP[,3:7]))
+  # Just make sure (should already be named this)
+  colnames(villages_TEMP) <- c("shrid", "m0_NOT", "m1_NOT", "m2_NOT", "m3_NOT", "m4_NOT", "m5_NOT", "season", "days_sums_NOT")
+  
+  # join with villages2
+  villages2 <- villages2 %>% left_join(villages_TEMP, by = c("shrid", "season"))
+  
+  # rbind vilalges and villages2
   villages <- rbind(villages, villages2)
   
   

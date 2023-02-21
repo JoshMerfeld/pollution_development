@@ -124,7 +124,7 @@
 
 \title{Pollution, agricultural productivity, and development: Evidence from coal plants in India\footnote{I thank Marc Bellemare and David Sungho Park for comments and suggestions that greatly improved the quality of the paper. The usual disclaimer applies. All scripts used in this paper are publicly available on my GitHub page: github.com/JoshMerfeld/pollution\_development}}
 \author{Joshua D. Merfeld\footnote{KDI School of Public Policy and Management and IZA; \href{mailto:merfeld@kdis.ac.kr}{\nolinkurl{merfeld@kdis.ac.kr}}}}
-\date{2023-02-11}
+\date{2023-02-20}
 
 \begin{document}
 \maketitle
@@ -233,14 +233,14 @@ A large question looms with respect to identification: what are the characterist
 \cmidrule(l{3pt}r{3pt}){2-3} \cmidrule(l{3pt}r{3pt}){4-5}
   & 1991 & 2001 & 2001 & 2011\\
 \midrule
-pop (log) & 0.068*** & 0.0003 & 0.009*** & 0.002***\\
- & (0.0002) & (0.0002) & (0.0003) & (0.0002)\\
-literacy (prop) & 0.127*** & -0.005*** & 0.043*** & 0.030***\\
+pop (log) & 0.068*** & 0.000 & 0.009*** & 0.002***\\
+ & (0.000) & (0.000) & (0.000) & (0.000)\\
+literacy (prop) & 0.127*** & -0.005*** & 0.044*** & 0.030***\\
  & (0.002) & (0.001) & (0.002) & (0.002)\\
-has paved road & -0.036*** & 0.003*** & -0.008*** & -2.68e-7\\
- & (0.0008) & (0.0004) & (0.0008) & (0.0006)\\
+has paved road & -0.037*** & 0.003*** & -0.008*** & -0.000\\
+ & (0.001) & (0.000) & (0.001) & (0.001)\\
 ag productivity &  &  & 0.033*** & 0.005***\\
- &  &  & (0.0005) & (0.0004)\\
+ &  &  & (0.001) & (0.000)\\
 sub-sample & all & no plant & all & no plant\\
 \midrule
 observations & 490,882 & 447,288 & 516,798 & 476,517\\
@@ -269,14 +269,14 @@ It is worth taking the time to validate the use of wind direction as a measure o
 \cmidrule(l{3pt}r{3pt}){2-3} \cmidrule(l{3pt}r{3pt}){4-5}
   & (1) & (2) & (3) & (4)\\
 \midrule
-wind & 0.045*** & 0.014*** & 0.063*** & 0.015***\\
- & (0.004) & (0.001) & (0.005) & (0.002)\\
+wind (10s) & 0.002*** & 0.002*** & 0.006*** & 0.001***\\
+ & (0.000) & (0.000) & (0.001) & (0.000)\\
 \textbf{fixed effects:} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
 village & Yes & Yes & Yes & Yes\\
 month & Yes & No & Yes & No\\
 district-month & No & Yes & No & Yes\\
 \midrule
-observations & 22,345,092 & 22,345,092 & 14,896,728 & 14,896,728\\
+observations & 24,376,458 & 24,376,458 & 16,250,973 & 16,250,973\\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[para]
@@ -287,7 +287,7 @@ observations & 22,345,092 & 22,345,092 & 14,896,728 & 14,896,728\\
 
 Both the particulate matter data and the wind data is at the village level, which means the regressions in Table \ref{tab:pollutiontable} are at the village level. As such, the geographic fixed effects are village fixed effects and the temporal fixed effects are month fixed effects. Since the exposure variable is at the village level and we follow villages over time, the standard errors are also clustered at the village level. In columns two and four, I switch the month fixed effects for district-month fixed effects, which considers only villages in the same district in the same month.
 
-In addition to serving as an example, Table \ref{tab:pollutiontable} also helps validate the use of wind direction as a proxy for exposure to pollution. The first two columns include all available years of data while the last two columns restrict estimation only to the years for which the agricultural productivity regressions are estimated. Across all four columns, the story is the same: when the wind is blowing in the direction of a village from a coal plant within 30 kilometers, estimated \(\mathrm{PM_{2.5}}\) is substantially higher. The regressions indicate that one additional day of wind in the direction of the village increases mean \(\mathrm{PM_{2.5}}\) for the month by between 0.01 and 0.06 \(\mathrm{\mu g/m^3}\).
+In addition to serving as an example, Table \ref{tab:pollutiontable} also helps validate the use of wind direction as a proxy for exposure to pollution. The first two columns include all available years of data while the last two columns restrict estimation only to the years for which the agricultural productivity regressions are estimated. Across all four columns, the story is the same: when the wind is blowing in the direction of a village from a coal plant within 30 kilometers, estimated \(\mathrm{PM_{2.5}}\) is substantially higher. The regressions indicate that one additional day of wind in the direction of the village increases mean \(\mathrm{PM_{2.5}}\) for the month by between 0.00 and 0.00 \(\mathrm{\mu g/m^3}\).
 
 To put these numbers into perspective, the World Health Organization's updated guidelines are that average annual exposure should not exceed 15 \(\mathrm{\mu g/m^3}\). For the month, an increase at the midpoint of the estimated range is equal to an increase of 0.2 percent of the maximum recommended mean concentration from the WHO. This is just a single day of wind in the direction of a village. Since this includes all villages located within 30km of a coal plant, this is evidence that wind direction can have serious repercussions on the health of hundreds of millions of people in India.
 
@@ -318,12 +318,12 @@ Column three adds district-by-year-by-season fixed effects as an additional robu
 \cmidrule(l{3pt}r{3pt}){2-4} \cmidrule(l{3pt}r{3pt}){5-5} \cmidrule(l{3pt}r{3pt}){6-6}
   & (1) & (2) & (3) & (4) & (5)\\
 \midrule
-wind & -0.003*** & -0.003*** & -0.0007*** & -0.002*** & -0.004***\\
- & (0.0002) & (0.0002) & (9.24e-5) & (0.0002) & (0.0003)\\
+wind & -0.003*** & -0.003*** & -0.001*** & -0.002*** & -0.004***\\
+ & (0.000) & (0.000) & (0.000) & (0.000) & (0.000)\\
 rain (z) &  & 0.029*** & 0.008*** & 0.075*** & 0.006***\\
- &  & (0.0004) & (0.001) & (0.002) & (0.0005)\\
-mean temp (10s) &  & -0.0004*** & -0.007*** & -0.002*** & -0.008***\\
- &  & (5.53e-5) & (0.0004) & (0.0001) & (9.83e-5)\\
+ &  & (0.000) & (0.001) & (0.002) & (0.000)\\
+mean temp (10s) &  & -0.000*** & -0.007*** & -0.002*** & -0.008***\\
+ &  & (0.000) & (0.000) & (0.000) & (0.000)\\
 \textbf{fixed effects:} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
 village-season & Yes & Yes & Yes & No & No\\
 year & Yes & Yes & No & Yes & Yes\\
@@ -352,12 +352,12 @@ To put the size of the coefficient in context, it is worth digging a little deep
 \cmidrule(l{3pt}r{3pt}){2-4} \cmidrule(l{3pt}r{3pt}){5-5} \cmidrule(l{3pt}r{3pt}){6-6}
   & (1) & (2) & (3) & (4) & (5)\\
 \midrule
-particulate matter & 0.0000 & 0.0005*** & -0.0004*** & 0.002*** & 0.0004***\\
-(PM 2.5, '000s) & (0.0000) & (3.17e-5) & (5.72e-5) & (9.87e-5) & (3.7e-5)\\
-rain (z) &  & 0.030*** & 0.008*** & 0.075*** & 0.007***\\
- &  & (0.0004) & (0.001) & (0.002) & (0.0005)\\
-mean temp (10s) &  & -0.0003*** & -0.007*** & -0.002*** & -0.008***\\
- &  & (5.63e-5) & (0.0004) & (0.0001) & (9.79e-5)\\
+particulate matter & 0.0000 & 0.0329*** & -0.0787*** & -0.0509*** & 0.0216***\\
+(log PM 2.5) & (0.0000) & (0.0028) & (0.0040) & (0.0033) & (0.0052)\\
+rain (z) &  & 0.0290*** & 0.0079*** & 0.0760*** & 0.0064***\\
+ &  & (0.0004) & (0.0013) & (0.0017) & (0.0005)\\
+mean temp (10s) &  & -0.0003*** & -0.0071*** & -0.0020*** & -0.0080***\\
+ &  & (0.0001) & (0.0004) & (0.0001) & (0.0001)\\
 \textbf{fixed effects:} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
 village-season & Yes & Yes & Yes & No & No\\
 year & Yes & Yes & No & Yes & Yes\\
@@ -373,13 +373,17 @@ observations & 2,387,417 & 2,371,221 & 2,371,221 & 1,256,951 & 1,114,270\\
 \end{threeparttable}
 \end{table}
 
-Of course, it is not wind, per se, that we are interested in. Instead, we are actually interested in better understanding the effects of exposure to pollution on agricultural productivity. Table \ref{tab:yieldtablepm} presents the same regressions as Table \ref{fig:yieldtable}, with a key difference: instead of wind exposure, it uses average concentration of \(\mathrm{PM_{2.5}}\) -- from Hammer et al. (2020) -- during the season as the key explanatory variable. I rescale particulate matter by dividing by one thousand to help with presentation of the coefficients. Several interesting patterns emerge. In the first column we see no relationship between particulate matter and agricultural productivity, while there is actually a positive relationship in columns two, four, and five. There is a small, negative relationship between pollution and productivity in column three.
+Of course, it is not wind, per se, that we are interested in. Instead, we are actually interested in better understanding the effects of exposure to pollution on agricultural productivity. Table \ref{tab:yieldtablepm} presents the same regressions as Table \ref{fig:yieldtable}, with a key difference: instead of wind exposure, it uses average concentration of \(\mathrm{PM_{2.5}}\) -- from Hammer et al. (2020) -- during the season as the key explanatory variable.
+
+Several interesting patterns emerge. We only observe a negative relationship between particulate matter and agricultural productivity in column three; the coefficient in column two is actually positive. Breaking out the effects into the monsoon and winter seasons, we also see a positive relationship between pollution and agricultural productivity.
 
 Recall, however, the results from above: coal plants were placed in places with higher average agricultural productivity. This means that the simple regressions in \ref{tab:yieldtablepm} might actually be biased upwards: although pollution might negatively affect productivity, pollution is higher in more productive areas due to the endogenous placement of coal plants in the study areas. To recover the actual effect of pollution, we need an instrument. If, conditional on the fixed effects and weather variables, wind direction is exogenous and only affects agricultural productivity through pollution -- which seems reasonable since it is hard to imagine what other variables it might affect -- then it is a valid instrument for pollution.
 
 I present the IV results in Table \ref{tab:yieldtabletwo}, with the second-stage results in the top panel and the first-stage results in the bottom panel. The first-stage results make clear how strong of an instrument wind is; the t-statistic in column one, for example, is almost 48 while it is still well above 10 in column three, which translates to a first-stage F-statistic of 195, meeting even the higher bar for the first-stage F-test argued for by D. S. Lee et al. (2022). Also note that the coefficients are quite different from those in Table \ref{tab:pollutiontable} because the unit of analysis in Table \ref{tab:yieldtabletwo} is the season, while in Table \ref{tab:pollutiontable} the unit of analysis is the month.
 
-The second-stage results first indicate that \(\mathrm{PM_{2.5}}\) is a very strong predictor of agricultural productivity. The smallest coefficient -- that for the monsoon season in column (4) -- and the mean absolute deviation for \(\mathrm{PM_{2.5}}\) point to a change in agricultural productivity of around 23 percent, which is much higher than the wind results documented above. This makes sense, of course, since the IV is essentially scaling up the effects of wind. The comparison of the results to those in the previous table also confirm the concerns around endogenous placement of coal plants. The coefficients in Table \ref{tab:yieldtabletwo} are always more negative than those in Table \ref{tab:yieldtablepm}, and sometimes substantially so. In other words, the simple regression of agricultural productivity on pollution results in coefficients on pollution that are upwards biased, since coal plants are placed in more productive areas. The IV strategy corrects this bias and leads to a robust, negative relationship between pollution and agricultural productivity.
+The second-stage results first indicate that \(\mathrm{PM_{2.5}}\) is a very strong predictor of agricultural productivity. The smallest coefficient -- that for the monsoon season in column (4) -- and the mean absolute deviation for \(\mathrm{PM_{2.5}}\) point to a change in agricultural productivity of around 23 percent, which is much higher than the wind results documented above. This makes sense, of course, since the IV is essentially scaling up the effects of wind.
+
+The comparison of the results to those in the previous table also confirm the concerns around endogenous placement of coal plants. The coefficients in Table \ref{tab:yieldtabletwo} are always more negative than those in Table \ref{tab:yieldtablepm}, and sometimes substantially so. In other words, the simple regression of agricultural productivity on pollution results in coefficients on pollution that are upwards biased, since higher levels of pollution occur in more productive areas, on average. The IV strategy corrects this bias and leads to a robust, negative relationship between pollution and agricultural productivity.
 
 \begin{table}
 
@@ -392,12 +396,12 @@ The second-stage results first indicate that \(\mathrm{PM_{2.5}}\) is a very str
 \cmidrule(l{3pt}r{3pt}){2-4} \cmidrule(l{3pt}r{3pt}){5-5} \cmidrule(l{3pt}r{3pt}){6-6}
   & (1) & (2) & (3) & (4) & (5)\\
 \midrule
-particulate matter & -0.021*** & -0.024*** & -0.032*** & -0.012*** & -0.035***\\
-(PM 2.5) & (0.001) & (0.002) & (0.005) & (0.001) & (0.003)\\
-rain (z) &  & -0.011*** & -4.24e-5 & 0.078*** & -0.042***\\
- &  & (0.003) & (0.002) & (0.002) & (0.004)\\
-mean temp (10s) &  & -0.005*** & -0.007*** & -0.002*** & -0.008***\\
- &  & (0.0003) & (0.0004) & (0.0001) & (0.0001)\\
+particulate matter & -1.190*** & -1.027*** & -1.671*** & -0.525*** & -1.741***\\
+(log PM 2.5) & (0.070) & (0.071) & (0.235) & (0.043) & (0.139)\\
+rain (z) &  & 0.028*** & 0.012*** & 0.080*** & 0.001**\\
+ &  & (0.000) & (0.001) & (0.002) & (0.001)\\
+mean temp (10s) &  & -0.001*** & -0.009*** & -0.002*** & -0.007***\\
+ &  & (0.000) & (0.000) & (0.000) & \vphantom{2} (0.000)\\
 \textbf{fixed effects:} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
 village-season & Yes & Yes & Yes & No & No\\
 year & Yes & Yes & No & Yes & Yes\\
@@ -407,12 +411,12 @@ village & No & No & No & Yes & Yes\\
 observations & 2,387,417 & 2,371,221 & 2,371,221 & 1,256,951 & 1,114,270\\
 \midrule
 \textbf{first stage:} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
-wind & 0.145*** & 0.111*** & 0.022*** & 0.157*** & 0.105***\\
- & (0.002) & (0.002) & (0.002) & (0.002) & (0.004)\\
-rain (z) &  & -1.68*** & -0.239*** & 0.225*** & -1.37***\\
- &  & (0.011) & (0.017) & (0.015) & (0.010)\\
-mean temp (10s) &  & -0.192*** & 0.002 & -0.021*** & -0.007***\\
- &  & (0.0009) & (0.004) & (0.001) & (0.002)\\
+wind & 0.003*** & 0.003*** & 0.000*** & 0.004*** & 0.002***\\
+ & (0.000) & (0.000) & (0.000) & (0.000) & (0.000)\\
+rain (z) &  & -0.001*** & 0.002*** & 0.009*** & -0.003***\\
+ &  & (0.000) & (0.000) & (0.000) & \vphantom{1} (0.000)\\
+mean temp (10s) &  & -0.000*** & -0.001*** & 0.001*** & 0.001***\\
+ &  & (0.000) & (0.000) & (0.000) & (0.000)\\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[para]
@@ -421,53 +425,58 @@ mean temp (10s) &  & -0.192*** & 0.002 & -0.021*** & -0.007***\\
 \end{threeparttable}
 \end{table}
 
-Having established that exposure to pollution has a negative effect on agricultural productivity, I now move to heterogeneity in these effects. Table \ref{tab:yieldtablehet} presents four different analyses: effects of exposure by maximum exposure, multiplicative effects of shocks, the possibility of non-linearities, and the differential effects of exposure based on initial agricultural productivity.
+\hypertarget{heterogeneity}{%
+\subsection{Heterogeneity}\label{heterogeneity}}
 
-The first two columns split the sample based on maximum exposure; villages with maximum exposure above the median are included in column (1) while those below the median are in column (2). Interestingly, the largest effects are seen on villages in the lower half of the distribution. Apparently, smaller maximum effects lead to larger overall effects of pollution exposure on agricultural productivity. In other words, it is not the places where wind is most likely to blow from a coal plant that experience the largest decrease in productivity in response to an additional day of wind-driven pollution.
+Having established that exposure to pollution has a negative effect on agricultural productivity, I now move to heterogeneity in these effects. Table \ref{tab:yieldtablehet} presents three different analyses: heterogeneity by median exposure, heterogeneity by initial yield, and possible multiplicative effects of shocks. All regressions use the IV strategy detailed above and I include the F statistic from the first stage regressions (of which there are two in the last column) at the bottom of the table. Table \ref{tab:yieldtablehet1st} in the appendix presents the first-stage results for all columns.
+
+The first two columns split the sample based on median exposure. In other words, for each village, I calculate the median exposure (based on wind) and then use this single value for each village to split the sample into villages above and below median exposure. The coefficient in the first column is 2.5 times larger than the coefficient in the second column, indicating much larger effects of pollution in places where it is more common. One possible explanation is that exposure is cumulative, leading to larger and larger effects. I return to this in column five.
+
+Columns two and three split the sample based on median yield at the very beginning of the sample (the first year available, 2002-2003). Column three presents results for villages above the median while column four presents results for villages below the median. The largest effects are apparently concentrated in the lower half of the distribution. Perhaps more productive areas are more likely to have ways to combat the effects of shocks -- e.g.~by adjusting the use of other inputs -- or maybe less productive areas are inherently more susceptible to the effects of pollution, perhaps due to direct effects on land productivity.
+
+Given ongoing changes in the climate, a key question is how welfare will change as shocks become more and more common. In the last column looks at possible multiplicative effects of shocks by interacting pollution with rainfall and seeing whether the effects compound one another. Since there are now two endogenous regressors, I instrument for both using wind exposure and an interaction between wind exposure and rainfall.
 
 \begin{table}
 
 \caption{\label{tab:yieldtablehet}Heterogeneity in the effects of pollution on productivity}
 \centering
 \begin{threeparttable}
-\begin{tabular}[t]{>{\raggedright\arraybackslash}p{3cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}}
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{4.5cm}>{\centering\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{1.8cm}>{\centering\arraybackslash}p{1.8cm}}
 \toprule
 \multicolumn{1}{c}{ } & \multicolumn{2}{c}{exposure} & \multicolumn{2}{c}{yield} & \multicolumn{1}{c}{ } \\
 \cmidrule(l{3pt}r{3pt}){2-3} \cmidrule(l{3pt}r{3pt}){4-5}
   & >p(50) & <=p(50) & >p(50) & <=p(50) & \\
 \midrule
-pm & -0.074*** & -0.012*** & -0.006*** & -0.066*** & -0.021***\\
- & (0.004) & (0.002) & (0.001) & (0.006) & (0.001)\\
-pm (10s) times rain &  &  &  &  & 0.005***\\
- &  &  &  &  & (0.000)\\
-weather & yes & yes & yes & yes & yes\\
+PM 2.5 & -1.082*** & -2.523*** & -0.439*** & -1.711*** & -0.809***\\
+ & (0.073) & (0.624) & (0.046) & (0.146) & (0.060)\\
+PM time rain &  &  &  &  & 0.180***\\
+ &  &  &  &  & (0.008)\\
+weather & Yes & Yes & Yes & Yes & Yes\\
 \textbf{fixed effects:} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
 village-season & Yes & Yes & Yes & Yes & Yes\\
 year & Yes & Yes & Yes & Yes & Yes\\
 \midrule
-observations & 650,770 & 1,720,451 & 1,192,644 & 1,178,577 & 2,371,221\\
+F (1st stage, PM) & 6,488 & 60 & 2,867 & 2,150 & 2,958\\
+F (1st stage, PM times rain) & -- & -- & -- & -- & 1,697\\
+observations & 1,051,010 & 1,320,211 & 1,193,764 & 1,177,457 & 2,371,221\\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[para]
-\item Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions is estimated agricultural yield, defined as tons per hectare. The first two columns split the sample based on the *maximum* observed exposure. * p<0.10 ** p<0.05 *** p<0.01
+\item Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions is estimated agricultural yield, defined as tons per hectare. The first two columns split the sample based on the median exposure (by village). The second two columns split the sample based on initial -- the first year available -- agricultural productivity. * p<0.10 ** p<0.05 *** p<0.01
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
 
-Column three looks add the possible multiplicative effects of rainfall shocks and pollution shocks on agricultural productivity. In previous tables, rainfall always entered the regression positively -- as we would expect -- indicating that higher rainfall in a given season leads to higher agricultural productivity. However, an interesting question is whether rainfall and pollution shocks might interact. The positive coefficient on the interaction term between days of wind and rainfall during the agricultural season indicates that there is a multiplicative effect of shocks; when wind days are higher (bad) and rainfall is lower (bad), the overall negative effects are even worse than when just one shock happens. Considering that climate change is leading to more variable rainfall and more negative rainfall shocks, these results are potentially worrisome, especially for smallholders.
-
-Column four adds a quadratic in wind to see if the negative effects of pollution on agricultural productivity are increase or decreasing in wind. In column four, the coefficient on the linear term is 0.0006 while the coefficient on the quadratic term is -0.0002, meaning that the effect of wind is decreasing for any days of wind over three The negative coefficient also indicates that this negative effect is consistently decreasing, meaning the effect gets worse as average wind days gets higher. Note that this is somewhat different from the regressions in the first two columns, which split the sample by the \emph{maximum} days of wind observed in the sample, not the mean.
-
-In the final column I add to the regression an interaction between wind and initial agricultural productivity (defined in 2002, the first year observed in the productivity data). The linear term drops out of the regression since it is invariant within villages, leaving just the interaction term. The negative coefficient on the interaction term of -0.001 indicates that the effect of pollution is more negative in areas where agricultural productivity is higher. Note that agricultural productivity is defined in logs, so this can be interpreted as a percentage effect, not a level effect. Apparently, wind-driven pollution is particularly detrimental to agricultural productivity in the most productive places.
+The coefficient on the level term for pollution is negative. Since rainfall is defined as a z score, this represents the effect of pollution only when rainfall is at its mean value for a given season. The interaction term, on the other hand, is positive. Since higher values of rainfall are generally good, this positive coefficient represents a compounding effect of pollution and rainfall; when rainfall is low (bad), the effects of particulate matter on agricultural productivity is larger (more negative). Another way to think about this, however, is that higher values of rainfall dampen the effects of pollution shocks. This could have very profound effects on welfare, since this essentially increases the variance of agricultural productivity across years (which is already increasing due to climate change).
 
 \hypertarget{robustness-checks}{%
 \subsection{Robustness checks}\label{robustness-checks}}
 
 I present two separate robustness checks in the appendix. The first set of analyses attempts to separate the possible endogenous location of coal plants from outcomes. Specifically, prior to the opening of a new coal plant in an area, all villages receive a zero for wind. This means that, even if wind direction is exogenous, the opening of the coal plant could lead to correlations between the error term and the wind variable.
 
-Although the results with district-year-season help mitigate this concern, Table \ref{tab:yieldtablepostplant} in the appendix checks this possibility in a different way. Specifically, I restrict the sample to only village-years \emph{after} the introduction of a coal plant. This drops any pre-plant-opening observations -- all of which are mechanically zeros for wind -- to prevent endogeneity due to the opening. The coefficients in Table \ref{tab:yieldtablepostplant} show that the overall effects are essentially unchanged, with just a small change in coefficient magnitude (driven mostly by rounding).
+Although the results with district-year-season help mitigate this concern, Table \ref{tab:yieldtablepostplant} in the appendix checks this possibility in a different way. Specifically, I restrict the sample to only village-years \emph{after} the introduction of a coal plant. This drops any pre-plant-opening observations -- all of which are mechanically zeros for wind -- to prevent endogeneity due to the opening. The coefficients in Table \ref{tab:yieldtablepostplant} show that the overall effects are essentially unchanged across any specifications. Comparing changes in coefficients can also help reduce any effects driven by other polluting industries located near coal plants; since the pre-opening exposure variable is zero, the coefficients in Table \ref{tab:yieldtablepostplant} would likely increase in magnitude if the effects were driven by non-coal pollution.
 
-The second robustness check includes leads for wind to see if they predict current year productivity. I present these results in \ref{tab:yieldtableleads}. The second column includes district-year-season fixed effects, while the first does not. The results make clear the importance of including trends or district-year fixed effects. In the first column, leads seem to predict productivity. However, this relationship disappears in the second column, indicating that the previous results with district-year fixed effects are likely the most reliable.
+The second robustness check includes leads and lags for wind to see if they predict current year productivity. I present these results in \ref{tab:yieldtableleads}. The first column is the reduced form effect and shows that only current wind predicts productivity; leads and lags have no impact. We see similar results in column two -- the IV results -- with a negative coefficient for current pollution, only. However, the standard errors are much larger than the main results -- around five times as large -- making it hard to come to any conclusions.
 
 \hypertarget{labor-allocation}{%
 \subsection{Labor allocation}\label{labor-allocation}}
@@ -478,7 +487,7 @@ Table \ref{tab:labortable} presents results for labor allocation over the last s
 
 \begin{table}
 
-\caption{\label{tab:labortablerural}Wind direction and labor allocation, by location}
+\caption{\label{tab:labortablerural}Wind direction and labor allocation by rural status}
 \centering
 \begin{threeparttable}
 \begin{tabular}[t]{>{\raggedright\arraybackslash}p{3cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}}
@@ -521,6 +530,39 @@ One way to provide suggestive evidence of mechanisms is to explore heterogeneity
 
 Table \ref{tab:labortableold} presents a very clear set of results: the effects are always larger (more negative) for older adults. Particularly interestingly, we now see that the mean-zero effect on self employment in the previous table is driven by two stark contrasts: a large increase for the younger group and a large decrease for the older group. For the youngest group, this increase appears in farm labor, indicating likely increases in farm self-employment. The oldest, on the other hand, have large decreases in both farm and non-farm labor, with larger decreases in the latter.
 
+\begin{table}
+
+\caption{\label{tab:labortableruralage}Wind direction and labor allocation by age (rural only)}
+\centering
+\begin{threeparttable}
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{3cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}}
+\toprule
+  & all & all & self & wage & farm & non-farm\\
+\midrule
+\textbf{younger than 35} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
+wind & -0.077* & -0.085** & -0.061* & -0.024 & -0.001 & -0.085**\\
+ & (0.046) & (0.034) & (0.032) & (0.032) & (0.034) & (0.038)\\
+DV mean & 3.106 & 3.106 & 1.794 & 1.312 & 1.061 & 2.044\\
+observations & 263,965 & 263,923 & 263,923 & 263,923 & 263,923 & 263,923\\
+\midrule
+\textbf{45 or older} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
+wind & -0.131** & -0.165*** & -0.054 & -0.111*** & -0.070* & -0.095**\\
+ & (0.054) & (0.043) & (0.054) & (0.041) & (0.036) & (0.042)\\
+DV mean & 3.584 & 3.584 & 2.481 & 1.103 & 1.444 & 2.140\\
+observations & 166,184 & 166,155 & 166,155 & 166,155 & 166,155 & 166,155\\
+\midrule
+controls & No & Yes & Yes & Yes & Yes & Yes\\
+\textbf{fixed effects:} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
+district & Yes & Yes & Yes & Yes & Yes & Yes\\
+state-month & Yes & Yes & Yes & Yes & Yes & Yes\\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[para]
+\item Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education. The outcome in each regression is days worked in the previous seven days. * p<0.10 ** p<0.05 *** p<0.01
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
 To put some of these changes in context, an additional day of exposure to pollution from wind increases self-employment for the younger half of the sample by around six percent of the mean and increases farm employment for the younger half by almost 10 percent of the mean. For the older half, on the other hand, an additional day of exposure decreases self-employment and non-farm employment by around five percent of their means.
 
 While speculative, one possible explanation for this pattern is a decrease in labor productivity. While the youngest may be able to readjust and increase their overall self-employment labor allocation, perhaps the oldest cannot due to, for example, health effects of pollution, which are well documented (Bentayeb et al. 2012; Pope III 2000).\footnote{Much of the literature also suggests the youngest are at significant risk of mortality and morbidities. However, given my focus on labor allocation, I only discuss older adults here.} We see decreases in overall agricultural productivity, despite an increase in overall farm labor. We also see decreases in non-farm employment, indicating that individuals are reallocating labor from the non-farm sector to the farm sector.
@@ -533,36 +575,44 @@ The overall pattern of results stays the same when we shift the focus. Overall l
 
 Finally, Table \ref{tab:wagestable} in the appendix shows that there are no significant changes in daily wages, though the overall direction of wage changes would be ambiguous, anyway. While reduced productivity might lead to lower wages, decreased labor supply could also put upward pressure on wages.
 
-\hypertarget{nightlights}{%
-\subsection{Nightlights}\label{nightlights}}
+\hypertarget{month-specific-exposure}{%
+\subsection{Month-specific exposure}\label{month-specific-exposure}}
 
 Pollution leads to lower agricultural productivity as well as changes in labor allocation. This leads to an obvious question: might higher levels of pollution also directly affect economic growth? To explore this question, I look at changes in nightlights relative to changes in pollution. It seems reasonable to think that pollution might affect nightlights with a lag, so I include the lag of pollution rather than contemporaneous pollution.
 
 \begin{table}
 
-\caption{\label{tab:ntltable}Wind direction and nightlight growth}
+\caption{\label{tab:yieldtablemonthly}Month-specific exposure}
 \centering
 \begin{threeparttable}
-\begin{tabular}[t]{>{\raggedright\arraybackslash}p{3cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}}
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{3cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}}
 \toprule
-  & (1) & (2) & (3) & (4)\\
+  & monsoon & winter\\
 \midrule
-wind (lag) & -0.024*** & -0.024*** &  & \\
- & (0.003) & (0.003) &  & \\
-wind (lead) &  &  & -0.001 & -0.001\\
- &  &  & (0.002) & (0.002)\\
-weather & no & yes & no & yes\\
-\textbf{fixed effects:} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
-village & Yes & Yes & Yes & Yes\\
-year & Yes & Yes & Yes & Yes\\
-\textbf{varying slopes:} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
-year (by village) & Yes & Yes & Yes & Yes\\
+Month 1 & -0.808*** & 0.788\\
+(June/Nov.) & (0.066) & (0.588)\\
+Month 1 & 0.049 & -0.351\\
+(July/Dec.) & (0.060) & (0.967)\\
+Month 3 & -0.229*** & 4.758\\
+(Aug./Jan.) & (0.034) & (3.756)\\
+Month 4 & -0.215*** & -2.086***\\
+(Sept./Feb.) & (0.035) & (0.503)\\
+Month 5 & 0.149* & -3.788\\
+(Oct./March) & (0.082) & (3.210)\\
+\textbf{fixed effects:} & \textbf{} & \textbf{}\\
+village & Yes & Yes\\
+year & Yes & Yes\\
 \midrule
-observations & 1,694,535 & 1,694,535 & 1,807,504 & 1,807,504\\
+F (month 1) & 1,430 & 566\\
+F (month 2) & 1,029 & 897\\
+F (month 3) & 2,713 & 358\\
+F (month 4) & 2,131 & 389\\
+F (month 5) & 592 & 565\\
+observations & 1,266,922 & 1,120,495\\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[para]
-\item Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions is logged nightlights. Rainfall is included in columns (2) and (4). * p<0.10 ** p<0.05 *** p<0.01
+\item Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions is logged nightlights. * p<0.10 ** p<0.05 *** p<0.01
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -740,7 +790,7 @@ Wen, Jeff, and Marshall Burke. 2022. {``{Lower test scores from wildfire smoke e
 \caption{\label{tab:data}Data sources}
 \centering
 \begin{threeparttable}
-\begin{tabular}[t]{>{\raggedright\arraybackslash}p{2cm}>{\centering\arraybackslash}p{4.5cm}>{\centering\arraybackslash}p{3.5cm}>{\centering\arraybackslash}p{3.5cm}}
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{2cm}>{\centering\arraybackslash}p{5cm}>{\centering\arraybackslash}p{3cm}>{\centering\arraybackslash}p{3cm}}
 \toprule
   & source & geographic coverage & temporal coverage\\
 \midrule
@@ -748,13 +798,46 @@ shapefile & Asher et al. (2021) & India & \\
 coal plants & Global Energy Monitor & global & yearly\\
 wind & NCAR & global & daily\\
 pollution & Hammer et al. (2020) & global & monthly\\
-agriculture & Angopadhyay et al. (2022) & global & two seasons/year\\
+agriculture & Angopadhyay et al. (2022) & India & two seasons/year\\
 nightlights & Asher et al. (2021) & India & yearly\\
 weather & TerraClimate & global & monthly\\
+labor & National Sample Survey (NSS) & India & daily interviews\\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[para]
 \item Global Energy Monitor: globalenergymonitor.org/projects/global-coal-plant-tracker. NCAR: climatedataguide.ucar.edu/. TerraClimate: www.climatologylab.org/terraclimate.html
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+\FloatBarrier
+\newpage
+
+\begin{table}
+
+\caption{\label{tab:yieldtablehet1st}Heterogeneity in the effects of pollution on productivity, first-stage results}
+\centering
+\begin{threeparttable}
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{2.8cm}>{\centering\arraybackslash}p{1.7cm}>{\centering\arraybackslash}p{1.7cm}>{\centering\arraybackslash}p{1.7cm}>{\centering\arraybackslash}p{1.7cm}>{\centering\arraybackslash}p{1.7cm}>{\centering\arraybackslash}p{1.7cm}}
+\toprule
+\multicolumn{1}{c}{ } & \multicolumn{1}{c}{(1)} & \multicolumn{1}{c}{(2)} & \multicolumn{1}{c}{(3)} & \multicolumn{1}{c}{(4)} & \multicolumn{2}{c}{(5)} \\
+\cmidrule(l{3pt}r{3pt}){2-2} \cmidrule(l{3pt}r{3pt}){3-3} \cmidrule(l{3pt}r{3pt}){4-4} \cmidrule(l{3pt}r{3pt}){5-5} \cmidrule(l{3pt}r{3pt}){6-7}
+  & PM & PM & PM & PM & PM & PM*rain\\
+\midrule
+wind & 0.003*** & 0.000*** & 0.003*** & 0.002*** & 0.001*** & -0.032***\\
+ & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.001)\\
+wind times rain &  &  &  &  & 0.001*** & 0.009***\\
+ &  &  &  &  & (0.000) & (0.000)\\
+weather & Yes & Yes & Yes & Yes & Yes & Yes\\
+\textbf{fixed effects:} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
+village-season & Yes & Yes & Yes & Yes & Yes & Yes\\
+year & Yes & Yes & Yes & Yes & Yes & Yes\\
+\midrule
+observations & 1,051,010 & 1,320,211 & 1,193,764 & 1,177,457 & 2,371,221 & 2,371,221\\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}[para]
+\item Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions is estimated agricultural yield, defined as tons per hectare. The first two columns split the sample based on the median exposure (by village). The second two columns split the sample based on initial -- the first year available -- agricultural productivity. * p<0.10 ** p<0.05 *** p<0.01
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
@@ -773,12 +856,12 @@ weather & TerraClimate & global & monthly\\
 \cmidrule(l{3pt}r{3pt}){2-4} \cmidrule(l{3pt}r{3pt}){5-5} \cmidrule(l{3pt}r{3pt}){6-6}
   & (1) & (2) & (3) & (4) & (5)\\
 \midrule
-wind & -0.003*** & -0.002*** & -0.0006*** & -0.002*** & -0.003***\\
- & (0.0002) & (0.0002) & (9.56e-5) & (0.0002) & (0.0003)\\
-rain (z) &  & 0.018*** & 0.008*** & 0.061*** & 0.003***\\
- &  & (0.0005) & (0.001) & (0.002) & (0.0005)\\
-mean temp (10s) &  & 0.0008*** & -0.005*** & 0.005*** & -0.008***\\
- &  & (5.28e-5) & (0.0004) & (0.0001) & (0.0001)\\
+particulate matter & -1.153*** & -1.028*** & -2.270*** & -0.538*** & -1.688***\\
+(log PM 2.5) & (0.079) & (0.083) & (0.386) & (0.044) & (0.166)\\
+rain (z) &  & 0.017*** & 0.018*** & 0.073*** & -0.002***\\
+ &  & (0.001) & (0.002) & (0.002) & (0.001)\\
+mean temp (10s) &  & -0.000*** & -0.008*** & 0.005*** & -0.007***\\
+ &  & (0.000) & (0.001) & (0.000) & (0.000)\\
 \textbf{fixed effects:} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
 village-season & Yes & Yes & Yes & No & No\\
 year & Yes & Yes & No & Yes & Yes\\
@@ -786,6 +869,14 @@ district-year-season & No & No & Yes & No & No\\
 village & No & No & No & Yes & Yes\\
 \midrule
 observations & 1,886,956 & 1,872,177 & 1,872,177 & 996,509 & 875,668\\
+\midrule
+\textbf{first stage:} & \textbf{} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
+wind & 0.002*** & 0.002*** & 0.000*** & 0.004*** & 0.002***\\
+ & (0.000) & (0.000) & (0.000) & (0.000) & (0.000)\\
+rain (z) &  & -0.002*** & 0.004*** & 0.023*** & -0.003***\\
+ &  & (0.000) & (0.000) & (0.000) & \vphantom{1} (0.000)\\
+mean temp (10s) &  & -0.001*** & -0.001*** & -0.000*** & 0.000***\\
+ &  & (0.000) & (0.000) & (0.000) & (0.000)\\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[para]
@@ -806,21 +897,26 @@ observations & 1,886,956 & 1,872,177 & 1,872,177 & 996,509 & 875,668\\
 \toprule
   & (1) & (2)\\
 \midrule
-wind (lag) & 0.004*** & 0.0005\\
- & (0.0007) & (0.0003)\\
-wind & -0.002*** & -0.0006***\\
- & (0.0004) & (0.0002)\\
-wind (lead) & -0.004*** & 0.0000\\
- & (0.0001) & (0.0000)\\
-rain (z) & 0.022*** & 0.006***\\
- & (0.0004) & (0.001)\\
-mean temp (10s) & 0.0005*** & -0.007***\\
- & (6.04e-5) & (0.0004)\\
+wind (lag) & 0.0005 & \\
+ & (0.0003) & \\
+wind & -0.0006*** & \\
+ & (0.0002) & \\
+wind (lead) & -0.0001 & \\
+ & (0.0001) & \\
+PM (lag) &  & 0.4340\\
+ &  & (0.8666)\\
+PM &  & -0.6942***\\
+ &  & (0.1497)\\
+PM (lead) &  & -0.0958\\
+ &  & (0.5137)\\
+weather & Yes & Yes\\
 \textbf{fixed effects:} & \textbf{} & \textbf{}\\
 village-season & Yes & Yes\\
-year & Yes & No\\
-district-year-season & No & Yes\\
+district-year-season & Yes & Yes\\
 \midrule
+F (lag) & -- & 162\\
+F & -- & 410\\
+F (lead) & -- & 289\\
 observations & 1,976,205 & 1,976,205\\
 \bottomrule
 \end{tabular}
@@ -953,5 +1049,12 @@ observations & 16,534 & 149,973 & 133,526\\
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
+
+\FloatBarrier
+\newpage
+
+\begin{figure}
+\includegraphics{draft_files/figure-latex/monthplot-1} \caption[Average farm days by season, rural only]{Average farm days by season, rural only}\label{fig:monthplot}\floatfoot*{Note: The line graph shows the mean number of farm days worked per week based on the month of the relevant agricultural season. The monsoon season is defined as June (month 1) to October (month 5) while the rainy season is defined as November (month 1) to March (month 5) of the following year. The data is from the NSS.}
+\end{figure}
 
 \end{document}
