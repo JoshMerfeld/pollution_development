@@ -184,8 +184,8 @@ rad_deg <- function(rad){
 
 # GET PREVIOUS SEVEN DAYS (before start of loop)
 # Date
-date <- as.Date("2000-08-22", "%Y-%m-%d")
-final_date <- as.Date("2016-12-31", "%Y-%m-%d")
+date <- as.Date("2014-08-21", "%Y-%m-%d")
+final_date <- as.Date("2015-03-10", "%Y-%m-%d")
 
 wind_last_week <- dist_matrix %>% dplyr::select("shrid", "plant_id", "angle", "angle_original", "year_built", "year_retired")
 wind_last_week <- wind_last_week %>% group_by(shrid) %>% filter(row_number()==1) %>% ungroup()
@@ -554,7 +554,7 @@ while (date<=final_date){
 ## Aggregating to month/year ------------------------------------------------------------------------------------------
 ### PHEW! IT'S DONE! Now we need to pull all those daily csvs and aggregate them into months and years.
 # From 1990 through 2015
-today <- as.Date("1999-01-01", "%Y-%m-%d")
+today <- as.Date("2002-01-01", "%Y-%m-%d")
 final_date <- as.Date("2015-12-31", "%Y-%m-%d")
 
 while (today<=final_date){
@@ -572,152 +572,154 @@ while (today<=final_date){
     }
   }
   
-
-  # Going to set this up to redownload if there is an issue reading the csv
-  today_value <- NULL
-  try(
-    today_value <- read_csv(paste0("data/clean/wind_ntl/days/date_", year(today + 1), "-", month(today + 1), "-", day(today + 1), ".csv"))
-  )
-  if (is.null(today_value)==T){
-    wind_last_week <- dist_matrix %>% dplyr::select("shrid", "plant_id", "angle", "angle_original", "year_built", "year_retired")
-    wind_last_week <- wind_last_week %>% group_by(shrid) %>% filter(row_number()==1) %>% ungroup()
-    for (lag in 1:7){
-      wind_last_week_temp <- wind_last_week
-      wind_last_week_temp$sum <- 0
-      
-      # do it for TOMORROW
-      dl_year <- year(today + 1 - lag)
-      dl_month <- month(today + 1 - lag)
-      dl_day <- day(today + 1 - lag)
-      if (str_length(dl_month)==1){
-        dl_month <- paste0("0", dl_month)
-      }
-      if (str_length(dl_day)==1){
-        dl_day <- paste0("0", dl_day)
-      }
-      temp_nc1 <- fs::file_temp(ext = ".nc.gz")
-      url1 <- paste0("https://data.remss.com/ccmp/v02.0/Y", dl_year, "/M", dl_month, "/CCMP_Wind_Analysis_", dl_year, dl_month, dl_day, "_V02.0_L3.0_RSS.nc")
-      download.file(url1, destfile = temp_nc1, mode = "wb")
-      nc_path1 <- gunzip(temp_nc1)
-      data <- ncdf4::nc_open(nc_path1)
-      
-      
-      # Keep only those that cover India
-      lon_start <- max(which( data$dim$lon$vals<=extent(india_wind)[1] ))
-      lon_count <- min(which( data$dim$lon$vals>=extent(india_wind)[2] )) - lon_start + 1
-      lat_start <- max(which( data$dim$lat$vals<=extent(india_wind)[3] ))
-      lat_count <- min(which( data$dim$lat$vals>=extent(india_wind)[4] )) - lat_start + 1
-      
-      east <- ncvar_get(data, "uwnd", start = c(lon_start, lat_start, 1), count = c(lon_count, lat_count, 4))
-      north <- ncvar_get(data, "vwnd", start = c(lon_start, lat_start, 1), count = c(lon_count, lat_count, 4))
-      direction_original <- rad_deg(
-                                   atan2(
-                                         east,
-                                         north
-                                        )
-                                  )
-      direction <- direction_original
-      # Finally, if negative add 360
-      direction[direction<0] <- direction[direction<0] + 360
-      # Get lon and lat values of cells
-      lon <- data$dim$longitude$vals[lon_start:(lon_start + lon_count - 1)]
-      lat <- data$dim$latitude$vals[lat_start:(lat_start + lat_count - 1)]
-      r <- raster(
-                  direction,
-                  xmn = range(lon)[1], xmx = range(lon)[2],
-                  ymn = range(lat)[1], ymx = range(lat)[2],
-                  crs = "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
-                  )
-      
-      r2 <- raster(
-                  direction_original,
-                  xmn = range(lon)[1], xmx = range(lon)[2],
-                  ymn = range(lat)[1], ymx = range(lat)[2],
-                  crs = "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
-                  )
-      
-      r <- projectRaster(
-                         r,
-                         crs = crs(plants)
-                         )
-      r2 <- projectRaster(
-                         r2,
-                         crs = crs(plants)
-                         )
-      
-      extracted_values <- as_tibble(cbind(raster::extract(r, plants), plants$plant_id))
-      extracted_values_original <- as_tibble(cbind(raster::extract(r2, plants), plants$plant_id))
-      colnames(extracted_values) <- c("plant_angle", "plant_id")
-      extracted_values <- extracted_values %>% group_by(plant_id) %>% filter(row_number()==1) %>% ungroup()
-      colnames(extracted_values_original) <- c("plant_angle_original", "plant_id")
-      extracted_values_original <- extracted_values_original %>% group_by(plant_id) %>% filter(row_number()==1) %>% ungroup()
-      
-      # Only those plants NOT IN EXISTENCE at the time
-      wind_last_week_ALL <- wind_last_week_temp %>% filter(dl_year<wind_last_week_temp$year_built | dl_year>wind_last_week_temp$year_retired)
-      wind_last_week_ALL <- wind_last_week_ALL %>% left_join(extracted_values, by = "plant_id") 
-      wind_last_week_ALL <- wind_last_week_ALL %>% left_join(extracted_values_original, by = "plant_id") 
-      
-      # Only those plants in existence at the time
-      wind_last_week_temp <- wind_last_week_temp %>% filter(dl_year>=wind_last_week_temp$year_built & dl_year<=wind_last_week_temp$year_retired)
-      wind_last_week_temp <- wind_last_week_temp %>% left_join(extracted_values, by = "plant_id") 
-      wind_last_week_temp <- wind_last_week_temp %>% left_join(extracted_values_original, by = "plant_id") 
-      
-      # Add one when meeting conditions
-      condition_ALL <- wind_last_week_ALL$angle>=5 & wind_last_week_ALL$angle<=355
-      condition <- wind_last_week_temp$angle>=5 & wind_last_week_temp$angle<=355
-      
-      # figure out whether ANY are a one for a village
-      wind_last_week_ALL$sum[condition_ALL] <- wind_last_week_ALL$sum[condition_ALL] + 
-                                    as.numeric(
-                                              (wind_last_week_ALL$plant_angle[condition_ALL]>=wind_last_week_ALL$angle[condition_ALL] - 5) 
-                                              &
-                                              (wind_last_week_ALL$plant_angle[condition_ALL]<=wind_last_week_ALL$angle[condition_ALL] + 5)
-                                              )
-      wind_last_week_ALL$sum[!condition_ALL] <- wind_last_week_ALL$sum[!condition_ALL] + 
-                                    as.numeric(
-                                              (wind_last_week_ALL$plant_angle_original[!condition_ALL]>=wind_last_week_ALL$angle_original[!condition_ALL] - 5) 
-                                              &
-                                              (wind_last_week_ALL$plant_angle_original[!condition_ALL]<=wind_last_week_ALL$angle_original[!condition_ALL] + 5)
-                                              )
-      
-      wind_last_week_ALL <- wind_last_week_ALL %>% group_by(shrid) %>% mutate(sum = max(sum)) %>% filter(row_number()==1) %>% ungroup() %>% dplyr::select("shrid", "sum")
-      wind_last_week_merge_ALL <- wind_last_week_ALL[,1]
-      wind_last_week_merge_ALL <- wind_last_week_merge_ALL %>% left_join(wind_last_week_ALL, by = "shrid")
-      wind_last_week_merge_ALL$sum[is.na(wind_last_week_merge_ALL$sum)==T] <- 0
-      
-      wind_last_week_ALL[, 6 + lag] <- wind_last_week_merge_ALL$sum
-      
-      # figure out whether ANY are a one for a village
-      wind_last_week_temp$sum[condition] <- wind_last_week_temp$sum[condition] + 
-                                    as.numeric(
-                                              (wind_last_week_temp$plant_angle[condition]>=wind_last_week_temp$angle[condition] - 5) 
-                                              &
-                                              (wind_last_week_temp$plant_angle[condition]<=wind_last_week_temp$angle[condition] + 5)
-                                              )
-      wind_last_week_temp$sum[!condition] <- wind_last_week_temp$sum[!condition] + 
-                                    as.numeric(
-                                              (wind_last_week_temp$plant_angle_original[!condition]>=wind_last_week_temp$angle_original[!condition] - 5) 
-                                              &
-                                              (wind_last_week_temp$plant_angle_original[!condition]<=wind_last_week_temp$angle_original[!condition] + 5)
-                                              )
-      
-      wind_last_week_temp <- wind_last_week_temp %>% group_by(shrid) %>% mutate(sum = max(sum)) %>% filter(row_number()==1) %>% ungroup() %>% dplyr::select("shrid", "sum")
-      wind_last_week_merge <- wind_last_week[,1]
-      wind_last_week_merge <- wind_last_week_merge %>% left_join(wind_last_week_temp, by = "shrid")
-      wind_last_week_merge$sum[is.na(wind_last_week_merge$sum)==T] <- 0
-      
-      wind_last_week[, 6 + lag] <- wind_last_week_merge$sum
-    }
-    
-    write_csv(wind_last_week_ALL[, c(1, 7:ncol(wind_last_week_ALL))], paste0("data/clean/wind_ntl_NOT/days/date_", year(today + 1), "-", month(today + 1), "-", day(today + 1), ".csv"))
-    today_value_ALL <- wind_last_week_ALL[, c(1, 7:ncol(wind_last_week_ALL))]
-    
-    write_csv(wind_last_week[, c(1, 7:ncol(wind_last_week))], paste0("data/clean/wind_ntl/days/date_", year(today + 1), "-", month(today + 1), "-", day(today + 1), ".csv"))
-    today_value <- wind_last_week[, c(1, 7:ncol(wind_last_week))]
-  }
+  today_value_ALL <- read_csv(paste0("data/clean/wind_ntl_NOT/days/date_", year(today + 1), "-", month(today + 1), "-", day(today + 1), ".csv"))
+  today_value <- read_csv(paste0("data/clean/wind_ntl/days/date_", year(today + 1), "-", month(today + 1), "-", day(today + 1), ".csv"))
+# 
+#   # Going to set this up to redownload if there is an issue reading the csv
+#   today_value <- NULL
+#   try(
+#     
+#   )
+#   if (is.null(today_value)==T){
+#     wind_last_week <- dist_matrix %>% dplyr::select("shrid", "plant_id", "angle", "angle_original", "year_built", "year_retired")
+#     wind_last_week <- wind_last_week %>% group_by(shrid) %>% filter(row_number()==1) %>% ungroup()
+#     for (lag in 1:7){
+#       wind_last_week_temp <- wind_last_week
+#       wind_last_week_temp$sum <- 0
+#       
+#       # do it for TOMORROW
+#       dl_year <- year(today + 1 - lag)
+#       dl_month <- month(today + 1 - lag)
+#       dl_day <- day(today + 1 - lag)
+#       if (str_length(dl_month)==1){
+#         dl_month <- paste0("0", dl_month)
+#       }
+#       if (str_length(dl_day)==1){
+#         dl_day <- paste0("0", dl_day)
+#       }
+#       temp_nc1 <- fs::file_temp(ext = ".nc.gz")
+#       url1 <- paste0("https://data.remss.com/ccmp/v02.0/Y", dl_year, "/M", dl_month, "/CCMP_Wind_Analysis_", dl_year, dl_month, dl_day, "_V02.0_L3.0_RSS.nc")
+#       download.file(url1, destfile = temp_nc1, mode = "wb")
+#       nc_path1 <- gunzip(temp_nc1)
+#       data <- ncdf4::nc_open(nc_path1)
+#       
+#       
+#       # Keep only those that cover India
+#       lon_start <- max(which( data$dim$lon$vals<=extent(india_wind)[1] ))
+#       lon_count <- min(which( data$dim$lon$vals>=extent(india_wind)[2] )) - lon_start + 1
+#       lat_start <- max(which( data$dim$lat$vals<=extent(india_wind)[3] ))
+#       lat_count <- min(which( data$dim$lat$vals>=extent(india_wind)[4] )) - lat_start + 1
+#       
+#       east <- ncvar_get(data, "uwnd", start = c(lon_start, lat_start, 1), count = c(lon_count, lat_count, 4))
+#       north <- ncvar_get(data, "vwnd", start = c(lon_start, lat_start, 1), count = c(lon_count, lat_count, 4))
+#       direction_original <- rad_deg(
+#                                    atan2(
+#                                          east,
+#                                          north
+#                                         )
+#                                   )
+#       direction <- direction_original
+#       # Finally, if negative add 360
+#       direction[direction<0] <- direction[direction<0] + 360
+#       # Get lon and lat values of cells
+#       lon <- data$dim$longitude$vals[lon_start:(lon_start + lon_count - 1)]
+#       lat <- data$dim$latitude$vals[lat_start:(lat_start + lat_count - 1)]
+#       r <- raster(
+#                   direction,
+#                   xmn = range(lon)[1], xmx = range(lon)[2],
+#                   ymn = range(lat)[1], ymx = range(lat)[2],
+#                   crs = "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
+#                   )
+#       
+#       r2 <- raster(
+#                   direction_original,
+#                   xmn = range(lon)[1], xmx = range(lon)[2],
+#                   ymn = range(lat)[1], ymx = range(lat)[2],
+#                   crs = "+proj=longlat +datum=WGS84 +no_defs +ellps=WGS84 +towgs84=0,0,0"
+#                   )
+#       
+#       r <- projectRaster(
+#                          r,
+#                          crs = crs(plants)
+#                          )
+#       r2 <- projectRaster(
+#                          r2,
+#                          crs = crs(plants)
+#                          )
+#       
+#       extracted_values <- as_tibble(cbind(raster::extract(r, plants), plants$plant_id))
+#       extracted_values_original <- as_tibble(cbind(raster::extract(r2, plants), plants$plant_id))
+#       colnames(extracted_values) <- c("plant_angle", "plant_id")
+#       extracted_values <- extracted_values %>% group_by(plant_id) %>% filter(row_number()==1) %>% ungroup()
+#       colnames(extracted_values_original) <- c("plant_angle_original", "plant_id")
+#       extracted_values_original <- extracted_values_original %>% group_by(plant_id) %>% filter(row_number()==1) %>% ungroup()
+#       
+#       # Only those plants NOT IN EXISTENCE at the time
+#       wind_last_week_ALL <- wind_last_week_temp %>% filter(dl_year<wind_last_week_temp$year_built | dl_year>wind_last_week_temp$year_retired)
+#       wind_last_week_ALL <- wind_last_week_ALL %>% left_join(extracted_values, by = "plant_id") 
+#       wind_last_week_ALL <- wind_last_week_ALL %>% left_join(extracted_values_original, by = "plant_id") 
+#       
+#       # Only those plants in existence at the time
+#       wind_last_week_temp <- wind_last_week_temp %>% filter(dl_year>=wind_last_week_temp$year_built & dl_year<=wind_last_week_temp$year_retired)
+#       wind_last_week_temp <- wind_last_week_temp %>% left_join(extracted_values, by = "plant_id") 
+#       wind_last_week_temp <- wind_last_week_temp %>% left_join(extracted_values_original, by = "plant_id") 
+#       
+#       # Add one when meeting conditions
+#       condition_ALL <- wind_last_week_ALL$angle>=5 & wind_last_week_ALL$angle<=355
+#       condition <- wind_last_week_temp$angle>=5 & wind_last_week_temp$angle<=355
+#       
+#       # figure out whether ANY are a one for a village
+#       wind_last_week_ALL$sum[condition_ALL] <- wind_last_week_ALL$sum[condition_ALL] + 
+#                                     as.numeric(
+#                                               (wind_last_week_ALL$plant_angle[condition_ALL]>=wind_last_week_ALL$angle[condition_ALL] - 5) 
+#                                               &
+#                                               (wind_last_week_ALL$plant_angle[condition_ALL]<=wind_last_week_ALL$angle[condition_ALL] + 5)
+#                                               )
+#       wind_last_week_ALL$sum[!condition_ALL] <- wind_last_week_ALL$sum[!condition_ALL] + 
+#                                     as.numeric(
+#                                               (wind_last_week_ALL$plant_angle_original[!condition_ALL]>=wind_last_week_ALL$angle_original[!condition_ALL] - 5) 
+#                                               &
+#                                               (wind_last_week_ALL$plant_angle_original[!condition_ALL]<=wind_last_week_ALL$angle_original[!condition_ALL] + 5)
+#                                               )
+#       
+#       wind_last_week_ALL <- wind_last_week_ALL %>% group_by(shrid) %>% mutate(sum = max(sum)) %>% filter(row_number()==1) %>% ungroup() %>% dplyr::select("shrid", "sum")
+#       wind_last_week_merge_ALL <- wind_last_week_ALL[,1]
+#       wind_last_week_merge_ALL <- wind_last_week_merge_ALL %>% left_join(wind_last_week_ALL, by = "shrid")
+#       wind_last_week_merge_ALL$sum[is.na(wind_last_week_merge_ALL$sum)==T] <- 0
+#       
+#       wind_last_week_ALL[, 6 + lag] <- wind_last_week_merge_ALL$sum
+#       
+#       # figure out whether ANY are a one for a village
+#       wind_last_week_temp$sum[condition] <- wind_last_week_temp$sum[condition] + 
+#                                     as.numeric(
+#                                               (wind_last_week_temp$plant_angle[condition]>=wind_last_week_temp$angle[condition] - 5) 
+#                                               &
+#                                               (wind_last_week_temp$plant_angle[condition]<=wind_last_week_temp$angle[condition] + 5)
+#                                               )
+#       wind_last_week_temp$sum[!condition] <- wind_last_week_temp$sum[!condition] + 
+#                                     as.numeric(
+#                                               (wind_last_week_temp$plant_angle_original[!condition]>=wind_last_week_temp$angle_original[!condition] - 5) 
+#                                               &
+#                                               (wind_last_week_temp$plant_angle_original[!condition]<=wind_last_week_temp$angle_original[!condition] + 5)
+#                                               )
+#       
+#       wind_last_week_temp <- wind_last_week_temp %>% group_by(shrid) %>% mutate(sum = max(sum)) %>% filter(row_number()==1) %>% ungroup() %>% dplyr::select("shrid", "sum")
+#       wind_last_week_merge <- wind_last_week[,1]
+#       wind_last_week_merge <- wind_last_week_merge %>% left_join(wind_last_week_temp, by = "shrid")
+#       wind_last_week_merge$sum[is.na(wind_last_week_merge$sum)==T] <- 0
+#       
+#       wind_last_week[, 6 + lag] <- wind_last_week_merge$sum
+#     }
+  #   
+  #   write_csv(wind_last_week_ALL[, c(1, 7:ncol(wind_last_week_ALL))], paste0("data/clean/wind_ntl_NOT/days/date_", year(today + 1), "-", month(today + 1), "-", day(today + 1), ".csv"))
+  #   today_value_ALL <- wind_last_week_ALL[, c(1, 7:ncol(wind_last_week_ALL))]
+  #   
+  #   write_csv(wind_last_week[, c(1, 7:ncol(wind_last_week))], paste0("data/clean/wind_ntl/days/date_", year(today + 1), "-", month(today + 1), "-", day(today + 1), ".csv"))
+  #   today_value <- wind_last_week[, c(1, 7:ncol(wind_last_week))]
+  # }
   
   # ALL
-  today_value_ALL <- today_value[,1:2]
+  today_value_ALL <- today_value_ALL[,1:2]
   colnames(today_value_ALL ) <- c("shrid", "today")
   # Okay, so now add to sums
   year_sum_ALL <- year_sum %>% left_join(today_value_ALL, by = "shrid")
