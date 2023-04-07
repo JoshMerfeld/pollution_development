@@ -18,14 +18,14 @@ output:
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
 knitr::opts_chunk$set(
-  fig.width=9, fig.height=3.5, fig.retina=3,
-  out.width = "100%",
-  cache = FALSE,
-  echo = TRUE,
-  message = FALSE, 
-  warning = FALSE,
-  hiline = TRUE
-)
+                      fig.width = 9, fig.height = 3.5, fig.retina = 3,
+                      out.width = "100%",
+                      cache = FALSE,
+                      echo = TRUE,
+                      message = FALSE, 
+                      warning = FALSE,
+                      hiline = TRUE
+                      )
 
 
 library(sf)
@@ -48,7 +48,6 @@ library(modelsummary)
 library(openxlsx)
 library(raster)
 library(lubridate)
-library(icons)
 library(png)
 loadfonts()  # Must be run once in each session (markdown is a new "session" each time you render/knit)
 
@@ -176,26 +175,19 @@ villageswind <- villageswind %>% st_set_crs(st_crs(districts))
 # Tables
 plantresultstable <- readRDS("pollution_development/draft/tables/plantresultstable.rds")
 pollutiontable <- readRDS("pollution_development/draft/tables/pollutiontable.rds")
-yieldtable <- readRDS("pollution_development/draft/tables/yieldtable.rds")
-yieldtablepm <- readRDS("pollution_development/draft/tables/yieldtablepm.rds")
-yieldtabletwo <- readRDS("pollution_development/draft/tables/yieldtabletwo.rds")
-yieldtablehet <- readRDS("pollution_development/draft/tables/yieldtablehet.rds")
-pmeffects <- readRDS("pollution_development/draft/tables/yieldtablePM.rds")
-labortable <- readRDS("pollution_development/draft/tables/labortable.rds")
-labortablerural <- readRDS("pollution_development/draft/tables/labortablerural.rds")
-labortableurban <- readRDS("pollution_development/draft/tables/labortableurban.rds")
-labortableruralyoung <- readRDS("pollution_development/draft/tables/labortableruralyoung.rds")
-labortableruralold <- readRDS("pollution_development/draft/tables/labortableruralold.rds")
-wagestable <- readRDS("pollution_development/draft/tables/wagestable.rds")
-labortablemonsoon <- readRDS("pollution_development/draft/tables/labortablemonsoon.rds")
-labortablewinter <- readRDS("pollution_development/draft/tables/labortablewinter.rds")
-labortableold <- readRDS("pollution_development/draft/tables/labortableold.rds")
-labortableoldstate <- readRDS("pollution_development/draft/tables/labortableoldstate.rds")
-ntltable <- readRDS("pollution_development/draft/tables/ntltable.rds")
-yieldtableleads <- readRDS("pollution_development/draft/tables/yieldtableleads.rds")
-yieldtablepostplant <- readRDS("pollution_development/draft/tables/yieldtablepostplant.rds")
+yield1reducedform <- readRDS("pollution_development/draft/tables/yield1reducedform.rds")
+yield2naive <- readRDS("pollution_development/draft/tables/yield2naive.rds")
+yield3ivmain <- readRDS("pollution_development/draft/tables/yield3ivmain.rds")
+yield4monthly <- readRDS("pollution_development/draft/tables/yield4monthly.rds")
+yield5heterogeneity <- readRDS("pollution_development/draft/tables/yield5heterogeneity.rds")
+yield6leads <- readRDS("pollution_development/draft/tables/yield6leads.rds")
+yield7ivdiffindiff <- readRDS("pollution_development/draft/tables/yield7ivdiffindiff.rds")
+labor1all <- readRDS("pollution_development/draft/tables/labor1all.rds")
+labor2rural <- readRDS("pollution_development/draft/tables/labor2rural.rds")
+labor3month <- readRDS("pollution_development/draft/tables/labor3month.rds")
 laborplot <- readRDS("pollution_development/draft/tables/laborplot.rds")
-yieldtablemonthly <- readRDS("pollution_development/draft/tables/yieldtablemonthly.rds")
+monthplot <- readRDS("pollution_development/draft/tables/monthplot.rds")
+opplot <- readRDS("pollution_development/draft/tables/opplot.rds")
 
 ```
 
@@ -242,9 +234,7 @@ style_duo(
 - Coal one of most common energy sources worldwide
   - Reached an all-time high in 2021 <small><small>(www.iea.org/reports/coal-fired-electricity)</small></small>
 
-![]("../../../pollution_development/draft/tables/energy.png")
-
-
+- india villages complain coal "power plant" (Adaniwatch)
 
 
 
@@ -252,9 +242,15 @@ style_duo(
 
 ---
 
-## Coal and energy in India
 
-![]("../../../pollution_development/draft/tables/energy.png")
+```{r energypng, echo = FALSE, message = FALSE, warning = FALSE}
+
+knitr::include_graphics(
+                        path = "energy.png",
+                        auto_pdf = TRUE
+                        )
+
+```
 
 
 
@@ -297,7 +293,7 @@ style_duo(
   - Previous evidence from gold mines (Aragon and Rud 2016) and workers in California (Graff Zivin and Neidell 2012)
 - Higher exposure to pollution leads to lower agricultural productivity
   - Exposure defined as wind direction from coal plants towards villages
-  - One additional day of exposure per season: decrease of 0.3 percent (yields)
+  - Also instrument for particulate matter 2.5 (PM 2.5)
 
 
 
@@ -305,10 +301,23 @@ style_duo(
 
 ## This paper
 
-- Adults decrease labor allocation
-  - Driven by large decrease in older half of sample; younger half increases allocation to farm labor
-- More pollution in previous year also leads to lower nightlight growth
-  - 25th to 75th percentile of exposure leads to decrease in nightlights of 0.7 percent
+- Effects on labor allocation decisions, as well
+- Largest effects on labor and yield in same month
+  - Around very beginning of the monsoon season (June)
+
+
+
+
+
+---
+
+## General idea
+- Coal plants open in a given year
+- Plot wind direction each day
+  - Exposure means wind blowing from coal plant to village (within 30km)
+  - Aggregate up to desired level (e.g. season, month, week)
+
+
 
 
 
@@ -367,17 +376,6 @@ kable(
 
 ```
 
-
-
-
-
----
-
-## General idea
-- Coal plants open in a given year
-- Plot wind direction each day
-  - Exposure means wind blowing from coal plant to village (within 30km)
-  - Aggregate up to desired level (e.g. season, month, week)
 
 
 
@@ -462,6 +460,28 @@ ggplot() +
 
 
 
+---
+
+## Empirical strategy
+
+First stage
+
+$$pm_{it} = \alpha^1_{i} + \gamma^1_{t} + \phi^1 wind_{it} + \psi^1 weather_{it} + \varepsilon^1_{it}$$
+
+Second stage
+
+$$yield_{it} = \alpha^2_{i} + \gamma^2_{t} + \phi^2 \hat{pm}_{it} + \psi^2 weather_{it} + \varepsilon^2_{it}$$
+
+
+- i indexes villages (districts for labor)
+- t indexes time (where time differs based on the analysis)
+- standard errors clustered at village (or district) throughout
+- common use of stars (one indicates 0.10) throughout
+
+
+
+
+
 
 
 ---
@@ -477,13 +497,6 @@ kable(
       plantresultstable,
       align = "cccc", booktabs = TRUE, linesep = "", escape = FALSE
       ) %>%
-  footnote(
-           "Note: Robust standard errors are in parentheses. The outcome in the first column is whether the village is within 30km of a coal plant in 1991. The second column is whether a village in 1991 will have a coal plant in 2001, conditional on not having one in 1991. The last two columns are similarly defined, except using 2001 and 2011 as the years. * p<0.10 ** p<0.05 *** p<0.01",
-           general_title = "",
-           threeparttable = TRUE,
-           footnote_as_chunk = TRUE,
-           escape = FALSE
-           ) %>%
   column_spec(1, width = "3cm") %>%
   column_spec(c(2:5),width = "2cm") %>%
   row_spec(9, hline_after = TRUE) %>%
@@ -497,10 +510,41 @@ kable(
 
 
 
+---
+
+## Reduced form - wind and yield
+
+
+```{r yieldtable, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+
+# Table
+colnames(yield1reducedform) <- c("(1)", "(2)", "(3)")
+kable(
+      yield1reducedform,
+      align = "ccc", booktabs = TRUE, linesep = ""
+      ) %>%
+  column_spec(1, width = "3cm") %>%
+  column_spec(c(2:4),width = "2.5cm") %>%
+  row_spec(13, bold = TRUE) %>%
+  row_spec(15, hline_after = TRUE) %>%
+  #add_header_above(c(" ", "all" = 3, "monsoon" = 1, "winter" = 1)) %>%
+  kable_classic_2()
+
+```
+
+
+
+
+
+
+
+
+
+
 
 ---
 
-## Validating wind direction - particulate matter and exposure, monthly level
+## First stage - particulate matter and exposure, monthly level
 
 ```{r pollutiontable, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
@@ -510,12 +554,6 @@ kable(
       pollutiontable,
       align = "cccc", booktabs = TRUE, linesep = ""
       ) %>%
-  footnote(
-           "Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01", 
-           general_title = "",
-           threeparttable = TRUE,
-           footnote_as_chunk = TRUE
-           ) %>%
   column_spec(1, width = "4cm") %>%
   column_spec(c(2:5),width = "2cm") %>%
   row_spec(c(3), bold = TRUE) %>%
@@ -531,74 +569,33 @@ kable(
 
 
 
----
-
-## Effects of wind direction on agricultural productivity
-
-
-```{r yieldtable, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
-
-# Table
-colnames(yieldtable) <- c("(1)", "(2)", "(3)", "(4)", "(5)")
-kable(
-      yieldtable,
-      align = "ccccc", booktabs = TRUE, linesep = ""
-      ) %>%
-  footnote(
-           "Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01", 
-           general_title = "",
-           threeparttable = TRUE,
-           footnote_as_chunk = TRUE
-           ) %>%
-  column_spec(1, width = "3cm") %>%
-  column_spec(c(2:6),width = "2cm") %>%
-  row_spec(7, bold = TRUE) %>%
-  row_spec(11, hline_after = TRUE) %>%
-  add_header_above(c(" ", "all" = 3, "monsoon" = 1, "winter" = 1)) %>%
-  kable_classic_2()
-
-```
-
-
-
-
-
-
-
-
 
 
 
 ---
 
-## Effects of PM on agricultural productivity
-
-- Likely endogenous
-  - Upward biased?
+## PM and agricultural productivity
 
 ```{r yieldtablepm, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
 # Table
-colnames(yieldtablepm) <- c("(1)", "(2)", "(3)", "(4)", "(5)")
+colnames(yield2naive) <- c("(1)", "(2)", "(3)")
 kable(
-      yieldtablepm[-c(3:6),],
-      align = "ccccc", booktabs = TRUE, linesep = ""
+      yield2naive,
+      align = "ccc", booktabs = TRUE, linesep = ""
       ) %>%
-  # footnote(
-  #          "Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01", 
-  #          general_title = "",
-  #          threeparttable = TRUE,
-  #          footnote_as_chunk = TRUE
-  #          ) %>%
   column_spec(1, width = "3cm") %>%
-  column_spec(c(2:6),width = "2cm") %>%
-  row_spec(3, bold = TRUE) %>%
+  column_spec(c(2:4),width = "2.5cm") %>%
+  row_spec(5, bold = TRUE) %>%
   row_spec(7, hline_after = TRUE) %>%
-  add_header_above(c(" ", "all" = 3, "monsoon" = 1, "winter" = 1)) %>%
+  #add_header_above(c(" ", "all" = 3, "monsoon" = 1, "winter" = 1)) %>%
   kable_classic_2()
 
 ```
 
+
+- Likely endogenous
+  - Upward biased?
 
 
 
@@ -631,28 +628,23 @@ kable(
 
 ---
 
-## Effects of PM on agricultural productivity, IV estimates
+## Effects of PM on agricultural productivity (IV)
 
 
 ```{r yieldtabletwo, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
 # Table
-colnames(yieldtabletwo) <- c("(1)", "(2)", "(3)", "(4)", "(5)")
+colnames(yield3ivmain) <- c("(1)", "(2)", "(3)")
+rownames(yield3ivmain)[8] <- "F (first stage)"
 kable(
-      yieldtabletwo[-c(3:6, 12, 16:19),],
-      align = "cccc", booktabs = TRUE, linesep = ""
+      yield3ivmain,
+      align = "ccc", booktabs = TRUE, linesep = ""
       ) %>%
-  # footnote(
-  #          "Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01", 
-  #          general_title = "",
-  #          threeparttable = TRUE,
-  #          footnote_as_chunk = TRUE
-  #          ) %>%
   column_spec(1, width = "3cm") %>%
-  column_spec(c(2:6),width = "2cm") %>%
-  row_spec(c(3,8), bold = TRUE) %>%
-  row_spec(c(2), hline_after = TRUE) %>%
-  add_header_above(c(" ", "all" = 3, "monsoon" = 1, "winter" = 1)) %>%
+  column_spec(c(2:4),width = "2cm") %>%
+  row_spec(5, bold = TRUE) %>%
+  row_spec(7, hline_after = TRUE) %>%
+  #add_header_above(c(" ", "all" = 3, "monsoon" = 1, "winter" = 1)) %>%
   kable_classic_2()
 
 ```
@@ -670,28 +662,22 @@ kable(
 
 ---
 
-## Agricultural productivity and pollution leads/lags
+## Heterogeneity
 
-```{r yieldtableleads, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+```{r heterogeneity, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
 # Table
-colnames(yieldtableleads) <- c("wind", "IV - PM (log)")
-yieldtableleads[1:6,2] <- yieldtableleads[7:12,2]
-yieldtableleads <- yieldtableleads[-c(7:12),]
-yieldtableleads <- yieldtableleads[-c(7:10),]
-rownames(yieldtableleads)[c(1,3,5)] <- c("lag", "current", "lead")
+colnames(yield5heterogeneity) <- c(">p(50)", "<=p(50)", ">p(50)", "<=p(50)", "")
+rownames(yield5heterogeneity)[c(1, 3)] <- c("PM 2.5", "PM times rain")
 kable(
-      yieldtableleads,
-      align = "cc", booktabs = TRUE, linesep = ""
+      yield5heterogeneity,
+      align = "ccccc", booktabs = TRUE, linesep = ""
       ) %>%
-  footnote(
-           "Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions estimated agricultural yield (tons per hectare). * p<0.10 ** p<0.05 *** p<0.01", 
-           general_title = "",
-           threeparttable = TRUE,
-           footnote_as_chunk = TRUE
-           ) %>%
-  column_spec(1, width = "3cm") %>%
-  column_spec(c(2:3),width = "2cm") %>%
+  column_spec(1, width = "4.5cm") %>%
+  column_spec(c(2:6),width = "1.8cm") %>%
+  row_spec(c(8), hline_after = TRUE) %>%
+  row_spec(c(6), bold = TRUE) %>%
+  add_header_above(c(" " = 1, "wind" = 2, "yield" = 2, " " = 1)) %>%
   kable_classic_2()
 
 ```
@@ -714,6 +700,7 @@ kable(
 
 
 ---
+
 
 ## National Sample Survey (NSS)
 
@@ -783,73 +770,30 @@ ggplot() +
 ```{r labortablerural, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
 # Table
-colnames(labortablerural) <- c("all", "all", "self", "wage", "farm", "non-farm")
-colnames(labortableurban) <- c("all", "all", "self", "wage", "farm", "non-farm")
+colnames(labor1all) <- c("all", "all", "self", "wage", "farm", "non-farm")
+colnames(labor2rural) <- c("all", "all", "self", "wage", "farm", "non-farm")
 
 mat1 <- matrix(c("", "", "", "", "", ""), nrow = 1)
 colnames(mat1) <- c("all", "all", "self", "wage", "farm", "non-farm")
-rownames(mat1) <- c("rural")
+rownames(mat1) <- c("panel a: all")
 mat2 <- matrix(c("", "", "", "", "", ""), nrow = 1)
 colnames(mat2) <- c("all", "all", "self", "wage", "farm", "non-farm")
-rownames(mat2) <- c("urban")
+rownames(mat2) <- c("panel b: rural")
 
-labortablerural2 <- rbind(mat1, labortablerural[c(1:2, 7:8),], mat2, labortableurban[-c(3:6),], labortableurban[c(3:6),])
+labortablerural <- rbind(mat1, labor1all[c(1:2, 7:8),], mat2, labor2rural[-c(3:6),], labor2rural[c(3:6),])
 
 kable(
-      labortablerural2[-c(nrow(labortablerural2)-2, nrow(labortablerural2)-1, nrow(labortablerural2)),],
+      labortablerural,
       align = "cccccc", booktabs = TRUE, linesep = ""
       ) %>%
-  footnote(
-           "Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education. The outcome in each regression is days worked in the previous seven days. * p<0.10 ** p<0.05 *** p<0.01", 
-           general_title = "",
-           threeparttable = TRUE,
-           footnote_as_chunk = TRUE
-           ) %>%
   column_spec(1, width = "3cm") %>%
   column_spec(c(2:7),width = "1.5cm") %>%
+  row_spec(c(5,10), hline_after = TRUE) %>%
+  row_spec(c(1,6,12), bold = TRUE) %>%
   kable_classic_2()
 
 ```
 
-
-
-
----
-
-## Wind direction and labor allocation, by age (rural only)
-
-
-
-```{r labortableruralage, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
-
-# Table
-colnames(labortableruralyoung) <- c("all", "all", "self", "wage", "farm", "non-farm")
-colnames(labortableruralold) <- c("all", "all", "self", "wage", "farm", "non-farm")
-
-mat1 <- matrix(c("", "", "", "", "", ""), nrow = 1)
-colnames(mat1) <- c("all", "all", "self", "wage", "farm", "non-farm")
-rownames(mat1) <- c("younger than 35")
-mat2 <- matrix(c("", "", "", "", "", ""), nrow = 1)
-colnames(mat2) <- c("all", "all", "self", "wage", "farm", "non-farm")
-rownames(mat2) <- c("45 or older")
-
-labortableruralyoung2 <- rbind(mat1, labortableruralyoung[c(1:2, 7:8),], mat2, labortableruralold[-c(3:6),], labortableruralold[c(3:6),])
-
-kable(
-      labortableruralyoung2[-c(nrow(labortableruralyoung2)-2, nrow(labortableruralyoung2)-1, nrow(labortableruralyoung2)),],
-      align = "cccccc", booktabs = TRUE, linesep = ""
-      ) %>%
-  footnote(
-           "Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education. The outcome in each regression is days worked in the previous seven days. * p<0.10 ** p<0.05 *** p<0.01", 
-           general_title = "",
-           threeparttable = TRUE,
-           footnote_as_chunk = TRUE
-           ) %>%
-  column_spec(1, width = "3cm") %>%
-  column_spec(c(2:7),width = "1.5cm") %>%
-  kable_classic_2()
-
-```
 
 
 
@@ -874,27 +818,52 @@ kable(
 
 ---
 
-## Heterogeneity by month of the monsoon season
+## Heterogeneity by month, labor
+
+
+
+```{r labortablemonthly, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+
+# Table
+colnames(labor3month) <- c("farm", "non-farm")
+labor3month <- labor3month[-c(1:2, 13:14),]
+labor3month <- labor3month[c(1:14),]
+kable(
+      labor3month,
+      align = "cc", booktabs = TRUE, linesep = ""
+      ) %>%
+  column_spec(1, width = "3cm") %>%
+  column_spec(c(2:3),width = "2cm") %>%
+  row_spec(c(14), hline_after = TRUE) %>%
+  row_spec(c(12), bold = TRUE) %>%
+  kable_classic_2()
+
+```
+
+
+
+
+
+
+---
+
+## Heterogeneity by month, yield
 
 
 
 ```{r yieldtablemonthly, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
 # Table
-colnames(yieldtablemonthly) <- c("(1)", "(2)")
-
+colnames(yield4monthly) <- c("(1)", "(2)")
+yield4monthly <- yield4monthly[c(1:14),]
 kable(
-      yieldtablemonthly[c(1:10, nrow(yieldtablemonthly)),],
+      yield4monthly,
       align = "cc", booktabs = TRUE, linesep = ""
       ) %>%
-  footnote(
-           "Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions estimated agricultural yield (tons per hectare). * p<0.10 ** p<0.05 *** p<0.01", 
-           general_title = "",
-           threeparttable = TRUE,
-           footnote_as_chunk = TRUE
-           ) %>%
   column_spec(1, width = "3cm") %>%
-  column_spec(c(2:3),width = "1.5cm") %>%
+  column_spec(c(2:3),width = "2cm") %>%
+  row_spec(12, bold = TRUE) %>%
+  row_spec(14, hline_after = TRUE) %>%
   kable_classic_2()
 
 ```
@@ -907,14 +876,12 @@ kable(
 
 ---
 
-## Effects on aggregate growth?
+## Coal plants or overall pollution?
 
-- We know pollution affects productivity and labor allocation
-- Might it also affect growth?
-- Proxy for growth with nightlights
-  - Look at previous year's exposure and current year's nightlights
-  - "Growth" of nightlights
-  - Village FE
+- I use the location of coal plants to identify high-pollution areas
+- However, some coal plants open part-way through sample
+- Differences-in-differences combined with IV
+  - Differences in coal pollution, specifically, and other forms of pollution
 
 
 
@@ -922,28 +889,21 @@ kable(
 
 ---
 
-## Wind direction and growth of nightlights
+## Coal plants or overall pollution?
 
 
 ```{r ntltable, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
 # Table
-ntltable <- ntltable[,c(1,3)]
-colnames(ntltable) <- c("(1)", "(2)")
+colnames(yield7ivdiffindiff) <- c("(1)", "(2)", "(3)")
 kable(
-      ntltable,
-      align = "cc", booktabs = TRUE, linesep = ""
+      yield7ivdiffindiff, caption = "Agricultural productivity and pollution source",
+      align = "ccc", booktabs = TRUE, linesep = ""
       ) %>%
-  footnote(
-           "Note: Standard errors are in parentheses and are clustered at the village level. * p<0.10 ** p<0.05 *** p<0.01", 
-           general_title = "",
-           threeparttable = TRUE,
-           footnote_as_chunk = TRUE
-           ) %>%
   column_spec(1, width = "3cm") %>%
-  column_spec(c(2:3),width = "2cm") %>%
-  row_spec(c(9), hline_after = TRUE) %>%
-  row_spec(c(5,8), bold = TRUE) %>%
+  column_spec(c(2:4),width = "2cm") %>%
+  row_spec(c(7), bold = TRUE) %>%
+  row_spec(9, hline_after = TRUE) %>%
   kable_classic_2()
 
 ```
@@ -978,9 +938,8 @@ kable(
   - Identification relies on within-village changes across seasons
 - Wind exposure fluctuations lead to changes in agricultural productivity of around 2.4 percent based on mean absolute deviation
   - Instrumenting for particulate matter, effects are even larger (more than 20 percent)
-- Clear changes in labor allocation
-  - Oldest half of sample
-- Slower growth of nightlights
+- Clear changes in labor allocation at beginning of the season
+  - Yield only changes w.r.t. early-season pollution
 
 
 
@@ -995,6 +954,21 @@ kable(
 - Instead, results point to importance of the location of pollution sources
   - Downwind villages suffer
 - 30km radius indicates relatively long-range effects
+
+
+
+
+
+
+---
+
+class: center, middle
+
+<font size = "40"> Thank you! </font>
+
+[https://joshmerfeld.github.io](https://joshmerfeld.github.io) <br>
+Twitter: [@Josh\_Merfeld](twitter.com/Josh_Merfeld)
+
 
 
 

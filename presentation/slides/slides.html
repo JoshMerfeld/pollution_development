@@ -4,7 +4,7 @@
     <title>Pollution, agricultural productivity, and development: Evidence from coal plants in India</title>
     <meta charset="utf-8" />
     <meta name="author" content="Joshua D. Merfeld   KDI School and IZA" />
-    <meta name="date" content="2023-02-16" />
+    <meta name="date" content="2023-03-31" />
     <script src="slides_files/header-attrs/header-attrs.js"></script>
     <script src="slides_files/kePrint/kePrint.js"></script>
     <link href="slides_files/lightable/lightable.css" rel="stylesheet" />
@@ -21,7 +21,7 @@ class: center, middle, inverse, title-slide
 ### Joshua D. Merfeld <br> KDI School and IZA
 ]
 .date[
-### 2023-02-16
+### 2023-03-31
 ]
 
 ---
@@ -58,8 +58,6 @@ class: center, middle, inverse, title-slide
 - Coal one of most common energy sources worldwide
   - Reached an all-time high in 2021 &lt;small&gt;&lt;small&gt;(www.iea.org/reports/coal-fired-electricity)&lt;/small&gt;&lt;/small&gt;
 
-![]("../../../pollution_development/draft/tables/energy.png")
-
 
 
 
@@ -68,9 +66,8 @@ class: center, middle, inverse, title-slide
 
 ---
 
-## Coal and energy in India
 
-![]("../../../pollution_development/draft/tables/energy.png")
+&lt;img src="energy.png" width="100%" /&gt;
 
 
 
@@ -113,7 +110,7 @@ class: center, middle, inverse, title-slide
   - Previous evidence from gold mines (Aragon and Rud 2016) and workers in California (Graff Zivin and Neidell 2012)
 - Higher exposure to pollution leads to lower agricultural productivity
   - Exposure defined as wind direction from coal plants towards villages
-  - One additional day of exposure per season: decrease of 0.3 percent (yields)
+  - Also instrument for particulate matter 2.5 (PM 2.5)
 
 
 
@@ -121,10 +118,23 @@ class: center, middle, inverse, title-slide
 
 ## This paper
 
-- Adults decrease labor allocation
-  - Driven by large decrease in older half of sample; younger half increases allocation to farm labor
-- More pollution in previous year also leads to lower nightlight growth
-  - 25th to 75th percentile of exposure leads to decrease in nightlights of 0.7 percent
+- Effects on labor allocation decisions, as well
+- Largest effects on labor and yield in same month
+  - Around very beginning of the monsoon season (June)
+
+
+
+
+
+---
+
+## General idea
+- Coal plants open in a given year
+- Plot wind direction each day
+  - Exposure means wind blowing from coal plant to village (within 30km)
+  - Aggregate up to desired level (e.g. season, month, week)
+
+
 
 
 
@@ -201,17 +211,6 @@ class: center, middle, inverse, title-slide
 
 
 
----
-
-## General idea
-- Coal plants open in a given year
-- Plot wind direction each day
-  - Exposure means wind blowing from coal plant to village (within 30km)
-  - Aggregate up to desired level (e.g. season, month, week)
-
-
-
-
 
 ---
 
@@ -248,6 +247,28 @@ class: center, middle, inverse, title-slide
 
 
 
+---
+
+## Empirical strategy
+
+First stage
+
+`$$pm_{it} = \alpha^1_{i} + \gamma^1_{t} + \phi^1 wind_{it} + \psi^1 weather_{it} + \varepsilon^1_{it}$$`
+
+Second stage
+
+`$$yield_{it} = \alpha^2_{i} + \gamma^2_{t} + \phi^2 \hat{pm}_{it} + \psi^2 weather_{it} + \varepsilon^2_{it}$$`
+
+
+- i indexes villages (districts for labor)
+- t indexes time (where time differs based on the analysis)
+- standard errors clustered at village (or district) throughout
+- common use of stars (one indicates 0.10) throughout
+
+
+
+
+
 
 
 ---
@@ -255,7 +276,7 @@ class: center, middle, inverse, title-slide
 ## Where do coal plants open?
 
 
-&lt;table style='NAborder-bottom: 0; font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;' class=" lightable-classic-2"&gt;
+&lt;table class=" lightable-classic-2" style='font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;'&gt;
  &lt;thead&gt;
 &lt;tr&gt;
 &lt;th style="empty-cells: hide;border-bottom:hidden;" colspan="1"&gt;&lt;/th&gt;
@@ -273,52 +294,52 @@ class: center, middle, inverse, title-slide
 &lt;tbody&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt; pop (log) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.068*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.000 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.009*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.002*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 0.010*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 0.001*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 0.017*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 0.004*** &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; "&gt; (0.000) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.000) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.000) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.000) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; area (log) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; -0.006*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 0.001** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; -0.015*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; -0.001*** &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.001) &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; "&gt; (0.000) &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; "&gt; (0.000) &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; "&gt; (0.000) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt; literacy (prop) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.127*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.005*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.044*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.030*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 0.024*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 0.017*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 0.032*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 0.029*** &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.003) &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; "&gt; (0.002) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.001) &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; "&gt; (0.002) &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; "&gt; (0.002) &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; has paved road &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.037*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.003*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.008*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.000 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.001) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.000) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.001) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.001) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt; ag productivity &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; "&gt;  &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.033*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.005*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 0.026*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 0.004*** &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
@@ -336,15 +357,136 @@ class: center, middle, inverse, title-slide
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt; observations &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 490,882 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 447,288 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 516,798 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 476,517 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 283,021 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 264,265 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 508,784 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 469,004 &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
-&lt;tfoot&gt;&lt;tr&gt;&lt;td style="padding: 0; " colspan="100%"&gt;
-&lt;sup&gt;&lt;/sup&gt; Note: Robust standard errors are in parentheses. The outcome in the first column is whether the village is within 30km of a coal plant in 1991. The second column is whether a village in 1991 will have a coal plant in 2001, conditional on not having one in 1991. The last two columns are similarly defined, except using 2001 and 2011 as the years. * p&amp;lt;0.10 ** p&amp;lt;0.05 *** p&amp;lt;0.01&lt;/td&gt;&lt;/tr&gt;&lt;/tfoot&gt;
 &lt;/table&gt;
+
+
+
+
+
+
+---
+
+## Reduced form - wind and yield
+
+
+&lt;table class=" lightable-classic-2" style='font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;'&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; (1) &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; (2) &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; (3) &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; wind days &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; -0.0078*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; -0.0069*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; -0.0062*** &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; (0.0007) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; (0.0007) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; (0.0006) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; rain (z) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; 0.0854*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; -0.0424*** &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; (0.0018) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; (0.0046) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; mean temp (10s) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; -0.0021*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; 0.1321*** &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; (0.0001) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; (0.0034) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; rain square &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; -0.0010*** &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; (0.0001) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; temp square &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; -0.0002*** &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; (0.0000) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; rain times temp &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; 0.0003*** &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; (0.0000) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; font-weight: bold;"&gt; fixed effects: &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; font-weight: bold;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; village &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; Yes &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; year &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; Yes &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; observations &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; 1,266,922 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; 1,266,922 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; 1,266,922 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+
+
 
 
 
@@ -354,9 +496,9 @@ class: center, middle, inverse, title-slide
 
 ---
 
-## Validating wind direction - particulate matter and exposure, monthly level
+## First stage - particulate matter and exposure, monthly level
 
-&lt;table style='NAborder-bottom: 0; font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;' class=" lightable-classic-2"&gt;
+&lt;table class=" lightable-classic-2" style='font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;'&gt;
  &lt;thead&gt;
 &lt;tr&gt;
 &lt;th style="empty-cells: hide;border-bottom:hidden;" colspan="1"&gt;&lt;/th&gt;
@@ -374,17 +516,17 @@ class: center, middle, inverse, title-slide
 &lt;tbody&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 4cm; "&gt; wind (10s) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.002*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.002*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.006*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.001*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 0.0023*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 0.0016*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 0.0057*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 0.0015*** &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 4cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.000) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.000) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.001) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.000) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.0005) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.0002) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.0005) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.0002) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 4cm; font-weight: bold;"&gt; fixed effects: &lt;/td&gt;
@@ -422,140 +564,7 @@ class: center, middle, inverse, title-slide
    &lt;td style="text-align:center;width: 2cm; "&gt; 16,250,973 &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
-&lt;tfoot&gt;&lt;tr&gt;&lt;td style="padding: 0; " colspan="100%"&gt;
-&lt;sup&gt;&lt;/sup&gt; Note: Standard errors are in parentheses and are clustered at the village level. * p&amp;lt;0.10 ** p&amp;lt;0.05 *** p&amp;lt;0.01&lt;/td&gt;&lt;/tr&gt;&lt;/tfoot&gt;
 &lt;/table&gt;
-
-
-
-
-
-
-
----
-
-## Effects of wind direction on agricultural productivity
-
-
-&lt;table style='NAborder-bottom: 0; font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;' class=" lightable-classic-2"&gt;
- &lt;thead&gt;
-&lt;tr&gt;
-&lt;th style="empty-cells: hide;border-bottom:hidden;" colspan="1"&gt;&lt;/th&gt;
-&lt;th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="3"&gt;&lt;div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; "&gt;all&lt;/div&gt;&lt;/th&gt;
-&lt;th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="1"&gt;&lt;div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; "&gt;monsoon&lt;/div&gt;&lt;/th&gt;
-&lt;th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="1"&gt;&lt;div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; "&gt;winter&lt;/div&gt;&lt;/th&gt;
-&lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
-   &lt;th style="text-align:center;"&gt; (1) &lt;/th&gt;
-   &lt;th style="text-align:center;"&gt; (2) &lt;/th&gt;
-   &lt;th style="text-align:center;"&gt; (3) &lt;/th&gt;
-   &lt;th style="text-align:center;"&gt; (4) &lt;/th&gt;
-   &lt;th style="text-align:center;"&gt; (5) &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; wind &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.003*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.003*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.001*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.002*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.004*** &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.000) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.000) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.000) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.000) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.000) &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; rain (z) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.029*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.008*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.075*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.006*** &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.000) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.001) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.002) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.000) &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; mean temp (10s) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.000*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.007*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.002*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.008*** &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.000) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.000) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.000) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.000) &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; font-weight: bold;"&gt; fixed effects: &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; village-season &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; year &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; district-year-season &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; village &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; observations &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 2,387,417 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 2,371,221 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 2,371,221 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 1,256,951 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 1,114,270 &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;tfoot&gt;&lt;tr&gt;&lt;td style="padding: 0; " colspan="100%"&gt;
-&lt;sup&gt;&lt;/sup&gt; Note: Standard errors are in parentheses and are clustered at the village level. * p&amp;lt;0.10 ** p&amp;lt;0.05 *** p&amp;lt;0.01&lt;/td&gt;&lt;/tr&gt;&lt;/tfoot&gt;
-&lt;/table&gt;
-
 
 
 
@@ -568,96 +577,72 @@ class: center, middle, inverse, title-slide
 
 ---
 
-## Effects of PM on agricultural productivity
-
-- Likely endogenous
-  - Upward biased?
+## PM and agricultural productivity
 
 &lt;table class=" lightable-classic-2" style='font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;'&gt;
  &lt;thead&gt;
-&lt;tr&gt;
-&lt;th style="empty-cells: hide;border-bottom:hidden;" colspan="1"&gt;&lt;/th&gt;
-&lt;th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="3"&gt;&lt;div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; "&gt;all&lt;/div&gt;&lt;/th&gt;
-&lt;th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="1"&gt;&lt;div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; "&gt;monsoon&lt;/div&gt;&lt;/th&gt;
-&lt;th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="1"&gt;&lt;div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; "&gt;winter&lt;/div&gt;&lt;/th&gt;
-&lt;/tr&gt;
   &lt;tr&gt;
    &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
    &lt;th style="text-align:center;"&gt; (1) &lt;/th&gt;
    &lt;th style="text-align:center;"&gt; (2) &lt;/th&gt;
    &lt;th style="text-align:center;"&gt; (3) &lt;/th&gt;
-   &lt;th style="text-align:center;"&gt; (4) &lt;/th&gt;
-   &lt;th style="text-align:center;"&gt; (5) &lt;/th&gt;
   &lt;/tr&gt;
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt; particulate matter &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.0000 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.0329*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.0787*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.0509*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.0216*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; -0.042*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; -0.044*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; -0.032*** &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt; (log PM 2.5) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.0000) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.0028) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.0040) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.0033) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.0052) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; (0.003) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; (0.003) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; (0.003) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; weather &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; No &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; Yes &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; weather (expanded) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; No &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; No &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; Yes &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; font-weight: bold;"&gt; fixed effects: &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; village-season &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; year &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; district-year-season &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; font-weight: bold;"&gt;  &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt; village &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; Yes &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; year &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; Yes &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt; observations &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 2,387,417 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 2,371,221 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 2,371,221 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 1,256,951 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 1,114,270 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; 1,266,922 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; 1,266,922 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2.5cm; "&gt; 1,266,922 &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 
+
+- Likely endogenous
+  - Upward biased?
 
 
 
@@ -690,106 +675,72 @@ class: center, middle, inverse, title-slide
 
 ---
 
-## Effects of PM on agricultural productivity, IV estimates
+## Effects of PM on agricultural productivity (IV)
 
 
 &lt;table class=" lightable-classic-2" style='font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;'&gt;
  &lt;thead&gt;
-&lt;tr&gt;
-&lt;th style="empty-cells: hide;border-bottom:hidden;" colspan="1"&gt;&lt;/th&gt;
-&lt;th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="3"&gt;&lt;div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; "&gt;all&lt;/div&gt;&lt;/th&gt;
-&lt;th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="1"&gt;&lt;div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; "&gt;monsoon&lt;/div&gt;&lt;/th&gt;
-&lt;th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="1"&gt;&lt;div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; "&gt;winter&lt;/div&gt;&lt;/th&gt;
-&lt;/tr&gt;
   &lt;tr&gt;
    &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
    &lt;th style="text-align:center;"&gt; (1) &lt;/th&gt;
    &lt;th style="text-align:center;"&gt; (2) &lt;/th&gt;
    &lt;th style="text-align:center;"&gt; (3) &lt;/th&gt;
-   &lt;th style="text-align:center;"&gt; (4) &lt;/th&gt;
-   &lt;th style="text-align:center;"&gt; (5) &lt;/th&gt;
   &lt;/tr&gt;
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt; particulate matter &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -1.190*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -1.027*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -1.671*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.525*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -1.741*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; -0.941*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; -0.813*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; -0.728*** &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt; (log PM 2.5) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.070) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.071) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.235) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.043) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.139) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.078) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.076) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.075) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; weather &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; weather (expanded) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; font-weight: bold;"&gt; fixed effects: &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; village-season &lt;/td&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; village &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt; year &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; district-year-season &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; F (first stage) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 1,235 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 1,262 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 1,263 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; village &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; font-weight: bold;"&gt; first stage: &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; wind &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.003*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.003*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.000*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.004*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.002*** &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.000) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.000) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.000) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.000) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.000) &lt;/td&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; observations &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 1,266,922 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 1,266,922 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 1,266,922 &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -807,70 +758,115 @@ class: center, middle, inverse, title-slide
 
 ---
 
-## Agricultural productivity and pollution leads/lags
+## Heterogeneity
 
-&lt;table style='NAborder-bottom: 0; font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;' class=" lightable-classic-2"&gt;
+&lt;table class=" lightable-classic-2" style='font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;'&gt;
  &lt;thead&gt;
+&lt;tr&gt;
+&lt;th style="empty-cells: hide;border-bottom:hidden;" colspan="1"&gt;&lt;/th&gt;
+&lt;th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2"&gt;&lt;div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; "&gt;wind&lt;/div&gt;&lt;/th&gt;
+&lt;th style="border-bottom:hidden;padding-bottom:0; padding-left:3px;padding-right:3px;text-align: center; " colspan="2"&gt;&lt;div style="border-bottom: 1px solid #ddd; padding-bottom: 5px; "&gt;yield&lt;/div&gt;&lt;/th&gt;
+&lt;th style="empty-cells: hide;border-bottom:hidden;" colspan="1"&gt;&lt;/th&gt;
+&lt;/tr&gt;
   &lt;tr&gt;
    &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
-   &lt;th style="text-align:center;"&gt; wind &lt;/th&gt;
-   &lt;th style="text-align:center;"&gt; IV - PM (log) &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; &amp;gt;p(50) &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; &amp;lt;=p(50) &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; &amp;gt;p(50) &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; &amp;lt;=p(50) &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt;  &lt;/th&gt;
   &lt;/tr&gt;
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; lag &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.0005 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 0.4340 &lt;/td&gt;
+   &lt;td style="text-align:left;width: 4.5cm; "&gt; PM 2.5 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; -0.767*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; -0.328*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; -1.130*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; -0.690*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; -0.409** &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.0003) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.8666) &lt;/td&gt;
+   &lt;td style="text-align:left;width: 4.5cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; (0.104) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; (0.095) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; (0.060) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; (0.146) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; (0.160) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; current &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.0006*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.6942*** &lt;/td&gt;
+   &lt;td style="text-align:left;width: 4.5cm; "&gt; PM times rain &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; 0.061*** &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.0002) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.1497) &lt;/td&gt;
+   &lt;td style="text-align:left;width: 4.5cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; (0.014) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; lead &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.0001 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.0958 &lt;/td&gt;
+   &lt;td style="text-align:left;width: 4.5cm; "&gt; weather &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; Yes &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.0001) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.5137) &lt;/td&gt;
+   &lt;td style="text-align:left;width: 4.5cm; font-weight: bold;"&gt; fixed effects: &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; font-weight: bold;"&gt;  &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; F (lag) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -- &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 162 &lt;/td&gt;
+   &lt;td style="text-align:left;width: 4.5cm; "&gt; village &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; Yes &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; F &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -- &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 410 &lt;/td&gt;
+   &lt;td style="text-align:left;width: 4.5cm; "&gt; year &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; Yes &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; F (lead) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -- &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 289 &lt;/td&gt;
+   &lt;td style="text-align:left;width: 4.5cm; "&gt; F (1st stage, PM) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; 684 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; 491 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; 688 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; 484 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; 865 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; observations &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 1,976,205 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 1,976,205 &lt;/td&gt;
+   &lt;td style="text-align:left;width: 4.5cm; "&gt; F (1st stage, PM times rain) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; 1,437 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 4.5cm; "&gt; observations &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; 617,804 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; 649,118 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; 634,342 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; 632,580 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.8cm; "&gt; 1,266,922 &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
-&lt;tfoot&gt;&lt;tr&gt;&lt;td style="padding: 0; " colspan="100%"&gt;
-&lt;sup&gt;&lt;/sup&gt; Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions estimated agricultural yield (tons per hectare). * p&amp;lt;0.10 ** p&amp;lt;0.05 *** p&amp;lt;0.01&lt;/td&gt;&lt;/tr&gt;&lt;/tfoot&gt;
 &lt;/table&gt;
 
 
@@ -891,6 +887,7 @@ class: center, middle, inverse, title-slide
 
 
 ---
+
 
 ## National Sample Survey (NSS)
 
@@ -914,7 +911,7 @@ class: center, middle, inverse, title-slide
 
 
 
-&lt;table style='NAborder-bottom: 0; font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;' class=" lightable-classic-2"&gt;
+&lt;table class=" lightable-classic-2" style='font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;'&gt;
  &lt;thead&gt;
   &lt;tr&gt;
    &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
@@ -928,220 +925,94 @@ class: center, middle, inverse, title-slide
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; rural &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:left;width: 3cm; font-weight: bold;"&gt; panel a: all &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; font-weight: bold;"&gt;  &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt; wind &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.112*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.118*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.050* &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.068** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.002 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.116*** &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.036) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.029) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.030) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.031) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.028) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.034) &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; DV mean &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 3.499 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 3.499 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 2.172 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 1.327 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 1.260 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 2.240 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; observations &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 529,562 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 529,466 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 529,466 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 529,466 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 529,466 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 529,466 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; urban &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt;  &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; wind &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.020 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.030 &lt;/td&gt;
    &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.011 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.019 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 0.023* &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.053 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.009 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; 0.030 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.049 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.009 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.010 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.033) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.041) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.039) &lt;/td&gt;
    &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.031) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.014) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.048) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.034) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.039) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.034) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.034) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.033) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt; DV mean &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 3.040 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 3.040 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 1.393 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 1.647 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 0.101 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 2.939 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; 3.303 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; 3.303 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; 1.862 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; 1.442 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; 0.789 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; 2.514 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt; observations &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 369,483 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 369,390 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 369,390 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 369,390 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 369,390 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 369,390 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; 523,075 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; 522,957 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; 522,957 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; 522,957 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; 522,957 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; 522,957 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; controls &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; No &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; Yes &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; Yes &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; Yes &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; Yes &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; Yes &lt;/td&gt;
-  &lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;tfoot&gt;&lt;tr&gt;&lt;td style="padding: 0; " colspan="100%"&gt;
-&lt;sup&gt;&lt;/sup&gt; Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education. The outcome in each regression is days worked in the previous seven days. * p&amp;lt;0.10 ** p&amp;lt;0.05 *** p&amp;lt;0.01&lt;/td&gt;&lt;/tr&gt;&lt;/tfoot&gt;
-&lt;/table&gt;
-
-
-
-
----
-
-## Wind direction and labor allocation, by age (rural only)
-
-
-
-&lt;table style='NAborder-bottom: 0; font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;' class=" lightable-classic-2"&gt;
- &lt;thead&gt;
-  &lt;tr&gt;
-   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
-   &lt;th style="text-align:center;"&gt; all &lt;/th&gt;
-   &lt;th style="text-align:center;"&gt; all &lt;/th&gt;
-   &lt;th style="text-align:center;"&gt; self &lt;/th&gt;
-   &lt;th style="text-align:center;"&gt; wage &lt;/th&gt;
-   &lt;th style="text-align:center;"&gt; farm &lt;/th&gt;
-   &lt;th style="text-align:center;"&gt; non-farm &lt;/th&gt;
-  &lt;/tr&gt;
- &lt;/thead&gt;
-&lt;tbody&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; younger than 35 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:left;width: 3cm; font-weight: bold;"&gt; panel b: rural &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; font-weight: bold;"&gt;  &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt; wind &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.077* &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.085** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.061* &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.006 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.034 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; 0.068 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.102*** &lt;/td&gt;
    &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.024 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.001 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.085** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.010 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.046) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.034) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.032) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.032) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.034) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.038) &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; DV mean &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 3.106 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 3.106 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 1.794 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 1.312 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 1.061 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 2.044 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; observations &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 263,965 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 263,923 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 263,923 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 263,923 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 263,923 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 263,923 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; 45 or older &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt;  &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; wind &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.131** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.165*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.054 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.111*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.070* &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.095** &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.054) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.044) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.040) &lt;/td&gt;
    &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.043) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.054) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.041) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.035) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.043) &lt;/td&gt;
    &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.036) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.042) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt; DV mean &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 3.584 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 3.584 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 2.481 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 1.103 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 1.444 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 2.140 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; 3.494 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; 3.494 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; 2.184 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; 1.311 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; 1.271 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; 2.223 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt; observations &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 166,184 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 166,155 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 166,155 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 166,155 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 166,155 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 166,155 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; 307,381 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; 307,325 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; 307,325 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; 307,325 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; 307,325 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; 307,325 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt; controls &lt;/td&gt;
@@ -1152,10 +1023,36 @@ class: center, middle, inverse, title-slide
    &lt;td style="text-align:center;width: 1.5cm; "&gt; Yes &lt;/td&gt;
    &lt;td style="text-align:center;width: 1.5cm; "&gt; Yes &lt;/td&gt;
   &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; font-weight: bold;"&gt; fixed effects: &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; font-weight: bold;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; district &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; Yes &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; state-month &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 1.5cm; "&gt; Yes &lt;/td&gt;
+  &lt;/tr&gt;
 &lt;/tbody&gt;
-&lt;tfoot&gt;&lt;tr&gt;&lt;td style="padding: 0; " colspan="100%"&gt;
-&lt;sup&gt;&lt;/sup&gt; Note: Standard errors are in parentheses and are clustered at the district level. Control variables include female, age, age squared, and (years of) education. The outcome in each regression is days worked in the previous seven days. * p&amp;lt;0.10 ** p&amp;lt;0.05 *** p&amp;lt;0.01&lt;/td&gt;&lt;/tr&gt;&lt;/tfoot&gt;
 &lt;/table&gt;
+
 
 
 
@@ -1180,77 +1077,90 @@ class: center, middle, inverse, title-slide
 
 ---
 
-## Heterogeneity by month of the monsoon season
+## Heterogeneity by month, labor
 
 
 
-&lt;table style='NAborder-bottom: 0; font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;' class=" lightable-classic-2"&gt;
+&lt;table class=" lightable-classic-2" style='font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;'&gt;
  &lt;thead&gt;
   &lt;tr&gt;
    &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
-   &lt;th style="text-align:center;"&gt; (1) &lt;/th&gt;
-   &lt;th style="text-align:center;"&gt; (2) &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; farm &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; non-farm &lt;/th&gt;
   &lt;/tr&gt;
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; PM (June) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 0.791*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.707*** &lt;/td&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; June &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; -0.136* &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 0.114 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.280) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.075) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.080) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.099) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; PM (July) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 0.808*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.032 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.243) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.063) &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; PM (Aug.) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 0.533*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.408*** &lt;/td&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; July &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; -0.285** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 0.176 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.115) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.039) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.142) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.134) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; PM (Sept.) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.545*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; -0.198*** &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.080) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.032) &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; PM (Oct.) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; -1.775*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 0.285*** &lt;/td&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; Aug. &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 0.048 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; -0.010 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.382) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; (0.104) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.086) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.069) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; observations &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 1,266,922 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 1.5cm; "&gt; 1,266,922 &lt;/td&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; Sept. &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 0.076 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; -0.082 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.085) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.091) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; Oct. &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 0.013 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; -0.083 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.076) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.059) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; controls &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; font-weight: bold;"&gt; fixed effects: &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; district &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; year-month &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
-&lt;tfoot&gt;&lt;tr&gt;&lt;td style="padding: 0; " colspan="100%"&gt;
-&lt;sup&gt;&lt;/sup&gt; Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions estimated agricultural yield (tons per hectare). * p&amp;lt;0.10 ** p&amp;lt;0.05 *** p&amp;lt;0.01&lt;/td&gt;&lt;/tr&gt;&lt;/tfoot&gt;
 &lt;/table&gt;
 
 
@@ -1258,28 +1168,13 @@ class: center, middle, inverse, title-slide
 
 
 
-
 ---
 
-## Effects on aggregate growth?
-
-- We know pollution affects productivity and labor allocation
-- Might it also affect growth?
-- Proxy for growth with nightlights
-  - Look at previous year's exposure and current year's nightlights
-  - "Growth" of nightlights
-  - Village FE
+## Heterogeneity by month, yield
 
 
 
-
-
----
-
-## Wind direction and growth of nightlights
-
-
-&lt;table style='NAborder-bottom: 0; font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;' class=" lightable-classic-2"&gt;
+&lt;table class=" lightable-classic-2" style='font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;'&gt;
  &lt;thead&gt;
   &lt;tr&gt;
    &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
@@ -1289,24 +1184,59 @@ class: center, middle, inverse, title-slide
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; wind (lag) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.024*** &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; June &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; -0.325** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; -0.736*** &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.003) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.135) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.062) &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; wind (lead) &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; -0.001 &lt;/td&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; July &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; -0.778*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 0.051 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt;  &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; (0.002) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.151) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.095) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; Aug. &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; -1.201*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 0.087 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.455) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.070) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; Sept. &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 1.270*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; -0.140 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.427) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.180) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; Oct. &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; -3.013*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 0.334 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.963) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.291) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; weather &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; font-weight: bold;"&gt; fixed effects: &lt;/td&gt;
@@ -1323,24 +1253,117 @@ class: center, middle, inverse, title-slide
    &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
   &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+
+
+
+
+
+
+---
+
+## Coal plants or overall pollution?
+
+- I use the location of coal plants to identify high-pollution areas
+- However, some coal plants open part-way through sample
+- Differences-in-differences combined with IV
+  - Differences in coal pollution, specifically, and other forms of pollution
+
+
+
+
+
+---
+
+## Coal plants or overall pollution?
+
+
+&lt;table class=" lightable-classic-2" style='font-family: "Arial Narrow", "Source Sans Pro", sans-serif; margin-left: auto; margin-right: auto;'&gt;
+&lt;caption&gt;Agricultural productivity and pollution source&lt;/caption&gt;
+ &lt;thead&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; font-weight: bold;"&gt; varying slopes: &lt;/td&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; (1) &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; (2) &lt;/th&gt;
+   &lt;th style="text-align:center;"&gt; (3) &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; PM 2.5 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; -0.299*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; -0.107* &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; -0.147** &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.066) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.063) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.063) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; PM 2.5 times coal &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; -0.328*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; -0.321*** &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; -0.304*** &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt;  &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.026) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.024) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; (0.023) &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; weather &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; weather (expanded) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; No &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; font-weight: bold;"&gt; fixed effects: &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; font-weight: bold;"&gt;  &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;width: 3cm; "&gt; year (by village) &lt;/td&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; year &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
    &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; village &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; Yes &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; F (pm) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 766 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 776 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 788 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;width: 3cm; "&gt; F (pm times open) &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 199 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 222 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 232 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;width: 3cm; "&gt; observations &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 1,694,535 &lt;/td&gt;
-   &lt;td style="text-align:center;width: 2cm; "&gt; 1,807,504 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 1,266,922 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 1,266,922 &lt;/td&gt;
+   &lt;td style="text-align:center;width: 2cm; "&gt; 1,266,922 &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
-&lt;tfoot&gt;&lt;tr&gt;&lt;td style="padding: 0; " colspan="100%"&gt;
-&lt;sup&gt;&lt;/sup&gt; Note: Standard errors are in parentheses and are clustered at the village level. * p&amp;lt;0.10 ** p&amp;lt;0.05 *** p&amp;lt;0.01&lt;/td&gt;&lt;/tr&gt;&lt;/tfoot&gt;
 &lt;/table&gt;
 
 
@@ -1373,9 +1396,8 @@ class: center, middle, inverse, title-slide
   - Identification relies on within-village changes across seasons
 - Wind exposure fluctuations lead to changes in agricultural productivity of around 2.4 percent based on mean absolute deviation
   - Instrumenting for particulate matter, effects are even larger (more than 20 percent)
-- Clear changes in labor allocation
-  - Oldest half of sample
-- Slower growth of nightlights
+- Clear changes in labor allocation at beginning of the season
+  - Yield only changes w.r.t. early-season pollution
 
 
 
@@ -1390,6 +1412,21 @@ class: center, middle, inverse, title-slide
 - Instead, results point to importance of the location of pollution sources
   - Downwind villages suffer
 - 30km radius indicates relatively long-range effects
+
+
+
+
+
+
+---
+
+class: center, middle
+
+&lt;font size = "40"&gt; Thank you! &lt;/font&gt;
+
+[https://joshmerfeld.github.io](https://joshmerfeld.github.io) &lt;br&gt;
+Twitter: [@Josh\_Merfeld](twitter.com/Josh_Merfeld)
+
 
 
 

@@ -10,6 +10,7 @@ library(viridis)
 library(fixest)
 library(sf)
 library(openxlsx)
+library(parallel)
 
 
 # Sets wd to folder this script is in so we can create relative paths instead of absolute paths
@@ -134,14 +135,15 @@ summary(df$pm25_abs_dev)
 
 
 
+setFixest_fml(..ctrl1 = ~ rain_z + temp_mean)
+setFixest_fml(..ctrl2 = ~ rain_z + temp_mean + rain_z^2 + temp_mean^2 + rain_z*temp_mean)
+
+
+
 
 # Regressions ---------------------------------
 
 ## reduced form ---------------------------------
-
-setFixest_fml(..ctrl1 = ~ rain_z + temp_mean)
-setFixest_fml(..ctrl2 = ~ rain_z + temp_mean + rain_z^2 + temp_mean^2 + rain_z*temp_mean)
-
 
 yield1 <- feols(log(yield) ~ wind | shrid + year, data = df, cluster = c("shrid"))
 yield2 <- feols(log(yield) ~ wind + ..ctrl1 | shrid + year, data = df, cluster = c("shrid"))
@@ -165,6 +167,161 @@ rownames(yieldtable) <- c("wind days", " ", "rain (z)", "", "mean temp (10s)", "
                           "fixed effects:", "village", "year",
                           "observations")
 saveRDS(yieldtable, "pollution_development/draft/tables/yield1reducedform.rds")
+
+
+
+
+
+## placebo test
+wind_year <- df %>%
+              dplyr::select(wind, year) %>%
+              arrange(year) %>%
+              mutate(row = row_number()) %>% # row number in entire thing
+              group_by(year) %>%
+              mutate(
+                     row_min = min(row), # min row number (in entire column)
+                     row_max = max(row) # max
+                     ) %>%
+              ungroup() %>%
+              arrange(year)
+df_placebo <- df %>%
+              dplyr::select(-wind) %>%
+              arrange(year)
+
+samplefrom <- cbind(wind_year$row_min, wind_year$row_max)
+
+
+# create function to sample
+sample_pre_fun <- function(a) {
+  sample(x = min(a):max(a), size = 1, replace = T)
+}
+
+# now wrap that function in apply
+sample_fun <- function(a) {
+  sample_vec <- apply(a, 1, sample_pre_fun)
+}
+
+f <- function(i) {
+  # create vector with random sampling
+  temp_sample <- sample_fun(samplefrom)
+  # take those rows
+  wind_all <- wind_year[temp_sample,]
+  # sort by year, district
+  wind_all <- wind_all %>%
+                arrange(year)
+  # sort placebo by year and district
+  df_placebo <- df_placebo %>%
+                  arrange(year)
+  # should be in same order, so add wind column
+  temp <- cbind(df_placebo, wind_all %>% dplyr::select(wind))
+  # get coefficient
+  coefs <- feols(log(yield) ~ wind + ..ctrl1 + ..ctrl2 | shrid + year, data = temp, cluster = c("shrid"))
+  # return
+  return(coefs$coeftable[1,1])
+}
+RNGkind("L'Ecuyer-CMRG")
+set.seed(2430986) #resetting seed just to make sure this works correctly when using parallel
+coef_vec <- mclapply(1:1000, f, mc.set.seed = TRUE)
+coef_vec <- as_vector(coef_vec)
+
+
+
+# Also get distribution if we resample wind from WITHIN DISTRICTS ONLY
+## placebo test
+wind_year <- df %>%
+              dplyr::select(wind, distfe, year) %>%
+              arrange(year, distfe) %>%
+              mutate(row = row_number()) %>% # row number in entire thing
+              group_by(year, distfe) %>%
+              mutate(
+                     row_min = min(row), # min row number (in entire column)
+                     row_max = max(row), # max
+                     num = max(row_number()) # row number WITHIN 
+                     ) %>%
+              ungroup() %>%
+              arrange(year, distfe)
+df_placebo <- df %>%
+              dplyr::select(-wind) %>%
+              arrange(year, distfe)
+
+samplefrom <- cbind(wind_year$row_min, wind_year$row_max)
+
+f <- function(i) {
+  # create vector with random sampling
+  temp_sample <- sample_fun(samplefrom)
+  # take those rows
+  wind_all <- wind_year[temp_sample,]
+  # sort by year, district
+  wind_all <- wind_all %>%
+                arrange(year, distfe)
+  # sort placebo by year and district
+  df_placebo <- df_placebo %>%
+                  arrange(year, distfe)
+  # should be in same order, so add wind column
+  temp <- cbind(df_placebo, wind_all %>% dplyr::select(wind, pm25))
+  # get coefficient
+  coefs <- feols(log(yield) ~ wind + ..ctrl1 + ..ctrl2 | shrid + year, data = temp, cluster = c("shrid"))
+  # return
+  return(coefs$coeftable[1,1])
+}
+
+# use mclapply to take advantage of the cores on this computer
+# should take around an hour
+set.seed(23847906) #resetting seed just to make sure this works correctly when using parallel
+coefs_distfe <- mclapply(1:1000, f, mc.set.seed = TRUE)
+coefs_distfe <- as_vector(coefs_distfe)
+
+
+
+
+# get true value (with df)
+true_value <- feols(log(yield) ~ wind + ..ctrl1 + ..ctrl2 | shrid + year, data = df, cluster = c("shrid"))
+true_value <- true_value$coeftable[1,1]
+
+
+
+
+pal <- viridis(4)
+colors <- c(paste0(pal[1]), paste0(pal[2]))
+labels <- c("all", "within district")
+
+# plot
+gg1 <- ggplot() + 
+        geom_density(aes(x = coef_vec, fill = "all"), alpha = 0.5) +
+        geom_density(aes(x = coefs_distfe, fill = "within district"), alpha = 0.5) +
+        scale_fill_manual(
+                          name = "randomization:",
+                          values = colors,
+                          labels = labels
+                          ) +
+        theme_minimal() +
+        xlab("distribution of coefficients")
+
+colors <- c(paste0(pal[3]))
+labels <- c("actual")
+
+gg1 <- gg1 + 
+        geom_vline(aes(xintercept = true_value, color = "actual")) +
+        scale_color_manual(
+                          name = "",
+                          values = colors,
+                          labels = labels
+                          )
+saveRDS(gg1, "pollution_development/draft/tables/randomization.rds")
+
+
+# 
+# # get percentile
+# coefs_distfe <- sort(coefs_distfe)
+# row <- 1
+# while (row<=length(coefs_distfe)){
+#   if (true_value<coefs_distfe[row]){
+#     row <- row + 1
+#   }else{
+#     break
+#   }
+# }
+# row # larger than every single randomized value!
 
 
 
@@ -244,9 +401,219 @@ rownames(yieldtable) <- c("particulate matter", "(log PM 2.5)",
                           "weather", "weather (expanded)",
                           "fixed effects:", "village", "year",
                           "F", 
-                          "observations"
-                          )
+                          "observations")
 saveRDS(yieldtable, "pollution_development/draft/tables/yield3ivmain.rds")
+
+
+
+
+
+# leads
+df <- panel(df, ~ shrid + year)
+
+setFixest_fml(..ctrl1 = ~ f(rain_z, 0:1) + f(temp_mean, 0:1))
+
+
+yield1 <- feols(log(yield) ~ 1 | shrid + year | f(pm25, 0:1) ~ f(wind, 0:1), 
+                data = df, 
+                cluster = c("shrid"))
+yield2 <- feols(log(yield) ~ ..ctrl1 | shrid + year | f(pm25, 0:1) ~ f(wind, 0:1), 
+                data = df, 
+                cluster = c("shrid"))
+
+
+yieldtable <- etable(
+                     yield1, yield2,
+                     se.below = TRUE,
+                     depvar = FALSE,
+                     signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+                     digits = "r3",
+                     digits.stats = "r0",
+                     fitstat = c("ivwald", "n"),
+                     coefstat = "se",
+                     group = list(controls = "rain_z"),
+                     keep = c("pm25")
+                     )
+# rename
+yieldtable <- yieldtable[,-1]
+yieldtable <- yieldtable[-c(9:10),]
+yieldtable[6,] <- " "
+yieldtable <- as.matrix(yieldtable)
+rownames(yieldtable) <- c("particulate matter", "(log PM 2.5)",
+                          "particulate matter", "(one-year lead)",
+                          "weather",
+                          "fixed effects:", "village", "year",
+                          "F (current)", "F (lead)", 
+                          "observations")
+saveRDS(yieldtable, "pollution_development/draft/tables/yield3ivmain_lead.rds")
+
+
+
+
+
+
+
+
+
+
+
+
+## placebo test
+wind_year <- df %>%
+              dplyr::select(wind, pm25, year) %>%
+              arrange(year) %>%
+              mutate(row = row_number()) %>% # row number in entire thing
+              group_by(year) %>%
+              mutate(
+                row_min = min(row), # min row number (in entire column)
+                row_max = max(row) # max
+              ) %>%
+              ungroup() %>%
+              arrange(year)
+df_placebo <- df %>%
+              dplyr::select(-c(wind, pm25)) %>%
+              arrange(year)
+
+samplefrom <- cbind(wind_year$row_min, wind_year$row_max)
+
+
+# create function to sample
+sample_pre_fun <- function(a) {
+  sample(x = min(a):max(a), size = 1, replace = T)
+}
+
+# now wrap that function in apply
+sample_fun <- function(a) {
+  sample_vec <- apply(a, 1, sample_pre_fun)
+}
+
+f <- function(i) {
+  # create vector with random sampling
+  temp_sample <- sample_fun(samplefrom)
+  # take those rows
+  wind_all <- wind_year[temp_sample,]
+  # sort by year, district
+  wind_all <- wind_all %>%
+                  arrange(year)
+  # sort placebo by year and district
+  df_placebo <- df_placebo %>%
+                  arrange(year)
+  # should be in same order, so add wind column
+  temp <- cbind(df_placebo, wind_all %>% dplyr::select(wind, pm25))
+  # get coefficient
+  coefs <- feols(log(yield) ~ ..ctrl1 + ..ctrl2 | shrid + year | pm25 ~ wind, data = temp, cluster = c("shrid"))
+  # return
+  return(coefs$coeftable[1,1])
+}
+RNGkind("L'Ecuyer-CMRG")
+set.seed(234678) #resetting seed just to make sure this works correctly when using parallel
+coef_vec <- mclapply(1:1000, f, mc.set.seed = TRUE)
+coef_vec <- as_vector(coef_vec)
+
+
+
+# Also get distribution if we resample wind from WITHIN DISTRICTS ONLY
+## placebo test
+wind_year <- df %>%
+              dplyr::select(wind, pm25, distfe, year) %>%
+              arrange(year, distfe) %>%
+              mutate(row = row_number()) %>% # row number in entire thing
+              group_by(year, distfe) %>%
+              mutate(
+                row_min = min(row), # min row number (in entire column)
+                row_max = max(row), # max
+                num = max(row_number()) # row number WITHIN 
+              ) %>%
+              ungroup() %>%
+              arrange(year, distfe)
+df_placebo <- df %>%
+              dplyr::select(-c(wind, pm25)) %>%
+              arrange(year, distfe)
+
+samplefrom <- cbind(wind_year$row_min, wind_year$row_max)
+
+f <- function(i) {
+  # create vector with random sampling
+  temp_sample <- sample_fun(samplefrom)
+  # take those rows
+  wind_all <- wind_year[temp_sample,]
+  # sort by year, district
+  wind_all <- wind_all %>%
+                arrange(year, distfe)
+  # sort placebo by year and district
+  df_placebo <- df_placebo %>%
+                  arrange(year, distfe)
+  # should be in same order, so add wind column
+  temp <- cbind(df_placebo, wind_all %>% dplyr::select(wind, pm25))
+  # get coefficient
+  coefs <- feols(log(yield) ~ ..ctrl1 + ..ctrl2 | shrid + year | pm25 ~ wind, data = temp, cluster = c("shrid"))
+  # return
+  return(coefs$coeftable[1,1])
+}
+# use mclapply to take advantage of the cores on this computer
+# should take around an hour
+set.seed(67891235) #resetting seed just to make sure this works correctly when using parallel
+coefs_distfe <- mclapply(1:1000, f, mc.set.seed = TRUE)
+coefs_distfe <- as_vector(coefs_distfe)
+
+
+
+
+# get true value (with df)
+true_value <- feols(log(yield) ~ ..ctrl1 + ..ctrl2 | shrid + year | pm25 ~ wind, 
+                    data = df, 
+                    cluster = c("shrid"))
+true_value <- true_value$coeftable[1,1]
+
+
+
+
+pal <- viridis(4)
+colors <- c(paste0(pal[1]), paste0(pal[2]))
+labels <- c("all", "within district")
+
+# plot
+gg1 <- ggplot() + 
+        geom_density(aes(x = coef_vec, fill = "all"), alpha = 0.5) +
+        geom_density(aes(x = coefs_distfe, fill = "within district"), alpha = 0.5) +
+        scale_fill_manual(
+          name = "randomization:",
+          values = colors,
+          labels = labels
+        ) +
+        theme_minimal() +
+        xlab("distribution of coefficients")
+
+colors <- c(paste0(pal[3]))
+labels <- c("actual")
+
+gg1 <- gg1 + 
+        geom_vline(aes(xintercept = true_value, color = "actual")) +
+        scale_color_manual(
+          name = "",
+          values = colors,
+          labels = labels
+        ) +
+        theme(legend.position = c(0.4, 0.6))
+gg1
+ggsave("pollution_development/draft/tables/randomization_iv.png")
+saveRDS(coef_vec, "pollution_development/draft/tables/randomization_coef_vec.rds")
+saveRDS(coefs_distfe, "pollution_development/draft/tables/randomization_coefs_distfe.rds")
+saveRDS(true_value, "pollution_development/draft/tables/randomization_true_value.rds")
+
+
+
+# get percentile
+coefs_distfe <- sort(coefs_distfe)
+row <- 1
+while (row<=length(coefs_distfe)){
+  if (true_value<coefs_distfe[row]){
+    row <- row + 1
+  }else{
+    break
+  }
+}
+row # larger than every single randomized value!
 
 
 

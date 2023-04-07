@@ -1,5 +1,5 @@
 ---
-title: "Blowing in the wind: Pollution and agricultural productivity in India^[I thank Marc Bellemare and David Sungho Park for comments and suggestions that greatly improved the quality of the paper. The usual disclaimer applies. All scripts used in this paper are publicly available on my GitHub page: github.com/JoshMerfeld/pollution_development]"
+title: "Blowing in the wind: Pollution and agricultural productivity in India^[I thank Ariel Ortiz-Bobea, Marc Bellemare, and David Sungho Park for comments and suggestions that greatly improved the quality of the paper. The usual disclaimer applies. All scripts used in this paper are publicly available on my GitHub page: github.com/JoshMerfeld/pollution_development]"
 author:
   - Joshua D. Merfeld^[KDI School of Public Policy and Management and IZA; merfeld@kdis.ac.kr]
 date: "`r Sys.Date()`"
@@ -60,6 +60,7 @@ library(fixest)
 library(modelsummary)
 library(openxlsx)
 library(raster)
+library(viridis)
 loadfonts()  # Must be run once in each session (markdown is a new "session" each time you render/knit)
 
 
@@ -186,6 +187,7 @@ pollutiontable <- readRDS("pollution_development/draft/tables/pollutiontable.rds
 yield1reducedform <- readRDS("pollution_development/draft/tables/yield1reducedform.rds")
 yield2naive <- readRDS("pollution_development/draft/tables/yield2naive.rds")
 yield3ivmain <- readRDS("pollution_development/draft/tables/yield3ivmain.rds")
+yield3ivmain_lead <- readRDS("pollution_development/draft/tables/yield3ivmain_lead.rds")
 yield4monthly <- readRDS("pollution_development/draft/tables/yield4monthly.rds")
 yield5heterogeneity <- readRDS("pollution_development/draft/tables/yield5heterogeneity.rds")
 yield6leads <- readRDS("pollution_development/draft/tables/yield6leads.rds")
@@ -196,6 +198,11 @@ labor3month <- readRDS("pollution_development/draft/tables/labor3month.rds")
 laborplot <- readRDS("pollution_development/draft/tables/laborplot.rds")
 monthplot <- readRDS("pollution_development/draft/tables/monthplot.rds")
 opplot <- readRDS("pollution_development/draft/tables/opplot.rds")
+coef_vec <- readRDS("pollution_development/draft/tables/randomization_coef_vec.rds")
+coefs_distfe <- readRDS("pollution_development/draft/tables/randomization_coefs_distfe.rds")
+true_value <- readRDS("pollution_development/draft/tables/randomization_true_value.rds")
+
+
 
 plants1990_capacity <- plants %>% filter(year_built<=1990 & (year_retired>1990 | is.na(year_retired)==TRUE))
 plants2010_capacity <- plants %>% filter(year_built<=2010 & (year_retired>2010 | is.na(year_retired)==TRUE))
@@ -258,6 +265,8 @@ To explore the mechanisms driving this effect, I also use data on labor allocati
 The final set of results tries to disentangle the effects of pollution from the effects of coal pollution, specifically. Combining instrumental variables with a differences-in-differences strategy, I show that agricultural productivity has an elasticity of around -0.15 with respect to non-coal pollution. The opening of a coal plant, however, triples the elasticity, to more than -0.45, indicating that coal plant emissions are particularly harmful to agricultural productivity. This is consistent with coal emissions being quite different from other forms of pollution; for example, coal emissions contain much more mercury than other forms of pollution.
 
 This paper contributes to several strands of literature. First, we already have evidence of effects of pollution on different forms of labor activity. For example, general levels of pollution decrease productivity of call center works in China [@chang2019effect], lead people to perform worse on cognitive functions [@ebenstein2016long; @wen2022lower], and also lead to lower levels of farm labor productivity in California, driven by changes in ozone concentration [@graff2012impact]. Also in China, @he2019severe find small but significant negative effects of pollution on manufacturing productivity, while @chen2022effect show pollution leads to labor out migration. Perhaps relevant to my labor allocation results, @hanna2015effect show that decreases in pollution lead to increases in labor allocation, while I show the same relationship in at least a subset of months of the agricultural season. The papers most related to this one are @aragon2016polluting, who show that gold mines in Ghana have substantial negative impacts on agricultural productivity in the surrounding areas, and @burney2014recent, who model the effects of climate change and pollutants on agricultural productivity in India. This paper differs in two important ways. First, I explore effects of pollution from coal plants, which are much more ubiquitous than gold mines across the world. Second, I use a different identification strategy from either paper, relying on wind blowing pollution from coal plants.
+
+@sanders2022adaptation
 
 I also contribute to the more general literature on the effects of pollution on health. Pollution has substantial negative effects on health in both developing and developed countries [@arceo2016does] and we have known of these negative effects for many years [@brunekreef2002air; @kampa2008human; @pope2006health]. @currie2014we review the literature on the health effects of pollution during adolescence; we have robust evidence of pollution exposure leading to increases in infant mortality, including in developing countries [@heft2018robust; @heft2019air]. Since these effects are often driven by heart and lung disease and asthma [@kampa2008human], this my explain the labor allocation effects I identify in this paper.
 
@@ -326,6 +335,8 @@ So what are the characteristics of areas near the construction of new coal plant
 
 # Table
 colnames(plantresultstable) <- c("1991", "2001", "2001", "2011")
+rownames(plantresultstable) <- c("Population (log)", "", "Area (log)", "", "Literacy (prop)", "", "Ag. productivity", "", 
+                                "Sub-sample", "Observations")
 kable(
       plantresultstable, caption = "Local characteristics and the construction of coal plants",
       align = "cccc", booktabs = TRUE, linesep = "", escape = FALSE
@@ -400,6 +411,11 @@ The first column presents the most simple results, with only the wind exposure v
 
 # Table
 colnames(yield1reducedform) <- c("(1)", "(2)", "(3)")
+
+rownames(yield1reducedform) <- c("Wind days", " ", "Rain (z)", "", "Mean temperature (10s)", "",
+                                  "Rain squared", " ", "Temperature squared", " ", "Rain times Temperature", " ",
+                                  "Fixed effects:", "Village", "Year",
+                                  "Observations")
 kable(
       yield1reducedform, caption = "Wind direction and agricultural productivity",
       align = "ccc", booktabs = TRUE, linesep = ""
@@ -410,7 +426,7 @@ kable(
            threeparttable = TRUE,
            footnote_as_chunk = TRUE
            ) %>%
-  column_spec(1, width = "3cm") %>%
+  column_spec(1, width = "4cm") %>%
   column_spec(c(2:4),width = "2.5cm") %>%
   row_spec(13, bold = TRUE) %>%
   row_spec(15, hline_after = TRUE) %>%
@@ -425,6 +441,10 @@ To put the size of the coefficient in context, it is worth digging a little deep
 
 # Table
 colnames(yield2naive) <- c("(1)", "(2)", "(3)")
+rownames(yield2naive) <- c("Particulate matter", "(log PM 2.5)", 
+                           "Weather", "Weather (expanded)",
+                           "Fixed effects:", "Village", "Year",
+                           "Observations")
 kable(
       yield2naive, caption = "Particulate matter (PM 2.5) and agricultural productivity",
       align = "ccc", booktabs = TRUE, linesep = ""
@@ -435,7 +455,7 @@ kable(
            threeparttable = TRUE,
            footnote_as_chunk = TRUE
            ) %>%
-  column_spec(1, width = "3cm") %>%
+  column_spec(1, width = "4cm") %>%
   column_spec(c(2:4),width = "2.5cm") %>%
   row_spec(5, bold = TRUE) %>%
   row_spec(7, hline_after = TRUE) %>%
@@ -458,8 +478,13 @@ The comparison of the results to those in the previous table also confirm the co
 ```{r yieldtabletwo, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
 # Table
+yield3ivmain <- yield3ivmain[,-1]
 colnames(yield3ivmain) <- c("(1)", "(2)", "(3)")
-rownames(yield3ivmain)[8] <- "F (first stage)"
+rownames(yield3ivmain) <- c("Particulate matter", "(log PM 2.5)",
+                            "Weather", "Weather (expanded)",
+                            "Fixed effects:", "Village", "Year",
+                            "F (first stage)", 
+                            "Observations")
 kable(
       yield3ivmain, caption = "Pollution and agricultural productivity, IV estimates",
       align = "ccc", booktabs = TRUE, linesep = ""
@@ -470,7 +495,7 @@ kable(
            threeparttable = TRUE,
            footnote_as_chunk = TRUE
            ) %>%
-  column_spec(1, width = "3cm") %>%
+  column_spec(1, width = "4cm") %>%
   column_spec(c(2:4),width = "2cm") %>%
   row_spec(5, bold = TRUE) %>%
   row_spec(7, hline_after = TRUE) %>%
@@ -478,6 +503,76 @@ kable(
   kable_classic_2()
 
 ```
+
+
+## Robustness checks
+
+```{r randomplot, echo = FALSE, message = FALSE, warning = FALSE, fig.height = 8, fig.cap = "Randomization inference", fig.footer = list("Note: The figure presents the distribution of coefficients by randomly assigning wind direction across villages within the same year. The \"all\" distribution is created by randomly assigning a single wind value to each village, sampled with replacement across all villages in a given year. The \"within district\" randomly samples with replacement only from within the same district in the same year.")}
+
+
+pal <- viridis(4)
+colors <- c(paste0(pal[1]), paste0(pal[2]))
+labels <- c("All", "Within district")
+
+# plot
+gg1 <- ggplot() + 
+        geom_density(aes(x = coef_vec, fill = "All"), alpha = 0.5) +
+        geom_density(aes(x = coefs_distfe, fill = "Within district"), alpha = 0.5) +
+        scale_fill_manual(
+          name = "Randomization:",
+          values = colors,
+          labels = labels
+        ) +
+        theme_minimal() +
+        xlab("Distribution of coefficients") +
+        ylab("Density")
+
+colors <- c(paste0(pal[3]))
+labels <- c("actual")
+
+gg1 <- gg1 + 
+        geom_vline(aes(xintercept = true_value, color = "actual")) +
+        scale_color_manual(
+          name = "",
+          values = colors,
+          labels = labels
+        ) +
+        theme(legend.position = c(0.4, 0.6))
+
+gg1
+
+```
+
+
+
+```{r yieldtableleads, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
+
+# Table
+colnames(yield3ivmain_lead) <- c("(1)", "(2)")
+rownames(yield3ivmain_lead) <- c("Particulate matter", "(log PM 2.5)",
+                                 "Particulate matter", "(one-year lead)",
+                                 "Weather",
+                                 "Fixed effects:", "Village", "Year",
+                                 "F (current)", "F (lead)", 
+                                 "Observations")
+kable(
+      yield3ivmain_lead, caption = "Agricultural productivity and pollution leads",
+      align = "cc", booktabs = TRUE, linesep = ""
+      ) %>%
+  footnote(
+           "Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions estimated agricultural yield (tons per hectare). * p<0.10 ** p<0.05 *** p<0.01", 
+           general_title = "",
+           threeparttable = TRUE,
+           footnote_as_chunk = TRUE
+           ) %>%
+  column_spec(1, width = "3.5cm") %>%
+  column_spec(c(2:3),width = "2cm") %>%
+  row_spec(c(8), hline_after = TRUE) %>%
+  row_spec(c(6), bold = TRUE) %>%
+  kable_classic_2()
+
+```
+
 
 
 ## Heterogeneity
@@ -497,6 +592,10 @@ Given ongoing changes in the climate, a key question is how welfare will change 
 # Table
 colnames(yield5heterogeneity) <- c(">p(50)", "<=p(50)", ">p(50)", "<=p(50)", "")
 rownames(yield5heterogeneity)[c(1, 3)] <- c("PM 2.5", "PM times rain")
+rownames(yield5heterogeneity) <- c("Particulate matter", "(log PM 2.5)", "PM times Rain", "", "Weather",
+                                   "Fixed effects:", "Village", "Year", 
+                                   "F (1st stage, PM)", "F (1st stage, PM times rain)", 
+                                   "Observations")
 kable(
       yield5heterogeneity, caption = "Heterogeneity in the effects of pollution on productivity",
       align = "ccccc", booktabs = TRUE, linesep = ""
@@ -511,7 +610,7 @@ kable(
   column_spec(c(2:6),width = "1.8cm") %>%
   row_spec(c(8), hline_after = TRUE) %>%
   row_spec(c(6), bold = TRUE) %>%
-  add_header_above(c(" " = 1, "wind" = 2, "yield" = 2, " " = 1)) %>%
+  add_header_above(c(" " = 1, "Wind" = 2, "Yield" = 2, " " = 1)) %>%
   kable_classic_2()
 
 ```
@@ -533,17 +632,23 @@ Table \@ref(tab:labortable) presents results for labor allocation over the last 
 ```{r labortable, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
 # Table
-colnames(labor1all) <- c("all", "all", "self", "wage", "farm", "non-farm")
-colnames(labor2rural) <- c("all", "all", "self", "wage", "farm", "non-farm")
+colnames(labor1all) <- c("All", "All", "Self", "Wage", "Farm", "Non-farm")
+colnames(labor2rural) <- c("All", "All", "Self", "Wage", "Farm", "Non-farm")
 
 mat1 <- matrix(c("", "", "", "", "", ""), nrow = 1)
-colnames(mat1) <- c("all", "all", "self", "wage", "farm", "non-farm")
-rownames(mat1) <- c("panel a: all")
+colnames(mat1) <- c("All", "All", "Self", "Wage", "Farm", "Non-farm")
+rownames(mat1) <- c("Panel A: all")
 mat2 <- matrix(c("", "", "", "", "", ""), nrow = 1)
-colnames(mat2) <- c("all", "all", "self", "wage", "farm", "non-farm")
-rownames(mat2) <- c("panel b: rural")
+colnames(mat2) <- c("All", "All", "Self", "Wage", "Farm", "Non-farm")
+rownames(mat2) <- c("Panel B: Rural")
 
 labortablerural <- rbind(mat1, labor1all[c(1:2, 7:8),], mat2, labor2rural[-c(3:6),], labor2rural[c(3:6),])
+rownames(labortablerural)[c(2,7)] <- "Wind"
+rownames(labortablerural)[c(5,10)] <- "Observations"
+rownames(labortablerural)[11] <- "Controls"
+rownames(labortablerural)[12] <- "Fixed effects:"
+rownames(labortablerural)[13] <- "District"
+rownames(labortablerural)[14] <- "State-month"
 
 kable(
       labortablerural, caption = "Wind direction and labor allocation by rural status",
@@ -579,58 +684,35 @@ Higher exposure leads to significantly less farm labor labor in June and July, b
 
 ```{r labor3month, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
+labor3month <- cbind(labor3month, yield4monthly[-c(15:19),2])
+
 # Table
-colnames(labor3month) <- c("farm", "non-farm")
+colnames(labor3month) <- c("Farm", "Non-farm", "Yield")
 kable(
-      labor3month, caption = "Wind and labor allocation, by month",
-      align = "cc", booktabs = TRUE, linesep = ""
+      labor3month, caption = "Heterogeneity by month",
+      align = "ccc", booktabs = TRUE, linesep = ""
       ) %>%
   footnote(
-           "Note: Standard errors are in parentheses and are clustered at the village level. The outcome in column one is .  * p<0.10 ** p<0.05 *** p<0.01", 
+           "Note: Standard errors are in parentheses and are clustered at the village level. The outcome in column one is farm labor, the outcome is column two is non-farm labor, and the outcome in column three is village-level productivity. The independent variable for labor is wind, while the IV approach above is still used for yield. * p<0.10 ** p<0.05 *** p<0.01", 
            general_title = "",
            threeparttable = TRUE,
            footnote_as_chunk = TRUE
            ) %>%
-  column_spec(1, width = "3cm") %>%
-  column_spec(c(2:3),width = "2cm") %>%
-  row_spec(c(18), hline_after = TRUE) %>%
-  row_spec(c(16), bold = TRUE) %>%
+  column_spec(1, width = "2.5cm") %>%
+  column_spec(c(2:4),width = "2.5cm") %>%
+  row_spec(c(14), hline_after = TRUE) %>%
+  row_spec(c(12), bold = TRUE) %>%
+  add_header_above(c(" " = 1, "Labor" = 2, " " = 1)) %>%
   kable_classic_2()
 
 ```
 
 
-I perform a similar exercise with yield, the results of which are in Table \@ref(tab:yield4monthly). I include only the five months of the year that are used in the calculation of the yield estimates, or June through October. The results are again from two-stage least squares, with the F-statistics for each month presented at the bottom; monthly wind remains a strong predictor of pollution. Column one presents results without controls for weather while column two presents results with controls for weather; the differences in coefficients make clear how important the inclusion of weather is here.
+I perform a similar exercise with yield, the results of which are in Table \@ref(tab:labor3month). I include only the five months of the year that are used in the calculation of the yield estimates, or June through October. The results are again from two-stage least squares, with the F-statistics for each month presented at the bottom; monthly wind remains a strong predictor of pollution. Column one presents results without controls for weather while column two presents results with controls for weather; the differences in coefficients make clear how important the inclusion of weather is here.
 
 Focusing on column two, there is only one month where we see a clear effect of pollution on yield: June. Given that we also see negative effects of pollution on farm labor allocation in June, this is suggestive -- but not conclusive -- evidence that pollution works through labor. Note that this does not rule out pollution also having direct effects on agricultural productivity, however.
 
-
-
-```{r yield4monthly, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
-
-# Table
-colnames(yield4monthly) <- c("(1)", "(2)")
-kable(
-      yield4monthly, caption = "Pollution and productivity, by month",
-      align = "cc", booktabs = TRUE, linesep = ""
-      ) %>%
-  footnote(
-           "Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions is estimated agricultural yield, defined as tons per hectare. * p<0.10 ** p<0.05 *** p<0.01", 
-           general_title = "",
-           threeparttable = TRUE,
-           footnote_as_chunk = TRUE
-           ) %>%
-  column_spec(1, width = "3cm") %>%
-  column_spec(c(2:3),width = "2cm") %>%
-  row_spec(12, bold = TRUE) %>%
-  row_spec(14, hline_after = TRUE) %>%
-  #add_header_above(c(" ", "all" = 3, "monsoon" = 1, "winter" = 1)) %>%
-  kable_classic_2()
-
-```
-
-
-A final caveat about these month-specific results is that they do not take into account possible interactions between different months. For example, yield might respond strongly to average pollution in June and July, which would not be captured in Table \@ref(tab:yield4monthly).
+A final caveat about these month-specific results is that they do not take into account possible interactions between different months. For example, yield might respond strongly to average pollution in June and July, which would not be captured in Table \@ref(tab:labor3month).
 
 
 
@@ -645,6 +727,11 @@ Finally, while I identify high-pollution areas using the location of coal plants
 
 # Table
 colnames(yield7ivdiffindiff) <- c("(1)", "(2)", "(3)")
+rownames(yield7ivdiffindiff) <- c("Particulate matter", "(log PM 2.5)", 
+                                  "PM 2.5 times Coal", "",
+                                  "Weather", "Weather (expanded)",
+                                  "Fixed effects:", "Year", "Village",
+                                  "F (PM)", "F (PM times Coal)", "Observations")
 kable(
       yield7ivdiffindiff, caption = "Agricultural productivity and pollution source",
       align = "ccc", booktabs = TRUE, linesep = ""
@@ -655,7 +742,7 @@ kable(
            threeparttable = TRUE,
            footnote_as_chunk = TRUE
            ) %>%
-  column_spec(1, width = "3cm") %>%
+  column_spec(1, width = "3.5cm") %>%
   column_spec(c(2:4),width = "2cm") %>%
   row_spec(c(7), bold = TRUE) %>%
   row_spec(9, hline_after = TRUE) %>%
@@ -703,33 +790,30 @@ These results, of course, do not address possible positive effects of the buildi
 ```
 ```{r data, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
-data <- matrix(NA, nrow = 8, ncol = 3)
-rownames(data) <- c("shapefile", "coal plants", "wind", "pollution", "agriculture", "nightlights", "weather", "labor")
+data <- matrix(NA, nrow = 7, ncol = 3)
+rownames(data) <- c("shapefile", "coal plants", "wind", "pollution", "agriculture", "weather", "labor")
 colnames(data) <- c("source", "geographic coverage", "temporal coverage")
 data[1,1] <- "Asher et al. (2021)"
 data[2,1] <- "Global Energy Monitor"
 data[3,1] <- "NCAR"
 data[4,1] <- "Hammer et al. (2020)"
 data[5,1] <- "Gangopadhya et al. (2022)"
-data[6,1] <- "Asher et al. (2021)"
-data[7,1] <- "TerraClimate"
-data[8,1] <- "National Sample Survey (NSS)"
+data[6,1] <- "TerraClimate"
+data[7,1] <- "National Sample Survey (NSS)"
 data[1,2] <- "India"
 data[2,2] <- "global"
 data[3,2] <- "global"
 data[4,2] <- "global"
 data[5,2] <- "India"
-data[6,2] <- "India"
-data[7,2] <- "global"
-data[8,2] <- "India"
+data[6,2] <- "global"
+data[7,2] <- "India"
 data[1,3] <- " "
 data[2,3] <- "yearly"
 data[3,3] <- "daily"
 data[4,3] <- "monthly"
 data[5,3] <- "two seasons/year"
-data[6,3] <- "yearly"
-data[7,3] <- "monthly"
-data[8,3] <- "daily interviews"
+data[6,3] <- "monthly"
+data[7,3] <- "daily interviews"
 
 # Table
 kable(
@@ -764,7 +848,7 @@ plant1 <- ggplot() +
                 geom_sf(data = plants1990, size = 0.75, color = "black") +
                 labs(x = "lon",
                      y = "lat",
-                     subtitle = "Figure A: 1990")
+                     subtitle = "A. 1990")
 
 plant2 <- ggplot() +
                 theme_map() +
@@ -772,7 +856,7 @@ plant2 <- ggplot() +
                 geom_sf(data = plants2010, size = 0.75, color = "black") +
                 labs(x = "lon",
                      y = "lat",
-                     subtitle = "Figure B: 2010")
+                     subtitle = "B. 2010")
 
 
 ggarrange(plant1, plant2)
@@ -797,7 +881,7 @@ p1 <- ggplot() +
         geom_sf(data = plants2010, size = 0.5) +
         labs(x = "lon",
              y = "lat",
-             subtitle = "Figure A: Wind direction") +
+             subtitle = "A. Wind direction") +
         theme(legend.position = c(0.6, 0.05),
               legend.direction = "vertical",
               legend.key.height = unit(0.4, 'cm'),
@@ -811,7 +895,7 @@ p2 <- ggplot() +
         scale_fill_viridis_c("exposure (days)", option = "viridis") +
         labs(x = "lon",
              y = "lat",
-             subtitle = "Figure B: Aggregation to district") +
+             subtitle = "B. Aggregation to district") +
         theme(legend.position = c(0.5, 0.05),
               legend.direction = "horizontal",
               legend.key.width = unit(0.3, 'cm'),
@@ -857,28 +941,6 @@ kable(
 ```{=tex}
 \FloatBarrier
 \newpage
-```
-
-```{r yieldtableleads, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
-
-# Table
-colnames(yield6leads) <- c("(1)", "(2)", "(3)")
-kable(
-      yield6leads, caption = "Agricultural productivity and pollution leads",
-      align = "ccc", booktabs = TRUE, linesep = ""
-      ) %>%
-  footnote(
-           "Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions estimated agricultural yield (tons per hectare). * p<0.10 ** p<0.05 *** p<0.01", 
-           general_title = "",
-           threeparttable = TRUE,
-           footnote_as_chunk = TRUE
-           ) %>%
-  column_spec(1, width = "3cm") %>%
-  column_spec(c(2:4),width = "2cm") %>%
-  row_spec(c(9), hline_after = TRUE) %>%
-  row_spec(c(7), bold = TRUE) %>%
-  kable_classic_2()
-
 ```
 
 

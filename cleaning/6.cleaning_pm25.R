@@ -12,6 +12,7 @@ library(raster)
 library(ncdf4)
 library(lubridate)
 library(exactextractr)  
+library(rgeos)
 
 
 # Sets wd to folder this script is in so we can create relative paths instead of absolute paths
@@ -53,10 +54,10 @@ for (year in 1998:2015){
     # extract
     extracted_values <- exact_extract(r, villages, fun = "mean", append_cols = "shrid")
     extracted_values <- as_tibble(extracted_values) %>% 
-                        group_by(shrid) %>% 
-                        mutate(mean = mean(mean)) %>% 
-                        filter(row_number()==1) %>%
-                        ungroup()
+      group_by(shrid) %>% 
+      mutate(mean = mean(mean)) %>% 
+      filter(row_number()==1) %>%
+      ungroup()
     
     # And wind direction
     village_wind <- read_csv(paste0("data/clean/wind_ntl/months/y", year, "m", as.numeric(month), ".csv")) %>% as_tibble()
@@ -103,19 +104,19 @@ pollution$m5[pollution$month==3] <- pollution$mean[pollution$month==3]
 
 # Now shrid, year, season
 pollution <- pollution %>% 
-                group_by(shrid, year, season) %>% 
-                mutate(
-                       pm25 = mean(mean, na.rm = T),
-                       pm1 = mean(m1, na.rm = T),
-                       pm2 = mean(m2, na.rm = T),
-                       pm3 = mean(m3, na.rm = T),
-                       pm4 = mean(m4, na.rm = T),
-                       pm5 = mean(m5, na.rm = T)
-                       ) %>%
-                filter(row_number()==1) %>%
-                ungroup() %>%
-                dplyr::select(shrid, year, season, pm25,
-                              pm1, pm2, pm3, pm4, pm5)
+  group_by(shrid, year, season) %>% 
+  mutate(
+    pm25 = mean(mean, na.rm = T),
+    pm1 = mean(m1, na.rm = T),
+    pm2 = mean(m2, na.rm = T),
+    pm3 = mean(m3, na.rm = T),
+    pm4 = mean(m4, na.rm = T),
+    pm5 = mean(m5, na.rm = T)
+  ) %>%
+  filter(row_number()==1) %>%
+  ungroup() %>%
+  dplyr::select(shrid, year, season, pm25,
+                pm1, pm2, pm3, pm4, pm5)
 
 write_csv(pollution, paste0("data/clean/pm25/ag_merge.csv"))
 
@@ -128,15 +129,70 @@ pollution <- read_csv(paste0("data/clean/pm25/all_combined.csv"))
 
 # Now shrid, year, season
 pollution <- pollution %>% 
-                group_by(shrid, year) %>% 
-                mutate(
-                       pm25 = mean(mean)
-                       ) %>%
-                filter(row_number()==1) %>%
-                ungroup() %>%
-                dplyr::select(shrid, year, pm25)
+  group_by(shrid, year) %>% 
+  mutate(
+    pm25 = mean(mean)
+  ) %>%
+  filter(row_number()==1) %>%
+  ungroup() %>%
+  dplyr::select(shrid, year, pm25)
 
 write_csv(pollution, paste0("data/clean/pm25/ntl_merge.csv"))
+
+
+
+
+
+
+
+
+villages <- read_sf("data/spatial/shapefiles/village.shp")
+# create district shapefile
+villages <- villages %>% 
+              mutate(district = paste0(pc11_s_id, "-", pc11_d_id))
+villages_spatial <- as_Spatial(villages)
+
+districts <- gUnaryUnion(villages_spatial, id = villages_spatial@data$district)
+districts <- st_as_sf(districts)
+districts <- cbind(districts, unique(villages$district))
+
+
+months <- c()
+for (month in 1:9){
+  months <- c(months, paste0("0", month))
+}
+months <- c(months, "10", "11", "12")
+pollution <- c()
+for (year in 1998:2015){
+  for (month in months){
+    # MONSOON --------------------------------------------------------------------
+    # This changes by year
+    r <- raster(paste0("data/raw/pm25/V5GL03.HybridPM25.Asia.", year, month, "-", year, month, ".nc"))
+    
+    # crop first (makes extraction MUCH faster)
+    r <- crop(r, districts)
+    
+    # extract
+    extracted_values <- exact_extract(r, districts, fun = "mean", append_cols = "district")
+    extracted_values <- as_tibble(extracted_values) %>% 
+                          group_by(district) %>% 
+                          mutate(mean = mean(mean)) %>% 
+                          filter(row_number()==1) %>%
+                          ungroup()
+    
+    extracted_values$year <- year
+    extracted_values$month <- as.numeric(month)
+    
+    # save
+    write_csv(extracted_values, paste0("data/clean/pm25_district/y", year, "m", as.numeric(month), ".csv"))
+    
+    pollution <- rbind(pollution, as_tibble(extracted_values))
+  }
+}
+pollution <- pollution %>%
+              rename(pm25_district = mean,
+                     district_id = district)
+write_csv(pollution, paste0("data/clean/pm25_district/all_combined_district.csv"))
 
 
 

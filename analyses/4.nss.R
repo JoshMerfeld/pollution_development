@@ -33,23 +33,20 @@ df <- df %>% mutate(
                     wind = days_sum,
                     district = distfe
                     )
-pollution <- read_csv(paste0("data/clean/pm25/nss_merge.csv"))
-pollution <- pollution %>% mutate(
-                                  temp_mean = (month_tmin + month_tmax)/200,
-                                  season_temp_mean = (season_tmin + season_tmax)/200,
-                                  month_precip = log(month_precip + 1),
-                                  season_precip = log(season_precip + 1),
-                                  pm25 = log(pm25)
-                                  )
-df <- df %>% left_join(pollution, by = c("state_merge", "district_merge", "year", "month_int"))
 
 # MONSOON ONLY
 df <- df %>% filter(month_int %in% c(5,6,7,8,9,10,11))
+# create seasons means
+df <- df %>% 
+      group_by(year, district) %>%
+      mutate(temp_mean = mean((month_tmin + month_tmax)/2),
+             precip_sum = sum(month_precip)) %>%
+      ungroup()
+
 
 # control variables
 # NOTE: "season' variables are defined as the season UP TO THAT POINT, so interact with month_int factor
-setFixest_fml(..ctrl = ~ poly(female, 1) + poly(age, 2) + educ + temp_mean*month_precip + temp_mean^2 + month_precip^2 + 
-                as_factor(month_int)*season_temp_mean*season_precip + as_factor(month_int)*season_temp_mean^2 + as_factor(month_int)*season_precip^2)
+setFixest_fml(..ctrl = ~ poly(female, 1) + poly(age, 2) + educ + temp_mean*precip_sum + month_precip + temp_mean^2 + precip_sum^2)
 
 
 
@@ -201,10 +198,10 @@ df <- df %>% mutate(
   wind6 = wind*(month_int==11)
 )
 
-labor1 <- feols(days_f ~ wind0 + wind1 + wind2 + wind3 + wind4 + wind5 + wind6 + ..ctrl | district + month,
+labor1 <- feols(days_f ~ wind1 + wind2 + wind3 + wind4 + wind5 + ..ctrl | district + month,
                 data = df %>% filter(rural==1),
                 cluster = "district")
-labor2 <- feols(days_nf ~ wind0 + wind1 + wind2 + wind3 + wind4 + wind5 + wind6 + ..ctrl | district + month,
+labor2 <- feols(days_nf ~ wind1 + wind2 + wind3 + wind4 + wind5 + ..ctrl | district + month,
                 data = df %>% filter(rural==1),
                 cluster = "district")
 
@@ -220,13 +217,14 @@ labortable <- etable(
                       group = list(controls = "poly"), 
                       keep = "wind"
                     )
-labortable <- labortable[-c(19:20),]
+labortable <- labortable[-c(15:16),]
 labortable <- as.matrix(labortable)
-rownames(labortable) <- c("May", " ", "June", " ", "July", " ", "Aug.", " ", "Sept.", " ", "Oct.", " ", "Nov.", " ",
+labortable <- labortable[,-1]
+rownames(labortable) <- c("June", " ", "July", " ", "Aug.", " ", "Sept.", " ", "Oct.", " ",
                           "controls",
                           "fixed effects:", "district", "year-month",
                           "observations")
-labortable[c(16),] <- " "
+labortable[c(12),] <- " "
 saveRDS(labortable, "pollution_development/draft/tables/labor3month.rds")
 
 
