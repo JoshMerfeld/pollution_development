@@ -37,16 +37,21 @@ df <- df %>% group_by(shrid, season) %>%
                      wind_abs_dev = abs(days_sums - mean(days_sums)),
                      pm25_abs_dev = abs(pm25 - mean(pm25)),
                      wind = days_sums/10,
-                     pm1 = log(pm1),
-                     pm2 = log(pm2),
-                     pm3 = log(pm3),
-                     pm4 = log(pm4),
-                     pm5 = log(pm5),
                      pmavg1 = log(pm1),
                      pmavg2 = log((pm1 + pm2)/2),
                      pmavg3 = log((pm1 + pm2 + pm3)/3),
                      pmavg4 = log((pm1 + pm2 + pm3 + pm4)/4),
                      pmavg5 = log((pm1 + pm2 + pm3 + pm4 + pm5)/5),
+                     pm1 = log(pm1),
+                     pm2 = log(pm2),
+                     pm3 = log(pm3),
+                     pm4 = log(pm4),
+                     pm5 = log(pm5),
+                     windavg1 = m1,
+                     windavg2 = (m1 + m2)/2,
+                     windavg3 = (m1 + m2 + m3)/3,
+                     windavg4 = (m1 + m2 + m3 + m4)/4,
+                     windavg5 = (m1 + m2 + m3 + m4 + m5)/5,
                      temp_m1 = (tmax_m1 + tmin_m1)/20,
                      temp_m2 = (tmax_m2 + tmin_m2)/20,
                      temp_m3 = (tmax_m3 + tmin_m3)/20,
@@ -455,9 +460,6 @@ saveRDS(yieldtable, "pollution_development/draft/tables/yield3ivmain_lead.rds")
 
 
 
-
-
-
 ## placebo test
 wind_year <- df %>%
               dplyr::select(wind, pm25, year) %>%
@@ -617,6 +619,118 @@ row # larger than every single randomized value!
 
 
 
+
+
+
+
+
+
+
+
+# randomization for current/lead
+# create function to sample
+sample_pre_fun <- function(a) {
+  sample(x = min(a):max(a), size = 1, replace = T)
+}
+
+# now wrap that function in apply
+sample_fun <- function(a) {
+  sample_vec <- apply(a, 1, sample_pre_fun)
+}
+
+# Also get distribution if we resample wind from WITHIN DISTRICTS ONLY
+## placebo test
+df <- as_tibble(df)
+wind_year <- df %>%
+  dplyr::select(wind, pm25, distfe, year) %>%
+  arrange(year, distfe) %>%
+  mutate(row = row_number()) %>% # row number in entire thing
+  group_by(year, distfe) %>%
+  mutate(
+    row_min = min(row), # min row number (in entire column)
+    row_max = max(row), # max
+    num = max(row_number()) # row number WITHIN 
+  ) %>%
+  ungroup() %>%
+  arrange(year, distfe)
+df_placebo <- df %>%
+  dplyr::select(-wind) %>%
+  arrange(year, distfe)
+
+samplefrom <- cbind(wind_year$row_min, wind_year$row_max)
+
+f <- function(i) {
+  # create vector with random sampling
+  temp_sample <- sample_fun(samplefrom)
+  # take those rows
+  wind_all <- wind_year[temp_sample,]
+  # sort by year, district
+  wind_all <- wind_all %>%
+    arrange(year, distfe)
+  # sort placebo by year and district
+  df_placebo <- df_placebo %>%
+    arrange(year, distfe)
+  # should be in same order, so add wind column
+  temp <- cbind(df_placebo, wind_all %>% dplyr::select(wind, pm25))
+  # get coefficient
+  temp <- panel(temp, ~ shrid + year)
+  coefs <- feols(log(yield) ~ ..ctrl1 | shrid + year | f(pm25, 0:1) ~ f(wind, 0:1), 
+                 data = temp, 
+                 cluster = c("shrid"))
+  # return
+  return(coefs$coeftable[1:2,1])
+}
+
+# use mclapply to take advantage of the cores on this computer
+# should take around an hour
+set.seed(8732946) #resetting seed just to make sure this works correctly when using parallel
+coefs_distfe <- mclapply(1:1000, f, mc.set.seed = TRUE)
+coef_current <- c()
+coef_lead <- c()
+for (num in 1:1000){
+  coef_current <- c(coef_current, coefs_distfe[[num]][1])
+  coef_lead <- c(coef_lead, coefs_distfe[[num]][2])
+}
+coef_current <- as_vector(coef_current)
+coef_lead <- as_vector(coef_lead)
+
+saveRDS(coef_current, "pollution_development/draft/tables/coef_current.rds")
+saveRDS(coef_lead, "pollution_development/draft/tables/coef_lead.rds")
+
+# get true value (with df)
+true_value <- feols(log(yield) ~ ..ctrl1 | shrid + year | f(pm25, 0:1) ~ f(wind, 0:1), 
+                    data = df, 
+                    cluster = c("shrid"))
+true_value_current <- true_value$coeftable[1,1]
+true_value_lead <- true_value$coeftable[2,1]
+
+
+pal <- viridis(4)
+colors <- c(paste0(pal[1]), paste0(pal[2]))
+labels <- c("current", "lead")
+
+# plot
+ggplot() + 
+    geom_density(aes(x = coef_current, fill = "current"), alpha = 0.5) +
+    geom_density(aes(x = coef_lead, fill = "lead"), alpha = 0.5) +
+    scale_fill_manual(
+      name = "coefficient:",
+      values = colors,
+      labels = labels
+    ) +
+    theme_minimal() +
+    xlab("distribution of coefficients")
+
+# what percentile is zero?
+coef_lead <- sort(coef_lead)
+i <- 1
+while (i<=length(coef_lead)){
+  if (coef_lead[i]>=0){
+    print(i)
+    break
+  }
+  i <- i + 1
+}
 
 
 
@@ -854,6 +968,74 @@ saveRDS(yieldtable, "pollution_development/draft/tables/yield7ivdiffindiff.rds")
 
 
 
+
+
+
+
+
+
+# cumulative exposure? ----------------------------------------
+setFixest_fml(..ctrl1 = ~ rain1_z + rain2_z + rain3_z + rain4_z + rain5_z + temp_m1 + temp_m2 + temp_m3 + temp_m4 + temp_m5)
+
+
+
+
+
+yield1 <- feols(log(yield) ~ ..ctrl1 | 
+                  shrid + year | 
+                  pmavg1 ~ windavg1, 
+                data = df, 
+                cluster = "shrid")
+yield2 <- feols(log(yield) ~ ..ctrl1 | 
+                  shrid + year | 
+                  pmavg2 ~ windavg2, 
+                data = df, 
+                cluster = "shrid")
+yield3 <- feols(log(yield) ~ ..ctrl1 | 
+                  shrid + year | 
+                  pmavg3 ~ windavg3, 
+                data = df, 
+                cluster = "shrid")
+yield4 <- feols(log(yield) ~ ..ctrl1 | 
+                  shrid + year | 
+                  pmavg4 ~ windavg4, 
+                data = df, 
+                cluster = "shrid")
+yield5 <- feols(log(yield) ~ ..ctrl1 | 
+                  shrid + year | 
+                  pmavg5 ~ windavg5, 
+                data = df, 
+                cluster = "shrid")
+
+
+
+yieldtable <- etable(
+                    yield1, yield2, yield3, yield4, yield5,
+                    se.below = TRUE,
+                    depvar = FALSE,
+                    signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+                    digits = "r3",
+                    digits.stats = "r0",
+                    fitstat = c("ivwald", "n"),
+                    keep = c("pmavg1", "pmavg2", "pmavg3", "pmavg4", "pmavg5"),
+                    coefstat = "se",
+                    group = list(weather = "rain1_z")
+                  )
+
+yieldtable <- yieldtable[-c(15,16),]
+yieldtable[12,] <- " "
+yieldtable <- yieldtable[,-1]
+yieldtable[15,2] <- yieldtable[16,2]
+yieldtable[15,3] <- yieldtable[17,3]
+yieldtable[15,4] <- yieldtable[18,4]
+yieldtable[15,5] <- yieldtable[19,5]
+yieldtable <- yieldtable[-c(16:19),]
+yieldtable <- as.matrix(yieldtable)
+rownames(yieldtable) <- c("June", " ", "July", " ", "Aug.", " ", "Sept.", " ", "Oct.", " ",
+                          "weather",
+                          "fixed effects:", "village", "year", 
+                          "F", "observations")
+saveRDS(yieldtable, "pollution_development/draft/tables/yield8cumulative.rds")
 
 
 

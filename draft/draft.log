@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.3.20)  7 APR 2023 13:51
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.3.20)  11 APR 2023 17:28
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -603,9 +603,6 @@ h' as default language. on input line 129.
 LaTeX Warning: Label `data' multiply defined.
 
 
-LaTeX Warning: Label `identification' multiply defined.
-
-
 LaTeX Warning: Label `results' multiply defined.
 
 
@@ -792,81 +789,103 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 {/usr/local/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <7> on input line 144.
-[2] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13]
-<draft_files/figure-latex/randomplot-1.pdf, id=155, 459.7175pt x 566.115pt>
+[2] [3] [4]
+
+LaTeX Warning: Reference `data2' on page 5 undefined on input line 168.
+
+[5] [6] [7] [8] [9] [10] [11] [12] [13]
+<draft_files/figure-latex/randomplot-1.pdf, id=154, 459.7175pt x 566.115pt>
 File: draft_files/figure-latex/randomplot-1.pdf Graphic file (type pdf)
 <use draft_files/figure-latex/randomplot-1.pdf>
 Package pdftex.def Info: draft_files/figure-latex/randomplot-1.pdf  used on inp
-ut line 402.
+ut line 385.
 (pdftex.def)             Requested size: 459.74442pt x 566.14816pt.
 [14] [15 <./draft_files/figure-latex/randomplot-1.pdf>] [16] [17] [18] [19] [20
-] [21] [22] [23]
+] [21] [22] [23] [24]
 pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has
  been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.757 \caption{\label{tab:data}Data sources}
-                                             [24]
-<draft_files/figure-latex/plants-1.pdf, id=284, 449.68pt x 239.89626pt>
+l.776 \caption{\label{tab:data}Data sources}
+                                             [25]
+<draft_files/figure-latex/plants-1.pdf, id=301, 449.68pt x 239.89626pt>
 File: draft_files/figure-latex/plants-1.pdf Graphic file (type pdf)
 <use draft_files/figure-latex/plants-1.pdf>
 Package pdftex.def Info: draft_files/figure-latex/plants-1.pdf  used on input l
-ine 783.
+ine 802.
 (pdftex.def)             Requested size: 449.68575pt x 239.8993pt.
 
 pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) ha
 s been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.783 ...]{Coal plants in India from 1990 to 2010}
+l.802 ...]{Coal plants in India from 1990 to 2010}
                                                   \label{fig:plants}\floatfo...
-[25 <./draft_files/figure-latex/plants-1.pdf>]
-<draft_files/figure-latex/windexample-1.pdf, id=301, 286.06876pt x 556.0775pt>
+[26 <./draft_files/figure-latex/plants-1.pdf>]
+<draft_files/figure-latex/windexample-1.pdf, id=317, 286.06876pt x 556.0775pt>
 File: draft_files/figure-latex/windexample-1.pdf Graphic file (type pdf)
 <use draft_files/figure-latex/windexample-1.pdf>
 Package pdftex.def Info: draft_files/figure-latex/windexample-1.pdf  used on in
-put line 790.
+put line 809.
 (pdftex.def)             Requested size: 286.07242pt x 556.08463pt.
-[26 <./draft_files/figure-latex/windexample-1.pdf>]
+[27 <./draft_files/figure-latex/windexample-1.pdf>]
 pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has
  been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.798 ...le}Wind direction and particulate matter}
-                                                   [27]
-<draft_files/figure-latex/laborplot-1.pdf, id=325, 459.7175pt x 313.17pt>
+l.817 ...le}Wind direction and particulate matter}
+                                                   [28]
+<draft_files/figure-latex/randomplotleads-1.pdf, id=341, 453.695pt x 566.115pt>
+
+File: draft_files/figure-latex/randomplotleads-1.pdf Graphic file (type pdf)
+<use draft_files/figure-latex/randomplotleads-1.pdf>
+Package pdftex.def Info: draft_files/figure-latex/randomplotleads-1.pdf  used o
+n input line 846.
+(pdftex.def)             Requested size: 453.6939pt x 566.11362pt.
+[29 <./draft_files/figure-latex/randomplotleads-1.pdf>]
+<draft_files/figure-latex/laborplot-1.pdf, id=357, 459.7175pt x 313.17pt>
 File: draft_files/figure-latex/laborplot-1.pdf Graphic file (type pdf)
 <use draft_files/figure-latex/laborplot-1.pdf>
 Package pdftex.def Info: draft_files/figure-latex/laborplot-1.pdf  used on inpu
-t line 830.
+t line 853.
 (pdftex.def)             Requested size: 459.7304pt x 313.17877pt.
-[28
+[30
+
 
 
  <./draft_files/figure-latex/laborplot-1.pdf>]
-<draft_files/figure-latex/monthplot-1.pdf, id=341, 459.7175pt x 313.17pt>
+<draft_files/figure-latex/monthplot-1.pdf, id=373, 459.7175pt x 313.17pt>
 File: draft_files/figure-latex/monthplot-1.pdf Graphic file (type pdf)
 <use draft_files/figure-latex/monthplot-1.pdf>
 Package pdftex.def Info: draft_files/figure-latex/monthplot-1.pdf  used on inpu
-t line 837.
+t line 860.
 (pdftex.def)             Requested size: 459.7304pt x 313.17877pt.
-[29 <./draft_files/figure-latex/monthplot-1.pdf>] (./draft.aux)
+[31 <./draft_files/figure-latex/monthplot-1.pdf>]
+pdfTeX warning (ext4): destination with the same identifier (name{table.3}) has
+ been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.868 ... exposure to pollution during the season}
+                                                   [32] (./draft.aux)
+
+LaTeX Warning: There were undefined references.
+
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 20775 strings out of 478268
- 387715 string characters out of 5846347
- 703410 words of memory out of 5000000
- 38311 multiletter control sequences out of 15000+600000
- 552588 words of font info for 186 fonts, out of 8000000 for 9000
+ 20799 strings out of 478268
+ 388351 string characters out of 5846347
+ 711398 words of memory out of 5000000
+ 38318 multiletter control sequences out of 15000+600000
+ 552891 words of font info for 189 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 74i,13n,79p,1593b,786s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 74i,13n,79p,1992b,786s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/lo
-cal/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/20
-22/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2022/texmf-dist/
-fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/
+cal/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/20
+22/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2022/texmf-d
+ist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/texlive/2022/texmf-dist/fonts/enc/
 dvips/lm/lm-ts1.enc}</usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/l
 mbx10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmbx12.pfb>
 </usr/local/texlive/2022/texmf-dist/fonts/type1/public/lm/lmbx9.pfb></usr/local
@@ -881,10 +900,10 @@ ocal/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive
 dist/fonts/type1/public/lm/lmr9.pfb></usr/local/texlive/2022/texmf-dist/fonts/t
 ype1/public/lm/lmri10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/publi
 c/lm/lmsy10.pfb>
-Output written on draft.pdf (29 pages, 5580763 bytes).
+Output written on draft.pdf (32 pages, 5601105 bytes).
 PDF statistics:
- 512 PDF objects out of 1000 (max. 8388607)
- 419 compressed objects within 5 object streams
- 127 named destinations out of 1000 (max. 500000)
- 49298 words of extra memory for PDF output out of 51595 (max. 10000000)
+ 544 PDF objects out of 1000 (max. 8388607)
+ 444 compressed objects within 5 object streams
+ 137 named destinations out of 1000 (max. 500000)
+ 49287 words of extra memory for PDF output out of 51595 (max. 10000000)
 

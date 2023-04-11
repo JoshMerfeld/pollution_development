@@ -49,12 +49,34 @@ villages00 <- villages00 %>% left_join(monsoon, by = "shrid")
 # rename to get same row in table
 villages90 <- villages90 %>% rename(area = pc91_vd_area)
 villages00 <- villages00 %>% rename(area = pc01_vd_area)
+# pollution
+pollution <- read_csv(paste0("data/clean/pm25/plant_openings199801.csv"))
+pollution <- pollution %>%
+              dplyr::select(shrid)
+for (year in c("1998", "1999", "2000")){
+  for (month in c("01", "02", "03", "04", "05", "06",
+                  "07", "08", "09", "10", "11", "12")){
+    extracted_values <- read_csv(paste0("data/clean/pm25/plant_openings", year, month, ".csv"))
+    colnames(extracted_values) <- c("shrid", paste0(year, month))
+    pollution <- pollution %>%
+                  left_join(extracted_values, by = "shrid")
+  }
+}
+pollution <- pollution[, c(1, 7:11, 19:23, 31:35)]
+pollution$pm25 <- apply(pollution[,-1], 1, FUN = mean)
+pollution <- pollution %>%
+              dplyr::select(shrid, pm25)
+villages00 <- villages00 %>% left_join(pollution, by = "shrid")
+
+villages90$state <- substr(villages90$shrid, 1, 2)
+villages00$state <- substr(villages00$shrid, 1, 2)
 
 
-reg1 <- feols(plants90 ~ log(pop) + log(area) + literacy, data = villages90, vcov = "hetero")
-reg2 <- feols(plants00 ~ log(pop) + log(area) + literacy, data = villages90 %>% filter(plants90==0), vcov = "hetero")
-reg3 <- feols(plants00 ~ ag_prod + log(pop) + log(area) + literacy, data = villages00, vcov = "hetero")
-reg4 <- feols(plants10 ~ ag_prod + log(pop) + log(area) + literacy, data = villages00 %>% filter(plants00==0), vcov = "hetero")
+
+reg1 <- feols(plants90 ~ log(pop) + log(area) + literacy | state, data = villages90, vcov = "cluster")
+reg2 <- feols(plants00 ~ log(pop) + log(area) + literacy | state, data = villages90 %>% filter(plants90==0), vcov = "cluster")
+reg3 <- feols(plants00 ~ ag_prod + log(pm25) + log(pop) + log(area) + literacy | state, data = villages00, vcov = "cluster")
+reg4 <- feols(plants10 ~ ag_prod + log(pm25) + log(pop) + log(area) + literacy | state, data = villages00 %>% filter(plants00==0), vcov = "cluster")
 
 plantresultstable <- etable(
                           reg1, reg2, reg3, reg4,
@@ -67,9 +89,10 @@ plantresultstable <- etable(
                           coefstat = "se",
                           extralines = list("Sub-sample" = c("all", "no plant", "all", "no plant"))
                           )
-plantresultstable <- plantresultstable[-c(1:2,12:13),]
-plantresultstable <- as.matrix(plantresultstable)
-rownames(plantresultstable) <- c("pop (log)", "", "area (log)", "", "literacy (prop)", "", "ag productivity", "", 
+plantresultstable <- plantresultstable[-c(14:15),]
+plantresultstable <- as.matrix(plantresultstable[,-1])
+plantresultstable <- plantresultstable[-c(12:13),]
+rownames(plantresultstable) <- c("pop (log)", "", "area (log)", "", "literacy (prop)", "", "ag productivity", "", "Pollution", " ",
                                 "sub-sample", "observations")
 saveRDS(plantresultstable, "pollution_development/draft/tables/plantresultstable.rds")
 

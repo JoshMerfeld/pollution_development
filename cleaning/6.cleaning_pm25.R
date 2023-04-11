@@ -25,6 +25,30 @@ getwd()    # check
 
 
 
+# first extract pollution in villages for the 2001 census
+villages <- read_sf("data/spatial/shapefiles/village.shp")
+villages$shrid <- paste0(villages$pc11_s_id, "-", villages$pc11_tv_id)
+for (year in c("1998", "1999", "2000")){
+  for (month in c("01", "02", "03", "04", "05", "06",
+                  "07", "08", "09", "10", "11", "12")){
+    r <- raster(paste0("data/raw/pm25/V5GL03.HybridPM25.Asia.", year, month, "-", year, month, ".nc"))
+    
+    # crop first (makes extraction MUCH faster)
+    r <- crop(r, villages)
+    
+    # extract
+    extracted_values <- exact_extract(r, villages, fun = "mean", append_cols = "shrid")
+    extracted_values <- as_tibble(extracted_values) %>% 
+                          group_by(shrid) %>% 
+                          mutate(mean = mean(mean)) %>% 
+                          filter(row_number()==1) %>%
+                          ungroup()
+    colnames(extracted_values) <- c("shrid", "pm25")
+    write_csv(extracted_values, paste0("data/clean/pm25/plant_openings", year, month, ".csv"))
+  }
+}
+
+
 villages_centroids <- read_sf("data/spatial/centroids_villages_30km")
 villages_centroids <- as_tibble(villages_centroids) %>% dplyr::select(shrid)
 villages_centroids$within30 <- 1

@@ -9,6 +9,7 @@ library(lubridate)
 library(viridis)
 library(fixest)
 library(sf)
+library(tree)
 
 
 # Sets wd to folder this script is in so we can create relative paths instead of absolute paths
@@ -278,6 +279,47 @@ laborplot <- ggplot(data = df) +
        y = "households interviewed") +
   theme_minimal()
 saveRDS(laborplot, "pollution_development/draft/tables/laborplot.rds")
+
+
+
+
+
+
+
+
+
+# treatment effect heterogeneity ------------------------------------
+# first get centered values
+df_centered <- df %>%
+                group_by(district) %>%
+                mutate(
+                       month1 = as.numeric(month_int==6),
+                       month2 = as.numeric(month_int==7),
+                       month3 = as.numeric(month_int==8),
+                       month4 = as.numeric(month_int==9),
+                       month5 = as.numeric(month_int==10),
+                       wind = wind - mean(wind),
+                       wind1 = wind*(month_int==6) - mean(wind*(month_int==6)),
+                       wind2 = wind*(month_int==7) - mean(wind*(month_int==7)),
+                       wind3 = wind*(month_int==8) - mean(wind*(month_int==8)),
+                       wind4 = wind*(month_int==9) - mean(wind*(month_int==9)),
+                       wind5 = wind*(month_int==10) - mean(wind*(month_int==10)),
+                       educ = as.numeric(educ) - mean(as.numeric(educ)),
+                       distfe = min(row_number())
+                       ) %>%
+                ungroup() %>%
+                dplyr::select("month_int", "female", "age", "educ", "temp_mean", "precip_sum",
+                              "wind1", "wind2", "wind3", "wind4", "wind5",
+                              "days_f", "days_nf", "wind", "district", "distfe") %>%
+                filter(month_int %in% c(6, 7, 8, 9, 10))
+df_centered <- df_centered[complete.cases(df_centered),]
+xgboost <- xgboost(data = as.matrix(df_centered[,c("wind1", "wind2", "wind3", "wind4", "wind5", 
+                                             "female", "age", "educ", "temp_mean", "precip_sum")]),
+                   label = df_centered$days_f,
+                   nrounds = 250,
+                   subsample = 0.6,
+                   colsample_bytree = 0.6
+                   )
 
 
 
