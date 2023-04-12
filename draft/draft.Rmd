@@ -4,7 +4,7 @@ author:
   - Joshua D. Merfeld^[KDI School of Public Policy and Management and IZA; merfeld@kdis.ac.kr]
 date: "`r Sys.Date()`"
 abstract: |
-  | \noindent I document large negative externalities in the agricultural sector of India due to air pollution. Using random variation in pollution exposure induced by changes in wind direction, I show that higher levels of particulate matter lead to decreased agricultural productivity. Based on within-village average deviations in pollution exposure, year-to-year changes in productivity can be above 10 percent. Combining wind direction with the rollout of coal plants, I show that pollution from coal plants, specifically, has a larger effect on agricultural productivity than other types of pollution. Given that the agricultural sector is a refuge for the poor in many developing countries, these results suggest that the effects of pollution may hit the poorest particularly hard.
+  | \noindent I document externalities in the agricultural sector of India due to air pollution. Using variation in pollution induced by changes in wind, I show that higher levels of particulate matter lead to decreased agricultural productivity, with changes in productivity of 10 percent being common. Combining wind direction with the rollout of coal plants, results indicate pollution from coal plants has a larger effect on agricultural productivity than other types of pollution. Given that the agricultural sector is a refuge for the poor in many developing countries, these results suggest that the effects of pollution may hit the poorest particularly hard.
   |
   | \textbf{\textit{Keywords}}: pollution, productivity, agriculture, labor, India
   | \textbf{\textit{JEL Codes}}: H40, I15, J22, O13, Q52, Q53
@@ -61,6 +61,7 @@ library(modelsummary)
 library(openxlsx)
 library(raster)
 library(viridis)
+library(stars)
 loadfonts()  # Must be run once in each session (markdown is a new "session" each time you render/knit)
 
 
@@ -270,7 +271,7 @@ This paper contributes to several strands of literature. First, we already have 
 
 I also contribute to the more general literature on the effects of pollution on health. Pollution has substantial negative effects on health in both developing and developed countries [@arceo2016does] and we have known of these negative effects for many years [@brunekreef2002air; @kampa2008human; @pope2006health]. @currie2014we review the literature on the health effects of pollution during adolescence; we have robust evidence of pollution exposure leading to increases in infant mortality, including in developing countries [@heft2018robust; @heft2019air]. Since these effects are often driven by heart and lung disease and asthma [@kampa2008human], this my explain the labor allocation effects I identify in this paper.
 
-The rest of the paper is organized as follows. I first discuss data and methodology. I break this section up into \autoref{data2}, which covers the multiple sources of data used in this paper; \autoref{identification}, which discusses the empirical strategy and validates the wind direction variable using data on particulate matter. I present the main results in \autoref{results} before concluding in \autoref{conclusion}.
+The rest of the paper is organized as follows. I first discuss data and then methodology, in two separate sections. The methodology section discusses the empirical strategy and validates the wind direction variable using data on particulate matter. I present the main results in \autoref{results} before concluding in \autoref{conclusion}.
 
 # Data
 
@@ -872,10 +873,15 @@ ggarrange(plant1, plant2)
 
 ```{r windexample, echo = FALSE, message = FALSE, warning = FALSE, fig.height = 8, fig.cap = "Wind direction and aggregation examples (2010-01-01)", fig.footer = list("Note: The top figure shows the average wind direction on January 1st, 2010, with zero degrees indicating north. The points are the location of coal plants on that date. The bottom figure shows the distribution of pollution exposure in a specific district -- Guna district in Madhya Pradesh -- on the same date.")}
 
+
+windexample2 <- rasterFromXYZ(windexample)
+windexample2 <- mask(windexample2, india_shape)
+windexample2 <- rasterToPoints(windexample2)
+windexample2 <- as.data.frame(windexample2)
 p1 <- ggplot() + 
         theme_map() +
         geom_sf(data = india_shape, fill = NA) +
-        geom_tile(data = windexample, aes(x = x, y = y, fill = wind_example), alpha = 0.3) +
+        geom_tile(data = windexample2, aes(x = x, y = y, fill = wind_example), alpha = 0.3) +
         scale_fill_viridis_c("wind direction\n(degrees)", option = "viridis") +
         geom_sf(data = plants2010, size = 0.5) +
         labs(x = "lon",
@@ -887,6 +893,7 @@ p1 <- ggplot() +
               legend.text = element_text(size = 8),
               legend.background=element_blank() )
 
+
 p2 <- ggplot() + 
         theme_map() +
         geom_sf(data = districts, fill = NA) +
@@ -895,11 +902,12 @@ p2 <- ggplot() +
         labs(x = "lon",
              y = "lat",
              subtitle = "B. Aggregation to district") +
-        theme(legend.position = c(0.5, 0.05),
+        theme(legend.position = c(0.45, 0.05),
               legend.direction = "horizontal",
-              legend.key.width = unit(0.3, 'cm'),
+              legend.key.width = unit(0.8, 'cm'),
               legend.text = element_text(size = 8),
-              legend.background=element_blank() )
+              legend.background=element_blank() ) +
+        guides(fill = guide_colourbar(title.position="top", title.hjust = 0.5))
 
 ggarrange(p1, p2,
           nrow = 2)
