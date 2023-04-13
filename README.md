@@ -2,7 +2,11 @@
 This project uses the following datasets:
   - National Sample Survey (NSS)
   - Village-level shapefiles and census data from [The SHRUG](https://www.devdatalab.org/shrug)
-  - 
+  - The data on coal plants is from [Global Energy Monitor](globalenergymonitor.org/projects/global-coal-plant-tracker/)
+  - I use agricultural yield estimates from 2001 through 2013 from [Gangopadhyay et al. (2022)](https://www.nature.com/articles/s41597-022-01828-y)
+  - The pollution data is from [Gangopadhyay et al. (2022)](https://www.nature.com/articles/s41597-022-01828-y)
+  - Daily wind data (with four estimates per day) is from [the National Center for Atmospheric Research](climatedataguide.ucar.edu/)
+  - Monthly pollution (particulate) estimates are from (Hammer et al. (2020))[https://pubs.acs.org/doi/full/10.1021/acs.est.0c01764]
 
 ## Cleaning scripts
 - I clean the National Sample Survey (NSS) data in [this script](cleaning/3.cleaning_nss.R).
