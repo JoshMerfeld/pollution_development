@@ -184,7 +184,7 @@ rad_deg <- function(rad){
 
 # GET PREVIOUS SEVEN DAYS (before start of loop)
 # Date
-date <- as.Date("2014-08-21", "%Y-%m-%d")
+date <- as.Date("1990-01-01", "%Y-%m-%d")
 final_date <- as.Date("2015-03-10", "%Y-%m-%d")
 
 wind_last_week <- dist_matrix %>% dplyr::select("shrid", "plant_id", "angle", "angle_original", "year_built", "year_retired")
@@ -338,6 +338,7 @@ for (lag in 1:7){
   wind_last_week_merge <- wind_last_week_merge %>% left_join(wind_last_week_temp2, by = "shrid")
   wind_last_week_merge$sum[is.na(wind_last_week_merge$sum)==T] <- 0
   wind_last_week_ALL[, 6 + lag] <- wind_last_week_merge$sum
+  
   # now those during years coal plant actually in operation
   wind_last_week_temp <- wind_last_week_temp[dl_year>=wind_last_week_temp$year_built & dl_year<=wind_last_week_temp$year_retired,]
   wind_last_week_temp <- wind_last_week_temp %>% group_by(shrid) %>% mutate(sum = max(sum)) %>% filter(row_number()==1) %>% ungroup() %>% dplyr::select("shrid", "sum")
