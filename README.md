@@ -29,6 +29,6 @@ This project uses the following datasets:
 - All regressions related to NSS data are in [this script](analysis/4.nss.R).
 
 ## Slides
-- You can find my most recent html slides [here](presentation/slides/slides.html).
+- You can find my most recent html slides [here](https://joshmerfeld.github.io/pollution-slides/#1).
 
 

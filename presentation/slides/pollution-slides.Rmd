@@ -634,6 +634,7 @@ kable(
 ```{r yieldtabletwo, include = TRUE, echo = FALSE, message = FALSE, warning = FALSE}
 
 # Table
+yield3ivmain <- yield3ivmain[,-1]
 colnames(yield3ivmain) <- c("(1)", "(2)", "(3)")
 rownames(yield3ivmain)[8] <- "F (first stage)"
 kable(
@@ -826,8 +827,6 @@ kable(
 
 # Table
 colnames(labor3month) <- c("farm", "non-farm")
-labor3month <- labor3month[-c(1:2, 13:14),]
-labor3month <- labor3month[c(1:14),]
 kable(
       labor3month,
       align = "cc", booktabs = TRUE, linesep = ""
@@ -855,7 +854,7 @@ kable(
 
 # Table
 colnames(yield4monthly) <- c("(1)", "(2)")
-yield4monthly <- yield4monthly[c(1:14),]
+yield4monthly <- yield4monthly[c(1:14, nrow(yield4monthly)),]
 kable(
       yield4monthly,
       align = "cc", booktabs = TRUE, linesep = ""
