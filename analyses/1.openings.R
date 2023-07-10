@@ -12,7 +12,7 @@ library(sf)
 
 
 # Sets wd to folder this script is in so we can create relative paths instead of absolute paths
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+# setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 # We want to get the wd up to the main folder
 # Need to go up two levels
 setwd("../../")
@@ -21,24 +21,37 @@ getwd()    # check
 
 
 
+villages <- read_sf(paste0("data/spatial/village_new/village_new.shp"))
+villages <- as_tibble(villages) %>% mutate(shrid = paste0(pc11_s_id, "-", pc11_tv_id),
+                                district_id = paste0(pc11_s_id, "-", pc11_d_id),
+                                area_overlap = area) %>%
+                          dplyr::select(shrid, district_id)
+
+
 # Where do plants open?
 villages90 <- read_csv("data/clean/census_plants/villages90.csv")
+villages90$pc91_pca_tot_p_u[is.na(villages90$pc91_pca_tot_p_u)] <- 0
 villages90 <- villages90 %>% mutate(
                                     literacy = pc91_pca_p_lit/pc91_pca_tot_p,
                                     pop = pc91_pca_tot_p,
                                     scst_prop = (pc91_pca_p_sc + pc91_pca_p_st)/pop,
-                                    tar_road = pc91_vd_tar_road
-                                    )
+                                    tar_road = pc91_vd_tar_road,
+                                    urban_pop = pc91_pca_tot_p_u/pc91_pca_tot_p
+                                    ) %>%
+                              left_join(villages, by = c("shrid"))
 villages00 <- read_csv("data/clean/census_plants/villages00.csv")
+villages00$pc01_pca_tot_p_u[is.na(villages00$pc01_pca_tot_p_u)] <- 0
 villages00 <- villages00 %>% group_by(shrid) %>%
                              mutate(
                                     literacy = sum(pc01_pca_p_lit)/sum(pc01_pca_tot_p),
                                     pop = sum(pc01_pca_tot_p),
                                     scst_prop = (sum(pc01_pca_p_sc) + sum(pc01_pca_p_st))/pop,
-                                    tar_road = max(pc01_vd_tar_road)
+                                    tar_road = max(pc01_vd_tar_road),
+                                    urban_pop = pc01_pca_tot_p_u/pc01_pca_tot_p
                                     ) %>%
                               filter(row_number()==1) %>%
-                              ungroup()
+                              ungroup() %>%
+                              left_join(villages, by = c("shrid"))
 # monsoon at beginning
 monsoon <- read_csv("data/clean/census_plants/monsoon2002.csv")
 monsoon <- monsoon %>% group_by(shrid) %>% 
@@ -72,11 +85,10 @@ villages90$state <- substr(villages90$shrid, 1, 2)
 villages00$state <- substr(villages00$shrid, 1, 2)
 
 
-
-reg1 <- feols(plants90 ~ log(pop) + log(area) + literacy | state, data = villages90, vcov = "cluster")
-reg2 <- feols(plants00 ~ log(pop) + log(area) + literacy | state, data = villages90 %>% filter(plants90==0), vcov = "cluster")
-reg3 <- feols(plants00 ~ ag_prod + log(pm25) + log(pop) + log(area) + literacy | state, data = villages00, vcov = "cluster")
-reg4 <- feols(plants10 ~ ag_prod + log(pm25) + log(pop) + log(area) + literacy | state, data = villages00 %>% filter(plants00==0), vcov = "cluster")
+reg1 <- feols(plants90 ~ log(pop) + log(area) + urban_pop | state, data = villages90, vcov = "hetero")
+reg2 <- feols(plants00 ~ log(pop) + log(area) + urban_pop | state, data = villages90 %>% filter(plants90==0), vcov = "hetero")
+reg3 <- feols(plants00 ~ ag_prod + log(pm25) + log(pop) + log(area) + urban_pop | state, data = villages00, vcov = "hetero")
+reg4 <- feols(plants10 ~ ag_prod + log(pm25) + log(pop) + log(area) + urban_pop | state, data = villages00 %>% filter(plants00==0), vcov = "hetero")
 
 plantresultstable <- etable(
                           reg1, reg2, reg3, reg4,
@@ -89,11 +101,11 @@ plantresultstable <- etable(
                           coefstat = "se",
                           extralines = list("Sub-sample" = c("all", "no plant", "all", "no plant"))
                           )
-plantresultstable <- plantresultstable[-c(14:15),]
-plantresultstable <- as.matrix(plantresultstable[,-1])
-plantresultstable <- plantresultstable[-c(12:13),]
-rownames(plantresultstable) <- c("pop (log)", "", "area (log)", "", "literacy (prop)", "", "ag productivity", "", "Pollution", " ",
+plantresultstable <- as.matrix(plantresultstable)
+plantresultstable <- plantresultstable[-c(12:15),]
+rownames(plantresultstable) <- c("pop (log)", "", "area (log)", "", "urban pop. (prop)", "", "ag productivity", "", "Pollution", " ",
                                 "sub-sample", "observations")
+plantresultstable <- plantresultstable[,-c(1)]
 saveRDS(plantresultstable, "pollution_development/draft/tables/plantresultstable.rds")
 
 

@@ -26,7 +26,7 @@ getwd()    # check
 
 
 ### Load raw data ----------------------------------------------------------------------------------------------------------------------------------------------
-ntl <- as_tibble(read.csv("daa/raw/shrug-v1.5.samosa-nl-csv/shrug_nl_wide.csv"))
+ntl <- as_tibble(read.csv("data/raw/shrug-v1.5.samosa-nl-csv/shrug_nl_wide.csv"))
 ntl <- ntl %>% select(-num_cells)
 
 # Gather, one variable at a time (we want long by year but wide by variables)

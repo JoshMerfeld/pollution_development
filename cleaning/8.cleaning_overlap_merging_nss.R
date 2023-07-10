@@ -12,10 +12,10 @@ library(sf)
 
 
 # Sets wd to folder this script is in so we can create relative paths instead of absolute paths
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+# setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 # We want to get the wd up to the main folder
 # Need to go up two levels
-setwd("../../")
+setwd("../")
 # Double check
 getwd()    # check
 
@@ -73,6 +73,29 @@ df_labor <- df_labor %>% mutate(state_merge = as.numeric(state_merge),
 df_labor <- df_labor %>% filter(is.na(merge)==F)
 
 
+# now get averages for each district
+all <- read_csv(paste0("data/clean/terra_district/precip1990.csv"))
+all <- all[,1:2]
+for (month in 6:11){
+       temp <- read_csv(paste0("data/clean/terra_district/precip1990.csv"))
+       temp <- temp[,c(1:2, 2+month)]
+       for (year in 1991:2003){
+              temp2 <- read_csv(paste0("data/clean/terra_district/precip", year, ".csv"))
+              temp2$sum <- temp2[,c(8:(2+month))]
+              temp2 <- temp2[,c(1:2, ncol(temp2))]
+              temp <- temp %>% left_join(temp2, by = c("ST_CEN_CD", "DT_CEN_CD"))
+       }
+       temp[[paste0("precip_mean_month", month)]] <- apply(temp[,3:ncol(temp)], 1, mean)
+       temp[[paste0("precip_sd_month", month)]] <- apply(temp[,3:ncol(temp)], 1, sd)
+
+       temp <- temp %>%
+                dplyr::select(c("ST_CEN_CD", "DT_CEN_CD", starts_with(c("precip_"))))
+
+       all <- all %>% left_join(temp, by = c("ST_CEN_CD", "DT_CEN_CD"))
+}
+write_csv(all, paste0("data/clean/terra_district/precip_mean_monthALL.csv"))
+
+
 # district pollution
 pollution <- as_tibble(read_csv("data/clean/pm25_district/all_combined_district.csv"))
 
@@ -111,13 +134,13 @@ for (day in 1:length(date_vec)){
                   group_by(state, district) %>%
                   mutate(days_sum = weighted.mean(days_sum, area_weight, na.rm = T),
                          month_sum = weighted.mean(month_sum, area_weight, na.rm = T),
-                         #pm25_district = weighted.mean(pm25, area_weight, na.rm = T),
+                         pm25_district_weighted = weighted.mean(pm25, area_weight, na.rm = T),
                          state_merge = as.numeric(state),
                          district_merge = as.numeric(district),
                          tot_weight = sum(area_weight, na.rm = T),
                          days_sum = days_sum*tot_weight,
                          month_sum = month_sum*tot_weight,
-                         #pm25_sum = days_sum*tot_weight
+                         pm25_sum = days_sum*tot_weight
                          ) %>% # Last one adjusts for the zeros for areas not here (not pm, though, since it is the entire district)
                   filter(row_number()==1) %>%
                   ungroup() %>%
@@ -138,6 +161,16 @@ for (day in 1:length(date_vec)){
   precip <- read_csv(paste0("data/clean/terra_district/precip", year(date_vec[day]), ".csv"))
   precip <- precip[, c(1, 2, 2 + month(date_vec[day]))]
   colnames(precip) <- c("state_merge", "district_merge", "month_precip")
+  
+  tmin_all <- read_csv(paste0("data/clean/terra_district/tmin", year(date_vec[day]), ".csv"))
+  tmin_all <- tmin_all[, c(1, 2, 8:12)]
+  colnames(tmin_all) <- c("state_merge", "district_merge", "month6_tmin", "month7_tmin", "month8_tmin", "month9_tmin", "month10_tmin")
+  tmax_all <- read_csv(paste0("data/clean/terra_district/tmax", year(date_vec[day]), ".csv"))
+  tmax_all <- tmax_all[, c(1, 2, 8:12)]
+  colnames(tmax_all) <- c("state_merge", "district_merge", "month6_tmax", "month7_tmax", "month8_tmax", "month9_tmax", "month10_tmax")
+  precip_all <- read_csv(paste0("data/clean/terra_district/precip", year(date_vec[day]), ".csv"))
+  precip_all <- precip_all[, c(1, 2, 8:12)]
+  colnames(precip_all) <- c("state_merge", "district_merge", "month6_precip", "month7_precip", "month8_precip", "month9_precip", "month10_precip")
 
   # merge into temp
   temp <- temp %>% left_join(tmin %>% mutate(state_merge = as.numeric(state_merge),
@@ -147,6 +180,15 @@ for (day in 1:length(date_vec)){
                                               district_merge = as.numeric(district_merge)),
                               by = c("state_merge", "district_merge"))
   temp <- temp %>% left_join(precip %>% mutate(state_merge = as.numeric(state_merge),
+                                      district_merge = as.numeric(district_merge)),
+                              by = c("state_merge", "district_merge"))
+  temp <- temp %>% left_join(tmin_all %>% mutate(state_merge = as.numeric(state_merge),
+                                              district_merge = as.numeric(district_merge)),
+                              by = c("state_merge", "district_merge"))
+  temp <- temp %>% left_join(tmax_all %>% mutate(state_merge = as.numeric(state_merge),
+                                              district_merge = as.numeric(district_66merge)),
+                              by = c("state_merge", "district_merge"))
+  temp <- temp %>% left_join(precip_all %>% mutate(state_merge = as.numeric(state_merge),
                                       district_merge = as.numeric(district_merge)),
                               by = c("state_merge", "district_merge"))
 
@@ -159,66 +201,6 @@ write.csv(df_labor_merged, "data/clean/nss/merged_week.csv")
 
 
 
-
-
-
-
-# 
-# 
-# 
-# 
-# 
-# # And also pm; all years covering the nss data
-# df_labor_merged <- read_csv("data/clean/nss/merged_week.csv")
-# pollution_merged <- c()
-# for (y in year(min(df_labor_merged$date)):year(max(df_labor_merged$date))){
-#   for (m in 1:12){
-#     pollution_merge <- pollution %>% filter(year==y & month==m)
-#     # weather - thuis is coded ONLY FOR MONSOON SEASON
-#     tmin <- read_csv(paste0("data/clean/terra_district/tmin", y, ".csv"))# create season total
-#     tmin$season_tmin <- rowMeans(tmin[,8:(2+m)])
-#     tmin <- tmin[, c(1, 2, 2 + m, ncol(tmin))]
-#     colnames(tmin) <- c("state_merge", "district_merge", "month_tmin", "season_tmin")
-#     tmax <- read_csv(paste0("data/clean/terra_district/tmax", y, ".csv"))
-#     tmax$season_tmax <- rowMeans(tmax[,8:(2+m)])
-#     tmax <- tmax[, c(1, 2, 2 + m, ncol(tmax))]
-#     colnames(tmax) <- c("state_merge", "district_merge", "month_tmax", "season_tmax")
-#     precip <- read_csv(paste0("data/clean/terra_district/precip", y, ".csv"))
-#     precip$season_precip <- rowSums(precip[,8:(2+m)])
-#     precip <- precip[, c(1, 2, 2 + m, ncol(precip))]
-#     colnames(precip) <- c("state_merge", "district_merge", "month_precip", "season_precip")
-#     
-#     village_wind <- villages %>% left_join(pollution_merge, by = "shrid")
-#     # Weighted mean by AREA. Any parts of the district without villages are ZEROS
-#     village_wind <- village_wind %>% 
-#                     group_by(state, district) %>%
-#                     mutate(pm25 = weighted.mean(pm25, area_weight, na.rm = T),
-#                            state_merge = as.numeric(state),
-#                            district_merge = as.numeric(district),
-#                            tot_weight = sum(area_weight),
-#                            pm25 = pm25*tot_weight,
-#                            year = y, month_int = m) %>% # Last one adjusts for the zeros for areas not here
-#                     filter(row_number()==1) %>%
-#                     ungroup() %>%
-#                     dplyr::select(state_merge, district_merge, year, month_int, pm25)
-#     
-#     # merge into temp
-#     village_wind <- village_wind %>% left_join(tmin %>% mutate(state_merge = as.numeric(state_merge),
-#                                                                 district_merge = as.numeric(district_merge)),
-#                                                 by = c("state_merge", "district_merge"))
-#     village_wind <- village_wind %>% left_join(tmax %>% mutate(state_merge = as.numeric(state_merge),
-#                                                                 district_merge = as.numeric(district_merge)),
-#                                                 by = c("state_merge", "district_merge"))
-#     village_wind <- village_wind %>% left_join(precip %>% mutate(state_merge = as.numeric(state_merge),
-#                                                                   district_merge = as.numeric(district_merge)),
-#                                                           by = c("state_merge", "district_merge"))
-#     
-#     pollution_merged <- rbind(pollution_merged, village_wind)
-#     
-#     print(paste0(y, "-", m))
-#   }
-# }
-# write_csv(pollution_merged, paste0("data/clean/pm25/nss_merge.csv"))
 
 
 

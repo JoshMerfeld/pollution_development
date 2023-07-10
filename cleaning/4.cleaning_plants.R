@@ -49,6 +49,7 @@ plants$year_retired <- as.numeric(plants$year_retired)
 
 # Add villages
 villages <- read_sf("data/spatial/shapefiles/village.shp")
+villages$shrid <- paste(villages$pc11_s_id, villages$pc11_tv_id, sep = "-")
 
 # Also want to transform both to a better crs for calculating distances
 plants <- st_transform(plants, "EPSG:24378")
@@ -72,7 +73,7 @@ centroids_villages$pc11_d_id <- NA
 centroids_villages$pc11_sd_id <- NA
 centroids_villages$pc11_tv_id <- NA
 centroids_villages$tv_name <- NA
-centroids_villages[,2] <- as_tibble(villages) %>% dplyr::select(shrid)
+centroids_villages$shrid <- villages$shrid
 
 # Now let's figure out which are within the 30km buffer
 centroids_villages_30km <- st_intersects(centroids_villages, buffer30km)
@@ -98,7 +99,6 @@ st_write(centroids_villages_100km, "data/spatial/centroids_villages_100km",
 
 
 ####### Loaded villages and plants into QGIS to do distances (much faster than doing it here)
-# Load distance matrix (takes a while; this csv is >4GB)
 dist_matrix <- read.csv(paste0("data/clean/wind_ntl/distances.csv"))
 
 # Only keep the rows where distance is within 30km
@@ -106,7 +106,7 @@ dist_matrix <- as_tibble(dist_matrix[dist_matrix$Distance<=30000,])
 colnames(dist_matrix) <- c("shrid", "plant_id", "distance")
 
 # Merge in coordinates
-centroids_villages_30km <- centroids_villages_30km %>% select(shrid)
+centroids_villages_30km <- centroids_villages_30km %>% dplyr::select(shrid)
 centroids_villages_30km$x_vil <- NA
 centroids_villages_30km$y_vil <- NA
 for (row in 1:nrow(centroids_villages_30km)){
@@ -124,6 +124,10 @@ for (row in 1:nrow(plants)){
 }
 # And join
 merging <- as_tibble(centroids_villages_30km) %>% dplyr::select(shrid, x_vil, y_vil)
+merging <- merging %>%
+            group_by(shrid) %>%
+            filter(row_number()==1) %>%
+            ungroup()
 dist_matrix <- dist_matrix %>% left_join(
                                          merging,
                                          by = "shrid"
@@ -186,6 +190,8 @@ rad_deg <- function(rad){
 # Date
 date <- as.Date("1990-01-01", "%Y-%m-%d")
 final_date <- as.Date("2015-03-10", "%Y-%m-%d")
+# date <- as.Date("2014-01-01", "%Y-%m-%d")
+# final_date <- as.Date("2017-12-31", "%Y-%m-%d")
 
 wind_last_week <- dist_matrix %>% dplyr::select("shrid", "plant_id", "angle", "angle_original", "year_built", "year_retired")
 wind_last_week <- wind_last_week %>% group_by(shrid) %>% filter(row_number()==1) %>% ungroup()

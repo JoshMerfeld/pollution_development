@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.3.20)  13 APR 2023 09:21
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.3.20)  10 JUL 2023 15:34
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -84,7 +84,17 @@ Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 (Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
-)) (/usr/local/texlive/2022/texmf-dist/tex/latex/lm/lmodern.sty
+)) (/usr/local/texlive/2022/texmf-dist/tex/generic/iftex/iftex.sty
+Package: iftex 2022/02/03 v1.0f TeX engine tests
+) (/usr/local/texlive/2022/texmf-dist/tex/latex/base/fontenc.sty
+Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
+) (/usr/local/texlive/2022/texmf-dist/tex/latex/base/inputenc.sty
+Package: inputenc 2021/02/14 v1.3d Input encoding file
+\inpenc@prehook=\toks21
+\inpenc@posthook=\toks22
+) (/usr/local/texlive/2022/texmf-dist/tex/latex/base/textcomp.sty
+Package: textcomp 2020/02/02 v2.0n Standard LaTeX package
+) (/usr/local/texlive/2022/texmf-dist/tex/latex/lm/lmodern.sty
 Package: lmodern 2015/05/01 v1.6.1 Latin Modern Fonts
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  OT1/cmr/m/n --> OT1/lmr/m/n on input line 22.
@@ -118,20 +128,6 @@ LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
 (Font)                  OT1/cmr/bx/it --> OT1/lmr/bx/it on input line 37.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
 (Font)                  OT1/cmtt/m/n --> OT1/lmtt/m/n on input line 38.
-) (/usr/local/texlive/2022/texmf-dist/tex/generic/iftex/iftex.sty
-Package: iftex 2022/02/03 v1.0f TeX engine tests
-) (/usr/local/texlive/2022/texmf-dist/tex/latex/base/fontenc.sty
-Package: fontenc 2021/04/29 v2.0v Standard LaTeX package
-LaTeX Font Info:    Trying to load font information for T1+lmr on input line 11
-2.
-(/usr/local/texlive/2022/texmf-dist/tex/latex/lm/t1lmr.fd
-File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
-)) (/usr/local/texlive/2022/texmf-dist/tex/latex/base/inputenc.sty
-Package: inputenc 2021/02/14 v1.3d Input encoding file
-\inpenc@prehook=\toks21
-\inpenc@posthook=\toks22
-) (/usr/local/texlive/2022/texmf-dist/tex/latex/base/textcomp.sty
-Package: textcomp 2020/02/02 v2.0n Standard LaTeX package
 ) (/usr/local/texlive/2022/texmf-dist/tex/latex/upquote/upquote.sty
 Package: upquote 2012/04/19 v1.3 upright-quote and grave-accent glyphs in verba
 tim
@@ -597,8 +593,12 @@ File: bkm-pdftex.def 2020-11-06 v1.29 bookmark driver for pdfTeX (HO)
 Package: xurl 2022/01/09 v 0.10 modify URL breaks
 )
 Package translations Info: No language package found. I am going to use `englis
-h' as default language. on input line 129.
-(./draft.aux
+h' as default language. on input line 132.
+LaTeX Font Info:    Trying to load font information for T1+lmr on input line 13
+2.
+(/usr/local/texlive/2022/texmf-dist/tex/latex/lm/t1lmr.fd
+File: t1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+) (./draft.aux
 
 LaTeX Warning: Label `data' multiply defined.
 
@@ -611,36 +611,36 @@ LaTeX Warning: Label `conclusion' multiply defined.
 )
 \openout1 = `draft.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 129.
-LaTeX Font Info:    ... okay on input line 129.
-LaTeX Info: Redefining \microtypecontext on input line 129.
-Package microtype Info: Applying patch `item' on input line 129.
-Package microtype Info: Applying patch `toc' on input line 129.
-Package microtype Info: Applying patch `eqnum' on input line 129.
-Package microtype Info: Applying patch `footnote' on input line 129.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 132.
+LaTeX Font Info:    ... okay on input line 132.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 132.
+LaTeX Font Info:    ... okay on input line 132.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 132.
+LaTeX Font Info:    ... okay on input line 132.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 132.
+LaTeX Font Info:    ... okay on input line 132.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 132.
+LaTeX Font Info:    ... okay on input line 132.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 132.
+LaTeX Font Info:    ... okay on input line 132.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 132.
+LaTeX Font Info:    ... okay on input line 132.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 132.
+LaTeX Font Info:    ... okay on input line 132.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 132.
+LaTeX Font Info:    ... okay on input line 132.
+LaTeX Info: Redefining \microtypecontext on input line 132.
+Package microtype Info: Applying patch `item' on input line 132.
+Package microtype Info: Applying patch `toc' on input line 132.
+Package microtype Info: Applying patch `eqnum' on input line 132.
+Package microtype Info: Applying patch `footnote' on input line 132.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
 Package microtype Info: Automatic font expansion enabled (level 2),
 (microtype)             stretch: 20, shrink: 20, step: 1, non-selected.
 Package microtype Info: Using default expansion set `alltext-nott'.
-LaTeX Info: Redefining \showhyphens on input line 129.
+LaTeX Info: Redefining \showhyphens on input line 132.
 Package microtype Info: No adjustment of tracking.
 Package microtype Info: No adjustment of interword spacing.
 Package microtype Info: No adjustment of character kerning.
@@ -717,8 +717,8 @@ File: translations-basic-dictionary-english.trsl (english translation file `tra
 nslations-basic-dictionary')
 )
 Package translations Info: loading dictionary `translations-basic-dictionary' f
-or `english'. on input line 129.
-Package hyperref Info: Link coloring OFF on input line 129.
+or `english'. on input line 132.
+Package hyperref Info: Link coloring OFF on input line 132.
 (/usr/local/texlive/2022/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2021-04-02 v2.47 Cross-referencing by name of section
 (/usr/local/texlive/2022/texmf-dist/tex/latex/refcount/refcount.sty
@@ -730,43 +730,43 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 )
 \c@section@level=\count337
 )
-LaTeX Info: Redefining \ref on input line 129.
-LaTeX Info: Redefining \pageref on input line 129.
-LaTeX Info: Redefining \nameref on input line 129.
+LaTeX Info: Redefining \ref on input line 132.
+LaTeX Info: Redefining \pageref on input line 132.
+LaTeX Info: Redefining \nameref on input line 132.
 LaTeX Font Info:    Trying to load font information for OT1+lmr on input line 1
-31.
+34.
 (/usr/local/texlive/2022/texmf-dist/tex/latex/lm/ot1lmr.fd
 File: ot1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OML+lmm on input line 1
-31.
+34.
 (/usr/local/texlive/2022/texmf-dist/tex/latex/lm/omllmm.fd
 File: omllmm.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMS+lmsy on input line 
-131.
+134.
 (/usr/local/texlive/2022/texmf-dist/tex/latex/lm/omslmsy.fd
 File: omslmsy.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    Trying to load font information for OMX+lmex on input line 
-131.
+134.
 (/usr/local/texlive/2022/texmf-dist/tex/latex/lm/omxlmex.fd
 File: omxlmex.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <17.28> on input line 131.
+(Font)              <17.28> on input line 134.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <12> on input line 131.
+(Font)              <12> on input line 134.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 131.
-LaTeX Font Info:    Trying to load font information for U+msa on input line 131
+(Font)              <10> on input line 134.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 134
 .
 (/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 ) (/usr/local/texlive/2022/texmf-dist/tex/latex/microtype/mt-msa.cfg
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 131
+LaTeX Font Info:    Trying to load font information for U+msb on input line 134
 .
 (/usr/local/texlive/2022/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -774,107 +774,96 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
 LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 1
-31.
+34.
 (/usr/local/texlive/2022/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 131.
+(Font)              <8> on input line 134.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 131.
+(Font)              <6> on input line 134.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 131.
+(Font)              <5> on input line 134.
 [1
 
 {/usr/local/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 144.
-[2] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13]
-<draft_files/figure-latex/randomplot-1.pdf, id=153, 459.7175pt x 566.115pt>
-File: draft_files/figure-latex/randomplot-1.pdf Graphic file (type pdf)
-<use draft_files/figure-latex/randomplot-1.pdf>
-Package pdftex.def Info: draft_files/figure-latex/randomplot-1.pdf  used on inp
-ut line 385.
-(pdftex.def)             Requested size: 459.74442pt x 566.14816pt.
-[14] [15 <./draft_files/figure-latex/randomplot-1.pdf>] [16] [17] [18] [19] [20
-] [21] [22] [23] [24]
+(Font)              <7> on input line 147.
+[2] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13] [14] [15] [16] [17]
+<draft_files/figure-latex/crops-1.png, id=175, 453.695pt x 348.30125pt>
+File: draft_files/figure-latex/crops-1.png Graphic file (type png)
+<use draft_files/figure-latex/crops-1.png>
+Package pdftex.def Info: draft_files/figure-latex/crops-1.png  used on input li
+ne 489.
+(pdftex.def)             Requested size: 453.6939pt x 348.3004pt.
+[18 <./draft_files/figure-latex/crops-1.png>] [19] [20] [21] [22] [23]
 pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has
  been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.776 \caption{\label{tab:data}Data sources}
-                                             [25]
-<draft_files/figure-latex/plants-1.pdf, id=300, 449.68pt x 239.89626pt>
-File: draft_files/figure-latex/plants-1.pdf Graphic file (type pdf)
-<use draft_files/figure-latex/plants-1.pdf>
-Package pdftex.def Info: draft_files/figure-latex/plants-1.pdf  used on input l
-ine 802.
-(pdftex.def)             Requested size: 449.68575pt x 239.8993pt.
+l.727 \caption{\label{tab:data}Data sources}
+                                             [24]
+<draft_files/figure-latex/plants-1.png, id=269, 449.68pt x 238.8925pt>
+File: draft_files/figure-latex/plants-1.png Graphic file (type png)
+<use draft_files/figure-latex/plants-1.png>
+Package pdftex.def Info: draft_files/figure-latex/plants-1.png  used on input l
+ine 753.
+(pdftex.def)             Requested size: 449.6789pt x 238.8919pt.
 
 pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) ha
 s been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.802 ...]{Coal plants in India from 1990 to 2010}
+l.753 ...]{Coal plants in India from 1990 to 2010}
                                                   \label{fig:plants}\floatfo...
-[26 <./draft_files/figure-latex/plants-1.pdf>]
-<draft_files/figure-latex/windexample-1.pdf, id=316, 286.06876pt x 556.0775pt>
-File: draft_files/figure-latex/windexample-1.pdf Graphic file (type pdf)
-<use draft_files/figure-latex/windexample-1.pdf>
-Package pdftex.def Info: draft_files/figure-latex/windexample-1.pdf  used on in
-put line 809.
+[25 <./draft_files/figure-latex/plants-1.png>]
+<draft_files/figure-latex/windexample-1.png, id=275, 286.06876pt x 556.0775pt>
+File: draft_files/figure-latex/windexample-1.png Graphic file (type png)
+<use draft_files/figure-latex/windexample-1.png>
+Package pdftex.def Info: draft_files/figure-latex/windexample-1.png  used on in
+put line 760.
 (pdftex.def)             Requested size: 286.07242pt x 556.08463pt.
-[27 <./draft_files/figure-latex/windexample-1.pdf>]
+[26 <./draft_files/figure-latex/windexample-1.png>]
 pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has
  been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.817 ...le}Wind direction and particulate matter}
-                                                   [28]
-<draft_files/figure-latex/randomplotleads-1.pdf, id=340, 453.695pt x 566.115pt>
-
-File: draft_files/figure-latex/randomplotleads-1.pdf Graphic file (type pdf)
-<use draft_files/figure-latex/randomplotleads-1.pdf>
-Package pdftex.def Info: draft_files/figure-latex/randomplotleads-1.pdf  used o
-n input line 846.
-(pdftex.def)             Requested size: 453.6939pt x 566.11362pt.
-[29 <./draft_files/figure-latex/randomplotleads-1.pdf>]
-<draft_files/figure-latex/laborplot-1.pdf, id=356, 459.7175pt x 313.17pt>
-File: draft_files/figure-latex/laborplot-1.pdf Graphic file (type pdf)
-<use draft_files/figure-latex/laborplot-1.pdf>
-Package pdftex.def Info: draft_files/figure-latex/laborplot-1.pdf  used on inpu
-t line 853.
-(pdftex.def)             Requested size: 459.7304pt x 313.17877pt.
-[30
+l.768 ...ge}Wind direction and particulate matter}
+                                                   [27]
+<draft_files/figure-latex/randomplot-1.png, id=285, 459.7175pt x 278.03876pt>
+File: draft_files/figure-latex/randomplot-1.png Graphic file (type png)
+<use draft_files/figure-latex/randomplot-1.png>
+Package pdftex.def Info: draft_files/figure-latex/randomplot-1.png  used on inp
+ut line 798.
+(pdftex.def)             Requested size: 459.72337pt x 278.04231pt.
+[28
 
 
-
- <./draft_files/figure-latex/laborplot-1.pdf>]
-<draft_files/figure-latex/monthplot-1.pdf, id=372, 459.7175pt x 313.17pt>
-File: draft_files/figure-latex/monthplot-1.pdf Graphic file (type pdf)
-<use draft_files/figure-latex/monthplot-1.pdf>
-Package pdftex.def Info: draft_files/figure-latex/monthplot-1.pdf  used on inpu
-t line 860.
-(pdftex.def)             Requested size: 459.7304pt x 313.17877pt.
-[31 <./draft_files/figure-latex/monthplot-1.pdf>]
+ <./draft_files/figure-latex/randomplot-1.png>]
 pdfTeX warning (ext4): destination with the same identifier (name{table.3}) has
  been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.868 ... exposure to pollution during the season}
-                                                   [32] (./draft.aux)
+l.809 ... exposure to pollution during the season}
+                                                   [29]
+pdfTeX warning (ext4): destination with the same identifier (name{table.4}) has
+ been already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.846 ...ultural productivity by most common crop}
+                                                   [30] (./draft.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 20796 strings out of 478268
- 388324 string characters out of 5846347
- 711398 words of memory out of 5000000
- 38317 multiletter control sequences out of 15000+600000
- 552802 words of font info for 188 fonts, out of 8000000 for 9000
+ 20771 strings out of 478268
+ 387586 string characters out of 5846347
+ 697273 words of memory out of 5000000
+ 38308 multiletter control sequences out of 15000+600000
+ 553229 words of font info for 185 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 74i,13n,79p,1992b,786s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 74i,13n,79p,1498b,786s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/
 texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/20
 22/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2022/texmf-dist/
@@ -893,10 +882,10 @@ ocal/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive
 dist/fonts/type1/public/lm/lmr9.pfb></usr/local/texlive/2022/texmf-dist/fonts/t
 ype1/public/lm/lmri10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/publi
 c/lm/lmsy10.pfb>
-Output written on draft.pdf (32 pages, 5540605 bytes).
+Output written on draft.pdf (30 pages, 532126 bytes).
 PDF statistics:
- 543 PDF objects out of 1000 (max. 8388607)
- 443 compressed objects within 5 object streams
- 137 named destinations out of 1000 (max. 500000)
- 49287 words of extra memory for PDF output out of 51595 (max. 10000000)
+ 444 PDF objects out of 1000 (max. 8388607)
+ 367 compressed objects within 4 object streams
+ 129 named destinations out of 1000 (max. 500000)
+ 49277 words of extra memory for PDF output out of 51595 (max. 10000000)
 

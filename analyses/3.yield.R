@@ -14,10 +14,10 @@ library(parallel)
 
 
 # Sets wd to folder this script is in so we can create relative paths instead of absolute paths
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+# setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 # We want to get the wd up to the main folder
 # Need to go up two levels
-setwd("../../")
+setwd("../")
 # Double check
 getwd()    # check
 
@@ -30,10 +30,11 @@ pollution <- read_csv(paste0("data/clean/pm25/ag_merge.csv"))
 df <- df %>% 
         left_join(pollution, by = c("shrid", "year", "season"))
 rm(pollution)
-df <- df %>% group_by(shrid, season) %>% 
+df <- df %>% group_by(shrid, season) %>%
               mutate(
                      yield = mean,
-                     rain_z = (log(rain_total) - mean(log(rain_total))/sd(log(rain_total))),
+                     rain_z = (log(rain_total + 1) - mean(log(rain_total + 1)))/sd(log(rain_total + 1)),
+                     rain_z2 = ((rain_total) - mean((rain_total)))/sd((rain_total)),
                      wind_abs_dev = abs(days_sums - mean(days_sums)),
                      pm25_abs_dev = abs(pm25 - mean(pm25)),
                      wind = days_sums/10,
@@ -57,11 +58,21 @@ df <- df %>% group_by(shrid, season) %>%
                      temp_m3 = (tmax_m3 + tmin_m3)/20,
                      temp_m4 = (tmax_m4 + tmin_m4)/20,
                      temp_m5 = (tmax_m5 + tmin_m5)/20,
-                     rain1_z = (log(rain_m1) - mean(log(rain_m1))/sd(log(rain_m1))),
-                     rain2_z = (log(rain_m2 + rain_m1) - mean(log(rain_m2 + rain_m1))/sd(log(rain_m2 + rain_m1))),
-                     rain3_z = (log(rain_m3 + rain_m1 + rain_m2) - mean(log(rain_m3 + rain_m1 + rain_m2))/sd(log(rain_m3 + rain_m1 + rain_m2))),
-                     rain4_z = (log(rain_m4 + rain_m1 + rain_m2 + rain_m3) - mean(log(rain_m4 + rain_m1 + rain_m2 + rain_m3))/sd(log(rain_m4 + rain_m1 + rain_m2 + rain_m3))),
-                     rain5_z = (log(rain_m5 + rain_m1 + rain_m2 + rain_m3 + rain_m4) - mean(log(rain_m5 + rain_m1 + rain_m2 + rain_m3 + rain_m4))/sd(log(rain_m5 + rain_m1 + rain_m2 + rain_m3 + rain_m4)))
+                     rain1_z = (log(rain_m1 + 1) - mean(log(rain_m1 + 1))/sd(log(rain_m1 + 1))),
+                     rain2_z = (log(rain_m2 + 1 + rain_m1) - mean(log(rain_m2 + 1 + rain_m1))/sd(log(rain_m2 + 1 + rain_m1))),
+                     rain3_z = (log(rain_m3 + 1 + rain_m1 + rain_m2) - mean(log(rain_m3 + 1 + rain_m1 + rain_m2))/sd(log(rain_m3 + 1 + rain_m1 + rain_m2))),
+                     rain4_z = (log(rain_m4 + 1 + rain_m1 + rain_m2 + rain_m3) - mean(log(rain_m4 + 1 + rain_m1 + rain_m2 + rain_m3))/sd(log(rain_m4 + 1 + rain_m1 + rain_m2 + rain_m3))),
+                     rain5_z = (log(rain_m5 + 1 + rain_m1 + rain_m2 + rain_m3 + rain_m4) - mean(log(rain_m5 + 1 + rain_m1 + rain_m2 + rain_m3 + rain_m4))/sd(log(rain_m5 + 1 + rain_m1 + rain_m2 + rain_m3 + rain_m4))), # nolint: line_length_linter.
+                     rain1_zbin0 = as.numeric(rain1_z>-1 & rain1_z<1),
+                     rain1_zbin1 = as.numeric(rain1_z>=1),
+                     rain2_zbin0 = as.numeric(rain2_z>-1 & rain2_z<1),
+                     rain2_zbin1 = as.numeric(rain2_z>=1),
+                     rain3_zbin0 = as.numeric(rain3_z>-1 & rain3_z<1),
+                     rain3_zbin1 = as.numeric(rain3_z>=1),
+                     rain4_zbin0 = as.numeric(rain4_z>-1 & rain4_z<1),
+                     rain4_zbin1 = as.numeric(rain4_z>=1),
+                     rain5_zbin0 = as.numeric(rain5_z>-1 & rain5_z<1),
+                     rain5_zbin1 = as.numeric(rain5_z>=1)
                      )
 
 
@@ -137,11 +148,31 @@ summary(df$wind_abs_dev)
 summary(exp(df$pm25))
 summary(df$pm25_abs_dev)
 
+crops <- read_csv(paste0("data/clean/ag_productivity/crop_area.csv"))
+df <- df %>%
+      left_join(crops, by = c("shrid"))
+
+
+
+
+################################################################################################################################################
+################################################################################################################################################
+################################################################################################################################################
+
+
 
 
 
 setFixest_fml(..ctrl1 = ~ rain_z + temp_mean)
 setFixest_fml(..ctrl2 = ~ rain_z + temp_mean + rain_z^2 + temp_mean^2 + rain_z*temp_mean)
+setFixest_fml(..ctrl3 = ~ rain1_zbin0 + rain1_zbin1 + rain2_zbin0 + rain2_zbin1 + rain3_zbin0 + rain3_zbin1 +
+                rain4_zbin0 + rain4_zbin1 + rain5_zbin0 + rain5_zbin1 +
+                temp_mean + 
+                rain1_zbin0*temp_mean + rain1_zbin1*temp_mean + rain2_zbin0*temp_mean + rain2_zbin1*temp_mean + rain3_zbin0*temp_mean + rain3_zbin1*temp_mean +
+                rain4_zbin0*temp_mean + rain4_zbin1*temp_mean + rain5_zbin0*temp_mean + rain5_zbin1*temp_mean +
+                temp_mean^2 + 
+                rain1_zbin0*temp_mean^2 + rain1_zbin1*temp_mean^2 + rain2_zbin0*temp_mean^2 + rain2_zbin1*temp_mean^2 + rain3_zbin0*temp_mean^2 + rain3_zbin1*temp_mean^2 +
+                rain4_zbin0*temp_mean^2 + rain4_zbin1*temp_mean^2 + rain5_zbin0*temp_mean^2 + rain5_zbin1*temp_mean^2)
 
 
 
@@ -152,7 +183,8 @@ setFixest_fml(..ctrl2 = ~ rain_z + temp_mean + rain_z^2 + temp_mean^2 + rain_z*t
 
 yield1 <- feols(log(yield) ~ wind | shrid + year, data = df, cluster = c("shrid"))
 yield2 <- feols(log(yield) ~ wind + ..ctrl1 | shrid + year, data = df, cluster = c("shrid"))
-yield3 <- feols(log(yield) ~ wind + ..ctrl1 + ..ctrl2 | shrid + year, data = df, cluster = c("shrid"))
+yield3 <- feols(log(yield) ~ wind + ..ctrl2 | shrid + year, data = df, cluster = c("shrid"))
+yield4 <- feols(log(yield) ~ wind + ..ctrl3 | shrid + year, data = df, cluster = c("shrid"))
 
 yieldtable <- etable(
                      yield1, yield2, yield3,
@@ -177,159 +209,6 @@ saveRDS(yieldtable, "pollution_development/draft/tables/yield1reducedform.rds")
 
 
 
-## placebo test
-wind_year <- df %>%
-              dplyr::select(wind, year) %>%
-              arrange(year) %>%
-              mutate(row = row_number()) %>% # row number in entire thing
-              group_by(year) %>%
-              mutate(
-                     row_min = min(row), # min row number (in entire column)
-                     row_max = max(row) # max
-                     ) %>%
-              ungroup() %>%
-              arrange(year)
-df_placebo <- df %>%
-              dplyr::select(-wind) %>%
-              arrange(year)
-
-samplefrom <- cbind(wind_year$row_min, wind_year$row_max)
-
-
-# create function to sample
-sample_pre_fun <- function(a) {
-  sample(x = min(a):max(a), size = 1, replace = T)
-}
-
-# now wrap that function in apply
-sample_fun <- function(a) {
-  sample_vec <- apply(a, 1, sample_pre_fun)
-}
-
-f <- function(i) {
-  # create vector with random sampling
-  temp_sample <- sample_fun(samplefrom)
-  # take those rows
-  wind_all <- wind_year[temp_sample,]
-  # sort by year, district
-  wind_all <- wind_all %>%
-                arrange(year)
-  # sort placebo by year and district
-  df_placebo <- df_placebo %>%
-                  arrange(year)
-  # should be in same order, so add wind column
-  temp <- cbind(df_placebo, wind_all %>% dplyr::select(wind))
-  # get coefficient
-  coefs <- feols(log(yield) ~ wind + ..ctrl1 + ..ctrl2 | shrid + year, data = temp, cluster = c("shrid"))
-  # return
-  return(coefs$coeftable[1,1])
-}
-RNGkind("L'Ecuyer-CMRG")
-set.seed(2430986) #resetting seed just to make sure this works correctly when using parallel
-coef_vec <- mclapply(1:1000, f, mc.set.seed = TRUE)
-coef_vec <- as_vector(coef_vec)
-
-
-
-# Also get distribution if we resample wind from WITHIN DISTRICTS ONLY
-## placebo test
-wind_year <- df %>%
-              dplyr::select(wind, distfe, year) %>%
-              arrange(year, distfe) %>%
-              mutate(row = row_number()) %>% # row number in entire thing
-              group_by(year, distfe) %>%
-              mutate(
-                     row_min = min(row), # min row number (in entire column)
-                     row_max = max(row), # max
-                     num = max(row_number()) # row number WITHIN 
-                     ) %>%
-              ungroup() %>%
-              arrange(year, distfe)
-df_placebo <- df %>%
-              dplyr::select(-wind) %>%
-              arrange(year, distfe)
-
-samplefrom <- cbind(wind_year$row_min, wind_year$row_max)
-
-f <- function(i) {
-  # create vector with random sampling
-  temp_sample <- sample_fun(samplefrom)
-  # take those rows
-  wind_all <- wind_year[temp_sample,]
-  # sort by year, district
-  wind_all <- wind_all %>%
-                arrange(year, distfe)
-  # sort placebo by year and district
-  df_placebo <- df_placebo %>%
-                  arrange(year, distfe)
-  # should be in same order, so add wind column
-  temp <- cbind(df_placebo, wind_all %>% dplyr::select(wind, pm25))
-  # get coefficient
-  coefs <- feols(log(yield) ~ wind + ..ctrl1 + ..ctrl2 | shrid + year, data = temp, cluster = c("shrid"))
-  # return
-  return(coefs$coeftable[1,1])
-}
-
-# use mclapply to take advantage of the cores on this computer
-# should take around an hour
-set.seed(23847906) #resetting seed just to make sure this works correctly when using parallel
-coefs_distfe <- mclapply(1:1000, f, mc.set.seed = TRUE)
-coefs_distfe <- as_vector(coefs_distfe)
-
-
-
-
-# get true value (with df)
-true_value <- feols(log(yield) ~ wind + ..ctrl1 + ..ctrl2 | shrid + year, data = df, cluster = c("shrid"))
-true_value <- true_value$coeftable[1,1]
-
-
-
-
-pal <- viridis(4)
-colors <- c(paste0(pal[1]), paste0(pal[2]))
-labels <- c("all", "within district")
-
-# plot
-gg1 <- ggplot() + 
-        geom_density(aes(x = coef_vec, fill = "all"), alpha = 0.5) +
-        geom_density(aes(x = coefs_distfe, fill = "within district"), alpha = 0.5) +
-        scale_fill_manual(
-                          name = "randomization:",
-                          values = colors,
-                          labels = labels
-                          ) +
-        theme_minimal() +
-        xlab("distribution of coefficients")
-
-colors <- c(paste0(pal[3]))
-labels <- c("actual")
-
-gg1 <- gg1 + 
-        geom_vline(aes(xintercept = true_value, color = "actual")) +
-        scale_color_manual(
-                          name = "",
-                          values = colors,
-                          labels = labels
-                          )
-saveRDS(gg1, "pollution_development/draft/tables/randomization.rds")
-
-
-# 
-# # get percentile
-# coefs_distfe <- sort(coefs_distfe)
-# row <- 1
-# while (row<=length(coefs_distfe)){
-#   if (true_value<coefs_distfe[row]){
-#     row <- row + 1
-#   }else{
-#     break
-#   }
-# }
-# row # larger than every single randomized value!
-
-
-
 
 
 
@@ -337,10 +216,19 @@ saveRDS(gg1, "pollution_development/draft/tables/randomization.rds")
 
 setFixest_fml(..ctrl1 = ~ rain_z + temp_mean)
 setFixest_fml(..ctrl2 = ~ rain_z + temp_mean + rain_z^2 + temp_mean^2 + rain_z*temp_mean)
+setFixest_fml(..ctrl3 = ~ rain1_zbin0 + rain1_zbin1 + rain2_zbin0 + rain2_zbin1 + rain3_zbin0 + rain3_zbin1 +
+                rain4_zbin0 + rain4_zbin1 + rain5_zbin0 + rain5_zbin1 +
+                temp_mean + 
+                rain1_zbin0*temp_mean + rain1_zbin1*temp_mean + rain2_zbin0*temp_mean + rain2_zbin1*temp_mean + rain3_zbin0*temp_mean + rain3_zbin1*temp_mean +
+                rain4_zbin0*temp_mean + rain4_zbin1*temp_mean + rain5_zbin0*temp_mean + rain5_zbin1*temp_mean +
+                temp_mean^2 + 
+                rain1_zbin0*temp_mean^2 + rain1_zbin1*temp_mean^2 + rain2_zbin0*temp_mean^2 + rain2_zbin1*temp_mean^2 + rain3_zbin0*temp_mean^2 + rain3_zbin1*temp_mean^2 +
+                rain4_zbin0*temp_mean^2 + rain4_zbin1*temp_mean^2 + rain5_zbin0*temp_mean^2 + rain5_zbin1*temp_mean^2)
 
 yield1 <- feols(log(yield) ~ pm25 | shrid + year, data = df, cluster = c("shrid"))
 yield2 <- feols(log(yield) ~ pm25 + ..ctrl1 | shrid + year, data = df, cluster = c("shrid"))
-yield3 <- feols(log(yield) ~ pm25 + ..ctrl1 + ..ctrl2 | shrid + year, data = df, cluster = c("shrid"))
+yield3 <- feols(log(yield) ~ pm25 + ..ctrl2 | shrid + year, data = df, cluster = c("shrid"))
+yield4 <- feols(log(yield) ~ pm25 + ..ctrl3 | shrid + year, data = df, cluster = c("shrid"))
 
 yieldtable <- etable(
                       yield1, yield2, yield3,
@@ -374,6 +262,14 @@ saveRDS(yieldtable, "pollution_development/draft/tables/yield2naive.rds")
 
 setFixest_fml(..ctrl1 = ~ rain_z + temp_mean)
 setFixest_fml(..ctrl2 = ~ rain_z + temp_mean + rain_z^2 + temp_mean^2 + rain_z*temp_mean)
+setFixest_fml(..ctrl3 = ~ rain1_zbin0 + rain1_zbin1 + rain2_zbin0 + rain2_zbin1 + rain3_zbin0 + rain3_zbin1 +
+                rain4_zbin0 + rain4_zbin1 + rain5_zbin0 + rain5_zbin1 +
+                temp_mean + 
+                rain1_zbin0*temp_mean + rain1_zbin1*temp_mean + rain2_zbin0*temp_mean + rain2_zbin1*temp_mean + rain3_zbin0*temp_mean + rain3_zbin1*temp_mean +
+                rain4_zbin0*temp_mean + rain4_zbin1*temp_mean + rain5_zbin0*temp_mean + rain5_zbin1*temp_mean +
+                temp_mean^2 + 
+                rain1_zbin0*temp_mean^2 + rain1_zbin1*temp_mean^2 + rain2_zbin0*temp_mean^2 + rain2_zbin1*temp_mean^2 + rain3_zbin0*temp_mean^2 + rain3_zbin1*temp_mean^2 +
+                rain4_zbin0*temp_mean^2 + rain4_zbin1*temp_mean^2 + rain5_zbin0*temp_mean^2 + rain5_zbin1*temp_mean^2)
 
 yield1 <- feols(log(yield) ~ 1 | shrid + year | pm25 ~ wind, 
                 data = df, 
@@ -381,12 +277,17 @@ yield1 <- feols(log(yield) ~ 1 | shrid + year | pm25 ~ wind,
 yield2 <- feols(log(yield) ~ ..ctrl1 | shrid + year | pm25 ~ wind, 
                 data = df, 
                 cluster = c("shrid"))
-yield3 <- feols(log(yield) ~ ..ctrl1 + ..ctrl2 | shrid + year | pm25 ~ wind, 
+yield3 <- feols(log(yield) ~ ..ctrl2 | shrid + year | pm25 ~ wind, 
+                data = df, 
+                cluster = c("shrid"))
+yield4 <- feols(log(yield) ~ ..ctrl3 | shrid + year | pm25 ~ wind, 
                 data = df, 
                 cluster = c("shrid"))
 
-yieldtable <- etable(
-                      yield1, yield2, yield3,
+
+yieldtable1 <- etable(
+                      yield1, yield2, yield3, yield4,
+                      stage = 1,
                       se.below = TRUE,
                       depvar = FALSE,
                       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
@@ -395,15 +296,42 @@ yieldtable <- etable(
                       fitstat = c("ivwald", "n"),
                       coefstat = "se",
                       group = list(controls = "rain_z",
-                                   conrols_expanded = "rain_z square"),
+                                   conrols_expanded = "rain_z square",
+                                   conrols_expanded2 = "rain1_zbin0"),
+                      keep = c("wind")
+                    )
+# rename
+yieldtable1 <- yieldtable1[-c(9:10),]
+yieldtable1[6,] <- " "
+yieldtable1 <- as.matrix(yieldtable1)
+rownames(yieldtable1) <- c("wind", "",
+                          "weather", "weather (expanded)", "weather (expanded, bins)",
+                          "fixed effects:", "village", "year",
+                          "F", 
+                          "observations")
+saveRDS(yieldtable1, "pollution_development/draft/tables/yield3ivmain_firststage.rds")
+
+
+yieldtable <- etable(
+                      yield1, yield2, yield3, yield4,
+                      se.below = TRUE,
+                      depvar = FALSE,
+                      signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+                      digits = "r3",
+                      digits.stats = "r0",
+                      fitstat = c("ivwald", "n"),
+                      coefstat = "se",
+                      group = list(controls = "rain_z",
+                                   conrols_expanded = "rain_z square",
+                                   conrols_expanded2 = "rain1_zbin0"),
                       keep = c("pm25")
                     )
 # rename
-yieldtable <- yieldtable[-c(8:9),]
-yieldtable[5,] <- " "
+yieldtable <- yieldtable[-c(9:10),]
+yieldtable[6,] <- " "
 yieldtable <- as.matrix(yieldtable)
 rownames(yieldtable) <- c("particulate matter", "(log PM 2.5)",
-                          "weather", "weather (expanded)",
+                          "weather", "weather (expanded)", "weather (expanded, bins)",
                           "fixed effects:", "village", "year",
                           "F", 
                           "observations")
@@ -413,16 +341,158 @@ saveRDS(yieldtable, "pollution_development/draft/tables/yield3ivmain.rds")
 
 
 
+
+## placebo test
+wind_year <- df %>%
+  dplyr::select(wind, pm25, year, shrid) %>%
+  arrange(year) %>%
+  mutate(row = row_number()) %>% # row number in entire thing
+  group_by(year) %>%
+  mutate(
+    row_min = min(row), # min row number (in entire column)
+    row_max = max(row) # max
+  ) %>%
+  ungroup()
+df_placebo <- df %>%
+  dplyr::select(-c(wind, pm25))
+
+samplefrom <- cbind(wind_year$row_min, wind_year$row_max)
+
+
+# create function to sample
+sample_pre_fun <- function(a) {
+  sample(x = min(a):max(a), size = 1, replace = T)
+}
+
+# now wrap that function in apply
+sample_fun <- function(a) {
+  sample_vec <- apply(a, 1, sample_pre_fun)
+}
+
+f <- function(i) {
+  # create vector with random sampling
+  temp_sample <- sample_fun(samplefrom)
+  # take those rows
+  wind_all <- wind_year[temp_sample,]
+  # sort by year, district
+  wind_all <- wind_all %>%
+    arrange(year, shrid)
+  # sort placebo by year and district
+  df_placebo <- df_placebo %>%
+    arrange(year, shrid)
+  # should be in same order, so add wind column
+  temp <- cbind(df_placebo, wind_all %>% dplyr::select(wind, pm25))
+  # get coefficient
+  coefs <- feols(log(yield) ~ ..ctrl3 | shrid + year | pm25 ~ wind, data = temp, cluster = c("shrid"))
+  # return
+  return(coefs$coeftable[1,1])
+}
+RNGkind("L'Ecuyer-CMRG")
+set.seed(2430986) #resetting seed just to make sure this works correctly when using parallel
+coef_vec <- mclapply(1:500, f, mc.set.seed = TRUE)
+coef_vec <- as_vector(coef_vec)
+
+
+
+# Also get distribution if we resample wind from WITHIN DISTRICTS ONLY
+## placebo test
+wind_year <- df %>%
+  dplyr::select(wind, pm25, distfe, year, shrid) %>%
+  arrange(year, distfe) %>%
+  mutate(row = row_number()) %>% # row number in entire thing
+  group_by(year, distfe) %>%
+  mutate(
+    row_min = min(row), # min row number
+    row_max = max(row) # max
+  ) %>%
+  ungroup()
+df_placebo <- df %>%
+  dplyr::select(-c(wind, pm25))
+
+samplefrom <- cbind(wind_year$row_min, wind_year$row_max)
+
+f <- function(i) {
+  # create vector with random sampling
+  temp_sample <- sample_fun(samplefrom)
+  # take those rows
+  wind_all <- wind_year[temp_sample,]
+  # sort by year, district, shrid
+  wind_all <- wind_all %>%
+    arrange(year, distfe, shrid)
+  # sort placebo by year and district
+  df_placebo <- df_placebo %>%
+    arrange(year, distfe, shrid)
+  # should be in same order, so add wind column
+  temp <- cbind(df_placebo, wind_all %>% dplyr::select(wind, pm25))
+  # get coefficient
+  coefs <- feols(log(yield) ~ ..ctrl2 | shrid + year | pm25 ~ wind,  data = temp, cluster = c("shrid"))
+  # return
+  return(coefs$coeftable[1,3])
+}
+
+# use mclapply to take advantage of the cores on this computer
+# should take around an hour
+set.seed(23847906) #resetting seed just to make sure this works correctly when using parallel
+coefs_distfe <- mclapply(1:500, f, mc.set.seed = TRUE)
+coefs_distfe <- as_vector(coefs_distfe)
+
+
+
+
+# get true value (with df)
+true_value <- feols(log(yield) ~ ..ctrl2 | shrid + year | pm25 ~ wind, 
+                    data = df, 
+                    cluster = c("shrid"))
+true_value <- true_value$coeftable[1,1]
+
+
+
+
+pal <- viridis(4)
+colors <- c(paste0(pal[1]), paste0(pal[2]))
+labels <- c("all")
+
+# plot
+gg1 <- ggplot() + 
+  geom_density(aes(x = coef_vec, fill = "all"), alpha = 0.5) +
+  #geom_density(aes(x = coefs_distfe, fill = "within district"), alpha = 0.5) +
+  scale_fill_manual(
+    name = "randomization:",
+    values = colors,
+    labels = labels
+  ) +
+  theme_minimal() +
+  xlab("distribution of coefficients")
+
+colors <- c(paste0(pal[3]))
+labels <- c("actual")
+
+gg1 <- gg1 + 
+  geom_vline(aes(xintercept = true_value, color = "actual")) +
+  scale_color_manual(
+    name = "",
+    values = colors,
+    labels = labels
+  )
+saveRDS(gg1, "pollution_development/draft/tables/randomization.rds")
+
+
+
+
+
+
+
 # leads
 df <- panel(df, ~ shrid + year)
 
 setFixest_fml(..ctrl1 = ~ f(rain_z, 0:1) + f(temp_mean, 0:1))
+setFixest_fml(..ctrl2 = ~ f(rain_z, 0:2) + f(temp_mean, 0:2))
 
 
-yield1 <- feols(log(yield) ~ 1 | shrid + year | f(pm25, 0:1) ~ f(wind, 0:1), 
+yield1 <- feols(log(yield) ~ ..ctrl1 | shrid + year | f(pm25, 1) ~ f(wind, 0:1), 
                 data = df, 
                 cluster = c("shrid"))
-yield2 <- feols(log(yield) ~ ..ctrl1 | shrid + year | f(pm25, 0:1) ~ f(wind, 0:1), 
+yield2 <- feols(log(yield) ~ ..ctrl2 | shrid + year | f(pm25, 2) ~ f(wind, 0:2), 
                 data = df, 
                 cluster = c("shrid"))
 
@@ -436,19 +506,21 @@ yieldtable <- etable(
                      digits.stats = "r0",
                      fitstat = c("ivwald", "n"),
                      coefstat = "se",
-                     group = list(controls = "rain_z"),
+                     group = list(controls = "rain_z",
+                                  conrols_expanded = "rain_z square"),
                      keep = c("pm25")
                      )
 # rename
 yieldtable <- yieldtable[,-1]
-yieldtable <- yieldtable[-c(9:10),]
-yieldtable[6,] <- " "
+yieldtable <- yieldtable[-c(5:6,10:11),]
+yieldtable[5,] <- " "
+yieldtable[8,2] <- yieldtable[9,2]
+yieldtable <- yieldtable[-9,]
 yieldtable <- as.matrix(yieldtable)
-rownames(yieldtable) <- c("particulate matter", "(log PM 2.5)",
-                          "particulate matter", "(one-year lead)",
-                          "weather",
+rownames(yieldtable) <- c("particulate matter", "(one-year lead)",
+                          "particulate matter", "(two-year lead)",
                           "fixed effects:", "village", "year",
-                          "F (current)", "F (lead)", 
+                          "F", 
                           "observations")
 saveRDS(yieldtable, "pollution_development/draft/tables/yield3ivmain_lead.rds")
 
@@ -503,7 +575,7 @@ f <- function(i) {
   # should be in same order, so add wind column
   temp <- cbind(df_placebo, wind_all %>% dplyr::select(wind, pm25))
   # get coefficient
-  coefs <- feols(log(yield) ~ ..ctrl1 + ..ctrl2 | shrid + year | pm25 ~ wind, data = temp, cluster = c("shrid"))
+  coefs <- feols(log(yield) ~ ..ctrl2 | shrid + year | pm25 ~ wind, data = temp, cluster = c("shrid"))
   # return
   return(coefs$coeftable[1,1])
 }
@@ -548,7 +620,7 @@ f <- function(i) {
   # should be in same order, so add wind column
   temp <- cbind(df_placebo, wind_all %>% dplyr::select(wind, pm25))
   # get coefficient
-  coefs <- feols(log(yield) ~ ..ctrl1 + ..ctrl2 | shrid + year | pm25 ~ wind, data = temp, cluster = c("shrid"))
+  coefs <- feols(log(yield) ~ ..ctrl2 | shrid + year | pm25 ~ wind, data = temp, cluster = c("shrid"))
   # return
   return(coefs$coeftable[1,1])
 }
@@ -562,7 +634,7 @@ coefs_distfe <- as_vector(coefs_distfe)
 
 
 # get true value (with df)
-true_value <- feols(log(yield) ~ ..ctrl1 + ..ctrl2 | shrid + year | pm25 ~ wind, 
+true_value <- feols(log(yield) ~ ..ctrl2 | shrid + year | pm25 ~ wind, 
                     data = df, 
                     cluster = c("shrid"))
 true_value <- true_value$coeftable[1,1]
@@ -674,7 +746,7 @@ f <- function(i) {
   temp <- cbind(df_placebo, wind_all %>% dplyr::select(wind, pm25))
   # get coefficient
   temp <- panel(temp, ~ shrid + year)
-  coefs <- feols(log(yield) ~ ..ctrl1 | shrid + year | f(pm25, 0:1) ~ f(wind, 0:1), 
+  coefs <- feols(log(yield) ~ ..ctrl2 | shrid + year | f(pm25, 0:1) ~ f(wind, 0:1), 
                  data = temp, 
                  cluster = c("shrid"))
   # return
@@ -698,7 +770,7 @@ saveRDS(coef_current, "pollution_development/draft/tables/coef_current.rds")
 saveRDS(coef_lead, "pollution_development/draft/tables/coef_lead.rds")
 
 # get true value (with df)
-true_value <- feols(log(yield) ~ ..ctrl1 | shrid + year | f(pm25, 0:1) ~ f(wind, 0:1), 
+true_value <- feols(log(yield) ~ ..ctrl2 | shrid + year | f(pm25, 0:1) ~ f(wind, 0:1), 
                     data = df, 
                     cluster = c("shrid"))
 true_value_current <- true_value$coeftable[1,1]
@@ -737,18 +809,175 @@ while (i<=length(coef_lead)){
 
 
 
+
+
+
+
+
+## by crop ---------------------------------
+df$rice <- as.numeric(df$most_common=="rice")
+df$pmrice <- df$rice*df$pm25
+df$windrice <- df$rice*df$wind
+
+setFixest_fml(..ctrl2 = ~ rain_z + temp_mean + rain_z^2 + temp_mean^2 + rain_z*temp_mean)
+setFixest_fml(..ctrl3 = ~ rain1_zbin0 + rain1_zbin1 + rain2_zbin0 + rain2_zbin1 + rain3_zbin0 + rain3_zbin1 +
+                rain4_zbin0 + rain4_zbin1 + rain5_zbin0 + rain5_zbin1 +
+                temp_mean + 
+                rain1_zbin0*temp_mean + rain1_zbin1*temp_mean + rain2_zbin0*temp_mean + rain2_zbin1*temp_mean + rain3_zbin0*temp_mean + rain3_zbin1*temp_mean +
+                rain4_zbin0*temp_mean + rain4_zbin1*temp_mean + rain5_zbin0*temp_mean + rain5_zbin1*temp_mean +
+                temp_mean^2 + 
+                rain1_zbin0*temp_mean^2 + rain1_zbin1*temp_mean^2 + rain2_zbin0*temp_mean^2 + rain2_zbin1*temp_mean^2 + rain3_zbin0*temp_mean^2 + rain3_zbin1*temp_mean^2 +
+                rain4_zbin0*temp_mean^2 + rain4_zbin1*temp_mean^2 + rain5_zbin0*temp_mean^2 + rain5_zbin1*temp_mean^2)
+
+
+yield1 <- feols(log(yield) ~ ..ctrl2 | shrid + year | pm25 + pmrice ~ wind + windrice, 
+                data = df, 
+                cluster = c("shrid"))
+yield2 <- feols(log(yield) ~ ..ctrl3 | shrid + year | pm25 + pmrice ~ wind + windrice, 
+                data = df, 
+                cluster = c("shrid"))
+
+
+yieldtable <- etable(
+                      yield1, yield2,
+                      stage = 2,
+                      se.below = TRUE,
+                      depvar = FALSE,
+                      signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+                      digits = "r3",
+                      digits.stats = "r0",
+                      fitstat = c("ivwald", "n"),
+                      coefstat = "se",
+                      group = list(conrols_expanded = "rain_z square",
+                                   conrols_expanded2 = "rain1_zbin0"),
+                      keep = c("pm25", "pmrice")
+                    )
+
+# rename
+yieldtable <- yieldtable[-c(10:11),]
+yieldtable[7,] <- " "
+yieldtable <- as.matrix(yieldtable)
+rownames(yieldtable) <- c("particulate matter", "(log PM 2.5)",
+                          "PM 2.5 times rice", " ",
+                          "weather (expanded)", "weather (expanded, bins)",
+                          "fixed effects:", "village", "year",
+                          "F (PM 2.5)", "F (PM 2.5 times rice)", 
+                          "observations")
+saveRDS(yieldtable, "pollution_development/draft/tables/yieldrice.rds")
+
+
+
+
+
+
+
+
+
+
+
+### with state FE ---------------------------------
+df$state <- substr(df$shrid, 1, 2)
+
+setFixest_fml(..ctrl2 = ~ rain_z + temp_mean + rain_z^2 + temp_mean^2 + rain_z*temp_mean)
+setFixest_fml(..ctrl3 = ~ rain1_zbin0 + rain1_zbin1 + rain2_zbin0 + rain2_zbin1 + rain3_zbin0 + rain3_zbin1 +
+                rain4_zbin0 + rain4_zbin1 + rain5_zbin0 + rain5_zbin1 +
+                temp_mean + 
+                rain1_zbin0*temp_mean + rain1_zbin1*temp_mean + rain2_zbin0*temp_mean + rain2_zbin1*temp_mean + rain3_zbin0*temp_mean + rain3_zbin1*temp_mean +
+                rain4_zbin0*temp_mean + rain4_zbin1*temp_mean + rain5_zbin0*temp_mean + rain5_zbin1*temp_mean +
+                temp_mean^2 + 
+                rain1_zbin0*temp_mean^2 + rain1_zbin1*temp_mean^2 + rain2_zbin0*temp_mean^2 + rain2_zbin1*temp_mean^2 + rain3_zbin0*temp_mean^2 + rain3_zbin1*temp_mean^2 +
+                rain4_zbin0*temp_mean^2 + rain4_zbin1*temp_mean^2 + rain5_zbin0*temp_mean^2 + rain5_zbin1*temp_mean^2)
+
+
+yield1 <- feols(log(yield) ~ ..ctrl2 | shrid + year^state | pm25 + pmrice ~ wind + windrice, 
+                data = df, 
+                cluster = c("shrid"))
+yield2 <- feols(log(yield) ~ ..ctrl3 | shrid + year^state | pm25 + pmrice ~ wind + windrice, 
+                data = df, 
+                cluster = c("shrid"))
+
+
+yieldtable <- etable(
+                      yield1, yield2,
+                      stage = 2,
+                      se.below = TRUE,
+                      depvar = FALSE,
+                      signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
+                      digits = "r3",
+                      digits.stats = "r0",
+                      fitstat = c("ivwald", "n"),
+                      coefstat = "se",
+                      group = list(conrols_expanded = "rain_z square",
+                                   conrols_expanded2 = "rain1_zbin0"),
+                      keep = c("pm25", "pmrice")
+                    )
+
+# rename
+yieldtable <- yieldtable[-c(10:11),]
+yieldtable[7,] <- " "
+yieldtable <- as.matrix(yieldtable)
+rownames(yieldtable) <- c("particulate matter", "(log PM 2.5)",
+                          "PM 2.5 times rice", " ",
+                          "weather (expanded)", "weather (expanded, bins)",
+                          "fixed effects:", "village", "state-by-byear",
+                          "F (PM 2.5)", "F (PM 2.5 times rice)", 
+                          "observations")
+saveRDS(yieldtable, "pollution_development/draft/tables/yieldricestatefe.rds")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ## monthly results ---------------------------------
 
 setFixest_fml(..ctrl1 = ~ rain1_z + rain2_z + rain3_z + rain4_z + rain5_z + temp_m1 + temp_m2 + temp_m3 + temp_m4 + temp_m5)
+setFixest_fml(..ctrl2 = ~ rain1_zbin0 + rain1_zbin1 + rain2_zbin0 + rain2_zbin1 + rain3_zbin0 + rain3_zbin1 +
+                rain4_zbin0 + rain4_zbin1 + rain5_zbin0 + rain5_zbin1 +
+                temp_mean + 
+                rain1_zbin0*temp_mean + rain1_zbin1*temp_mean + rain2_zbin0*temp_mean + rain2_zbin1*temp_mean + rain3_zbin0*temp_mean + rain3_zbin1*temp_mean +
+                rain4_zbin0*temp_mean + rain4_zbin1*temp_mean + rain5_zbin0*temp_mean + rain5_zbin1*temp_mean +
+                temp_mean^2 + 
+                rain1_zbin0*temp_mean^2 + rain1_zbin1*temp_mean^2 + rain2_zbin0*temp_mean^2 + rain2_zbin1*temp_mean^2 + rain3_zbin0*temp_mean^2 + rain3_zbin1*temp_mean^2 +
+                rain4_zbin0*temp_mean^2 + rain4_zbin1*temp_mean^2 + rain5_zbin0*temp_mean^2 + rain5_zbin1*temp_mean^2)
 
 
-yield1 <- feols(log(yield) ~ 1 | 
+yield1 <- feols(log(yield) ~ ..ctrl1 | 
                   shrid + year | 
                   pm1 + pm2 + pm3 + pm4 + pm5 ~ m1 + m2 + m3 + m4 + m5, 
                 data = df, 
                 cluster = "shrid")
 
-yield2 <- feols(log(yield) ~ ..ctrl1 | 
+yield2 <- feols(log(yield) ~ ..ctrl2 | 
                   shrid + year | 
                   pm1 + pm2 + pm3 + pm4 + pm5 ~ m1 + m2 + m3 + m4 + m5,
                 data = df, 
@@ -775,14 +1004,16 @@ yieldtable <- etable(
                      fitstat = c("ivwald", "n"),
                      keep = c("pm1", "pm2", "pm3", "pm4", "pm5"),
                      coefstat = "se",
-                     group = list(weather = "rain1_z")
+                     group = list(weather = "rain1_z",
+                                  conrols_expanded2 = "rain1_zbin0")
                      )
 
-yieldtable <- yieldtable[-c(15,16),]
-yieldtable[12,] <- " "
+yieldtable <- yieldtable[,-1]
+yieldtable <- yieldtable[-c(16,17),]
+yieldtable[13,] <- " "
 yieldtable <- as.matrix(yieldtable)
 rownames(yieldtable) <- c("June", " ", "July", " ", "Aug.", " ", "Sept.", " ", "Oct.", " ",
-                          "weather",
+                          "weather", "weather (expanded, bins)",
                           "fixed effects:", "village", "year", 
                           "F (June)", "F (July)", "F (Aug.)", "F (Sept.)", "F (Oct.)",
                           "observations")
@@ -818,20 +1049,28 @@ df$pmyield <- df$pm25*df$original_yield
 df$windyield <- df$wind*df$original_yield
 
 setFixest_fml(..ctrl1 = ~ rain_z + temp_mean)
+setFixest_fml(..ctrl2 = ~ rain1_zbin0 + rain1_zbin1 + rain2_zbin0 + rain2_zbin1 + rain3_zbin0 + rain3_zbin1 +
+                rain4_zbin0 + rain4_zbin1 + rain5_zbin0 + rain5_zbin1 +
+                temp_mean + 
+                rain1_zbin0*temp_mean + rain1_zbin1*temp_mean + rain2_zbin0*temp_mean + rain2_zbin1*temp_mean + rain3_zbin0*temp_mean + rain3_zbin1*temp_mean +
+                rain4_zbin0*temp_mean + rain4_zbin1*temp_mean + rain5_zbin0*temp_mean + rain5_zbin1*temp_mean +
+                temp_mean^2 + 
+                rain1_zbin0*temp_mean^2 + rain1_zbin1*temp_mean^2 + rain2_zbin0*temp_mean^2 + rain2_zbin1*temp_mean^2 + rain3_zbin0*temp_mean^2 + rain3_zbin1*temp_mean^2 +
+                rain4_zbin0*temp_mean^2 + rain4_zbin1*temp_mean^2 + rain5_zbin0*temp_mean^2 + rain5_zbin1*temp_mean^2)
 
-yield1 <- feols(log(yield) ~ ..ctrl1 | shrid + year | pm25 ~ wind, 
+yield1 <- feols(log(yield) ~ ..ctrl2 | shrid + year | pm25 ~ wind, 
                 data = df %>% filter(wind_med>wind_med_median),
                 cluster = c("shrid"))
-yield2 <- feols(log(yield) ~ ..ctrl1 | shrid + year | pm25 ~ wind, 
+yield2 <- feols(log(yield) ~ ..ctrl2 | shrid + year | pm25 ~ wind, 
                 data = df %>% filter(wind_med<=wind_med_median),
                 cluster = c("shrid"))
-yield3 <- feols(log(yield) ~ ..ctrl1 | shrid + year | pm25 ~ wind, 
+yield3 <- feols(log(yield) ~ ..ctrl2 | shrid + year | pm25 ~ wind, 
                 data = df %>% filter(yield_med>yield_med_median),
                 cluster = c("shrid"))
-yield4 <- feols(log(yield) ~ ..ctrl1 | shrid + year | pm25 ~ wind, 
+yield4 <- feols(log(yield) ~ ..ctrl2 | shrid + year | pm25 ~ wind, 
                 data = df %>% filter(yield_med<=yield_med_median),
                 cluster = c("shrid"))
-yield5 <- feols(log(yield) ~ ..ctrl1 | shrid + year | pm25 + pmrain ~ wind + windrain, 
+yield5 <- feols(log(yield) ~ ..ctrl2 | shrid + year | pm25 + pmrain ~ wind + windrain, 
                 data = df, 
                 cluster = c("shrid"))
 
@@ -845,14 +1084,15 @@ yieldtablehet <- etable(
                         fitstat = c("ivwald", "n"),
                         coefstat = "se",
                         #headers = list("wind" = 2, "yield" = 2, ""),
-                        group = list(weather = "rain1_z"),
+                        group = list(weather = "rain1_zbin0"),
                         keep = c("pm25", "pmrain")
                         )
+yieldtablehet <- yieldtablehet[,-1]
 yieldtablehet <- yieldtablehet[-c(9,10),]
 yieldtablehet[5,] <- "Yes"
 yieldtablehet[6,] <- ""
 yieldtablehet <- as.matrix(yieldtablehet)
-rownames(yieldtablehet) <- c("pm (log)", "", "pm times rain", "", "weather",
+rownames(yieldtablehet) <- c("pm (log)", "", "pm times rain", "", "weather (expanded, bins)",
                              "fixed effects:", "village", "year", 
                              "F (1st stage, PM)", "F (1st stage, PM times rain)", "observations")
 yieldtablehet[10,1:4] <- " "
@@ -863,49 +1103,6 @@ saveRDS(yieldtablehet, "pollution_development/draft/tables/yield5heterogeneity.r
 
 
 
-
-
-
-## naive regression ---------------------------------
-
-df <- panel(df, ~ shrid + year, duplicate.method = "first")
-
-setFixest_fml(..ctrl1 = ~ rain_z + temp_mean)
-setFixest_fml(..ctrl2 = ~ rain_z + temp_mean + rain_z^2 + temp_mean^2 + rain_z*temp_mean)
-
-yield1 <- feols(log(yield) ~ 1 | shrid + year | f(pm25, 0:1) ~ f(wind, 0:1), 
-                data = df, 
-                cluster = c("shrid"))
-yield2 <- feols(log(yield) ~ rain_z + temp_mean | shrid + year | f(pm25, 0:1) ~ f(wind, 0:1), 
-                data = df, 
-                cluster = c("shrid"))
-yield3 <- feols(log(yield) ~ rain_z*temp_mean + rain_z^2 + temp_mean^2 | shrid + year | f(pm25, 0:1) ~ f(wind, 0:1), 
-                data = df, 
-                cluster = c("shrid"))
-
-
-yieldtableleads <- etable(
-                          yield1, yield2, yield3,
-                          se.below = TRUE,
-                          depvar = FALSE,
-                          signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
-                          digits = "r4",
-                          digits.stats = "r0",
-                          fitstat = c("ivwald", "n"),
-                          coefstat = "se",
-                          group = list(controls = "rain_z",
-                                       conrols_expanded = "rain_z square"),
-                          keep = c("pm25", "f(pm25,1)")
-                          )
-yieldtableleads <- yieldtableleads[-c(10,11),]
-yieldtableleads[7,] <- ""
-yieldtableleads <- as.matrix(yieldtableleads)
-rownames(yieldtableleads) <- c("PM", "", "PM (lead)", "",
-                               "weather", "weather (expanded)",
-                               "fixed effects:", "village", "year", 
-                               "F", "F (lead)",
-                               "observations")
-saveRDS(yieldtableleads, "pollution_development/draft/tables/yield6leads.rds")
 
 
 
@@ -922,30 +1119,28 @@ df$windopen <- df$wind*df$open
 df$pmyear <- df$pm25*df$year
 df$windyear <- df$wind*df$year
 
-setFixest_fml(..ctrl1 = ~ rain_z + temp_mean)
-setFixest_fml(..ctrl2 = ~ rain_z + temp_mean + rain_z^2 + temp_mean^2 + rain_z*temp_mean)
+setFixest_fml(..ctrl1 = ~ rain_z + temp_mean + rain_z^2 + temp_mean^2 + rain_z*temp_mean)
+setFixest_fml(..ctrl2 = ~ rain1_zbin0 + rain1_zbin1 + rain2_zbin0 + rain2_zbin1 + rain3_zbin0 + rain3_zbin1 +
+                rain4_zbin0 + rain4_zbin1 + rain5_zbin0 + rain5_zbin1 +
+                temp_mean + 
+                rain1_zbin0*temp_mean + rain1_zbin1*temp_mean + rain2_zbin0*temp_mean + rain2_zbin1*temp_mean + rain3_zbin0*temp_mean + rain3_zbin1*temp_mean +
+                rain4_zbin0*temp_mean + rain4_zbin1*temp_mean + rain5_zbin0*temp_mean + rain5_zbin1*temp_mean +
+                temp_mean^2 + 
+                rain1_zbin0*temp_mean^2 + rain1_zbin1*temp_mean^2 + rain2_zbin0*temp_mean^2 + rain2_zbin1*temp_mean^2 + rain3_zbin0*temp_mean^2 + rain3_zbin1*temp_mean^2 +
+                rain4_zbin0*temp_mean^2 + rain4_zbin1*temp_mean^2 + rain5_zbin0*temp_mean^2 + rain5_zbin1*temp_mean^2)
 
 
-yield1 <- feols(log(yield) ~ open | year | pm25 + pmopen ~ wind + windopen, 
+yield1 <- feols(log(yield) ~ open + ..ctrl1  | shrid + year | pm25 + pmopen ~ wind + windopen, 
                 data = df, 
                 cluster = c("shrid"))
-yield2 <- feols(log(yield) ~ open | shrid + year | pm25 + pmopen ~ wind + windopen, 
-                data = df, 
-                cluster = c("shrid"))
-yield3 <- feols(log(yield) ~ open + ..ctrl1 | shrid + year | pm25 + pmopen ~ wind + windopen, 
-                data = df, 
-                cluster = c("shrid"))
-yield4 <- feols(log(yield) ~ open + ..ctrl1 + ..ctrl2 | shrid + year | pm25 + pmopen ~ wind + windopen, 
-                data = df, 
-                cluster = c("shrid"))
-yield5 <- feols(log(yield) ~ open + ..ctrl1 + ..ctrl2 | shrid[year] + year | pm25 + pmopen ~ wind + windopen, 
+yield2 <- feols(log(yield) ~ open + ..ctrl2 | shrid + year | pm25 + pmopen ~ wind + windopen, 
                 data = df, 
                 cluster = c("shrid"))
 
 
 
 yieldtable <- etable(
-                      yield2, yield3, yield4,
+                      yield1, yield2,
                       se.below = TRUE,
                       depvar = FALSE,
                       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
@@ -954,89 +1149,18 @@ yieldtable <- etable(
                       fitstat = c("ivwald", "n"),
                       coefstat = "se",
                       group = list(controls = "rain_z",
-                                   conrols_expanded = "rain_z square"),
+                                   conrols_expanded = "rain1_zbin0"),
                       keep = c("pm25", "pmopen")
                     )
+yieldtable <- yieldtable[,-1]
 yieldtable <- yieldtable[-c(10,11),]
 yieldtable[c(7),] <- " "
 yieldtable <- as.matrix(yieldtable)
 rownames(yieldtable) <- c("PM 2.5", "", "PM 2.5 times coal", "",
-                          "weather", "weather (expanded)",
+                          "weather", "weather (expanded, bins)",
                           "fixed effects:", "year", "village",
                           "F (pm)", "F (pm times open)", "observations")
 saveRDS(yieldtable, "pollution_development/draft/tables/yield7ivdiffindiff.rds")
-
-
-
-
-
-
-
-
-
-# cumulative exposure? ----------------------------------------
-setFixest_fml(..ctrl1 = ~ rain1_z + rain2_z + rain3_z + rain4_z + rain5_z + temp_m1 + temp_m2 + temp_m3 + temp_m4 + temp_m5)
-
-
-
-
-
-yield1 <- feols(log(yield) ~ ..ctrl1 | 
-                  shrid + year | 
-                  pmavg1 ~ windavg1, 
-                data = df, 
-                cluster = "shrid")
-yield2 <- feols(log(yield) ~ ..ctrl1 | 
-                  shrid + year | 
-                  pmavg2 ~ windavg2, 
-                data = df, 
-                cluster = "shrid")
-yield3 <- feols(log(yield) ~ ..ctrl1 | 
-                  shrid + year | 
-                  pmavg3 ~ windavg3, 
-                data = df, 
-                cluster = "shrid")
-yield4 <- feols(log(yield) ~ ..ctrl1 | 
-                  shrid + year | 
-                  pmavg4 ~ windavg4, 
-                data = df, 
-                cluster = "shrid")
-yield5 <- feols(log(yield) ~ ..ctrl1 | 
-                  shrid + year | 
-                  pmavg5 ~ windavg5, 
-                data = df, 
-                cluster = "shrid")
-
-
-
-yieldtable <- etable(
-                    yield1, yield2, yield3, yield4, yield5,
-                    se.below = TRUE,
-                    depvar = FALSE,
-                    signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
-                    digits = "r3",
-                    digits.stats = "r0",
-                    fitstat = c("ivwald", "n"),
-                    keep = c("pmavg1", "pmavg2", "pmavg3", "pmavg4", "pmavg5"),
-                    coefstat = "se",
-                    group = list(weather = "rain1_z")
-                  )
-
-yieldtable <- yieldtable[-c(15,16),]
-yieldtable[12,] <- " "
-yieldtable <- yieldtable[,-1]
-yieldtable[15,2] <- yieldtable[16,2]
-yieldtable[15,3] <- yieldtable[17,3]
-yieldtable[15,4] <- yieldtable[18,4]
-yieldtable[15,5] <- yieldtable[19,5]
-yieldtable <- yieldtable[-c(16:19),]
-yieldtable <- as.matrix(yieldtable)
-rownames(yieldtable) <- c("June", " ", "July", " ", "Aug.", " ", "Sept.", " ", "Oct.", " ",
-                          "weather",
-                          "fixed effects:", "village", "year", 
-                          "F", "observations")
-saveRDS(yieldtable, "pollution_development/draft/tables/yield8cumulative.rds")
-
 
 
 

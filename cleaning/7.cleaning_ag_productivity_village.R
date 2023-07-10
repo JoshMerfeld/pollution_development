@@ -1,4 +1,5 @@
 # Purpose: This script cleans data for estimates of agricultural productivity
+# data from here: https://springernature.figshare.com/collections/A_new_two-decade_2001-2019_high-resolution_agricultural_primary_productivity_dataset_for_India/6079104
 # Author: Josh Merfeld
 # Date: December 12th, 2022
 
@@ -27,8 +28,16 @@ getwd()    # check
 villages_centroids <- read_sf("data/spatial/centroids_villages_30km")
 villages_centroids <- as_tibble(villages_centroids) %>% dplyr::select(shrid)
 villages_centroids$within30 <- 1
+villages_centroids <- villages_centroids %>%
+                          group_by(shrid) %>%
+                          filter(row_number()==1) %>%
+                          ungroup()
 villages <- read_sf("data/spatial/shapefiles/village.shp")
 villages$shrid <- paste0(villages$pc11_s_id, "-", villages$pc11_tv_id)
+villages <- villages %>%
+              group_by(shrid) %>%
+              filter(row_number()==1) %>%
+              ungroup()
 villages <- villages %>% left_join(villages_centroids, by = "shrid")
 villages <- villages %>% filter(within30==1) %>% dplyr::select(shrid)
 rm(villages_centroids)
@@ -329,6 +338,43 @@ for (year in 2002:2013){
 write_csv(df, paste0("data/clean/ag_productivity/all_combined.csv"))
 
 
+
+# harvested area
+crops_all <- as_tibble(villages) %>% dplyr::select("shrid")
+crops <- c("rice", "wheat", "maize", "sugarcane", "cotton", "sorghum", "millet", "groundnut", "bean")
+c <- crops[1]
+temp <- raster(paste0("data/raw/croparea/GeoTiff/", c, "/", c, "_HarvestedAreaFraction.tif"))
+temp <- exact_extract(temp, villages, fun = "mean", append_cols = "shrid")
+crops_all$most_common <- paste0(c)
+crops_all$most_common_area <- temp$mean
+crops_all <- crops_all %>%
+              left_join(temp, by = c("shrid"))
+colnames(crops_all)[ncol(crops_all)] <- paste0("area_", c)
+for (c in crops[2:length(crops)]){
+  temp <- raster(paste0("data/raw/croparea/GeoTiff/", c, "/", c, "_HarvestedAreaFraction.tif"))
+  temp <- exact_extract(temp, villages, fun = "mean", append_cols = "shrid")
+  colnames(temp)[2] <- paste0("area_", c)
+  crops_all <- crops_all %>%
+                left_join(temp, by = c("shrid"))
+  # replace most common crop if area of new crop is higher than previous highest
+  crops_all$most_common[crops_all[,ncol(crops_all)]>crops_all$most_common_area] <- paste0(c)
+  crops_all$most_common_area[crops_all[,ncol(crops_all)]>crops_all$most_common_area] <- crops_all[,ncol(crops_all)][crops_all[,ncol(crops_all)]>crops_all$most_common_area]
+}
+# get proportion of area in each village that belongs to each crop
+crops_all$area_tot <- apply(crops_all[4:ncol(crops_all)], 1, sum)
+crops_all[4:(ncol(crops_all)-1)] <- crops_all[4:(ncol(crops_all)-1)]/crops_all$area_tot
+crops_all <- crops_all %>% dplyr::select(-c("area_tot"))
+write_csv(crops_all, paste0("data/clean/ag_productivity/crop_area.csv"))
+
+
+
+villages_shp <- villages %>%
+                  left_join(crops_all, by = c("shrid"))
+ggplot(villages_shp) +
+  geom_sf(aes(fill = most_common), lwd = 0) +
+  scale_fill_brewer("Most common crop\nby area harvested", palette = "Set3") +
+  theme_minimal()
+ggsave("pollution_development/draft/tables/most_common_crop.png", bg = "white")
 
 
 
