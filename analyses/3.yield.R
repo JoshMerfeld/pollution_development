@@ -187,22 +187,27 @@ yield3 <- feols(log(yield) ~ wind + ..ctrl2 | shrid + year, data = df, cluster =
 yield4 <- feols(log(yield) ~ wind + ..ctrl3 | shrid + year, data = df, cluster = c("shrid"))
 
 yieldtable <- etable(
-                     yield1, yield2, yield3,
+                     yield1, yield2, yield3, yield4,
                      se.below = TRUE,
                      depvar = FALSE,
                      signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
                      digits = "r4",
                      fitstat = c("n"),
-                     coefstat = "se"
+                      group = list(controls = "rain_z",
+                                   conrols_expanded = "rain_z square",
+                                   conrols_expanded2 = "rain1_zbin0"),
+                     coefstat = "se",
+                     keep = c("wind")
                      )
 # rename
-yieldtable <- yieldtable[-c(16:17),]
-yieldtable[13,] <- " "
+yieldtable <- yieldtable[-c(9:10),]
+yieldtable[6,] <- " "
 yieldtable <- as.matrix(yieldtable)
-rownames(yieldtable) <- c("wind days", " ", "rain (z)", "", "mean temp (10s)", "",
-                          "rain square", " ", "temp square", " ", "rain times temp", " ",
+rownames(yieldtable) <- c("wind days", " ", 
+                          "weather", "weather (expanded)", "weather (expanded, bins)",
                           "fixed effects:", "village", "year",
                           "observations")
+yieldtable <- yieldtable[,-1]
 saveRDS(yieldtable, "pollution_development/draft/tables/yield1reducedform.rds")
 
 
@@ -231,7 +236,7 @@ yield3 <- feols(log(yield) ~ pm25 + ..ctrl2 | shrid + year, data = df, cluster =
 yield4 <- feols(log(yield) ~ pm25 + ..ctrl3 | shrid + year, data = df, cluster = c("shrid"))
 
 yieldtable <- etable(
-                      yield1, yield2, yield3,
+                      yield1, yield2, yield3, yield4,
                       se.below = TRUE,
                       depvar = FALSE,
                       signif.code = c("***" = 0.01, "**" = 0.05, "*" = 0.1),
@@ -239,17 +244,19 @@ yieldtable <- etable(
                       fitstat = c("n"),
                       coefstat = "se",
                       group = list(controls = "rain_z",
-                                   conrols_expanded = "rain_z square"),
+                                   conrols_expanded = "rain_z square",
+                                   conrols_expanded2 = "rain1_zbin0"),
                       keep = c("pm25")
                     )
 # rename
-yieldtable <- yieldtable[-c(8:9),]
-yieldtable[5,] <- " "
+yieldtable <- yieldtable[-c(9:10),]
+yieldtable[6,] <- " "
 yieldtable <- as.matrix(yieldtable)
 rownames(yieldtable) <- c("particulate matter", "(log PM 2.5)", 
-                          "weather", "weather (expanded)",
+                          "weather", "weather (expanded)", "weather (expanded, bins)",
                           "fixed effects:", "village", "year",
                           "observations")
+yieldtable <- yieldtable[,-1]
 saveRDS(yieldtable, "pollution_development/draft/tables/yield2naive.rds")
 
 
@@ -485,8 +492,8 @@ saveRDS(gg1, "pollution_development/draft/tables/randomization.rds")
 # leads
 df <- panel(df, ~ shrid + year)
 
-setFixest_fml(..ctrl1 = ~ f(rain_z, 0:1) + f(temp_mean, 0:1))
-setFixest_fml(..ctrl2 = ~ f(rain_z, 0:2) + f(temp_mean, 0:2))
+setFixest_fml(..ctrl1 = ~ f(rain_z, 0:1) + f(temp_mean, 0:1) + f(rain_z*temp_mean, 0:1))
+setFixest_fml(..ctrl2 = ~ f(rain_z, 0:2) + f(temp_mean, 0:2) + f(rain_z*temp_mean, 0:2))
 
 
 yield1 <- feols(log(yield) ~ ..ctrl1 | shrid + year | f(pm25, 1) ~ f(wind, 0:1), 
@@ -511,17 +518,18 @@ yieldtable <- etable(
                      keep = c("pm25")
                      )
 # rename
-yieldtable <- yieldtable[,-1]
-yieldtable <- yieldtable[-c(5:6,10:11),]
-yieldtable[5,] <- " "
-yieldtable[8,2] <- yieldtable[9,2]
-yieldtable <- yieldtable[-9,]
+yieldtable <- yieldtable[-c(5,10:11),]
+yieldtable[6,] <- " "
+yieldtable[9,3] <- yieldtable[10,3]
+yieldtable <- yieldtable[-10,]
 yieldtable <- as.matrix(yieldtable)
 rownames(yieldtable) <- c("particulate matter", "(one-year lead)",
                           "particulate matter", "(two-year lead)",
+                          "weather (expanded)",
                           "fixed effects:", "village", "year",
                           "F", 
                           "observations")
+yieldtable <- yieldtable[,-1]
 saveRDS(yieldtable, "pollution_development/draft/tables/yield3ivmain_lead.rds")
 
 
@@ -952,12 +960,6 @@ saveRDS(yieldtable, "pollution_development/draft/tables/yieldricestatefe.rds")
 
 
 
-
-
-
-
-
-
 ## monthly results ---------------------------------
 
 setFixest_fml(..ctrl1 = ~ rain1_z + rain2_z + rain3_z + rain4_z + rain5_z + temp_m1 + temp_m2 + temp_m3 + temp_m4 + temp_m5)
@@ -1112,6 +1114,10 @@ saveRDS(yieldtablehet, "pollution_development/draft/tables/yield5heterogeneity.r
 
 
 
+
+
+
+
 ## diff-in-diff IV ---------------------------------
 
 df$pmopen <- df$pm25*df$open
@@ -1156,8 +1162,8 @@ yieldtable <- yieldtable[,-1]
 yieldtable <- yieldtable[-c(10,11),]
 yieldtable[c(7),] <- " "
 yieldtable <- as.matrix(yieldtable)
-rownames(yieldtable) <- c("PM 2.5", "", "PM 2.5 times coal", "",
-                          "weather", "weather (expanded, bins)",
+rownames(yieldtable) <- c("PM 2.5", "", "PM 2.5 times Coal", "",
+                          "weather (expanded)", "weather (expanded, bins)",
                           "fixed effects:", "year", "village",
                           "F (pm)", "F (pm times open)", "observations")
 saveRDS(yieldtable, "pollution_development/draft/tables/yield7ivdiffindiff.rds")

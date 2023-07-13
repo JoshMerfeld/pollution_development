@@ -125,9 +125,9 @@
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
 
-\title{Air pollution and agricultural productivity in a developing country\footnote{I thank Ariel Ortiz-Bobea, Marc Bellemare, and David Sungho Park for comments and suggestions that greatly improved the quality of the paper. The usual disclaimer applies. All scripts used in this paper are publicly available on my GitHub page: github.com/JoshMerfeld/pollution\_development}}
+\title{Air pollution and agricultural productivity in a developing country\footnote{I thank Ariel Ortiz-Bobea, Marc Bellemare, and David Sungho Park for comments and suggestions that greatly improved the quality of the paper, as well as conference attendees at the 2023 KER International Conference. The usual disclaimer applies. All scripts used in this paper are publicly available on my GitHub page: github.com/JoshMerfeld/pollution\_development}}
 \author{Joshua D. Merfeld\footnote{KDI School of Public Policy and Management and IZA; \href{mailto:merfeld@kdis.ac.kr}{\nolinkurl{merfeld@kdis.ac.kr}}}}
-\date{2023-07-10}
+\date{2023-07-13}
 
 \begin{document}
 \maketitle
@@ -146,11 +146,11 @@
 
 While reliance on coal is declining in much of the world, it continues to be an important source of energy in many countries. In 2021, energy generation from coal reached an all-time high,\footnote{www.iea.org/reports/coal-fired-electricity} driven in part by rapid population growth in developing countries, including India. From 1990 to 2010, India's population grew by more than 40 percent, leading to a large increase in demand for power.\footnote{data.worldbank.org} While natural gas has become a popular alternative in much of the world, the Indian government met much of the increased demand through the construction of coal power plants. During those same two decades, power generation from all coal units of at least 30 megawatts in the country more than doubled, from 42.4 gigawatts to more than 100 gigawatts.\footnote{globalenergymonitor.org/}
 
-While there are likely positive effects from this increase in power generation -- for example, electricity may lead to economic and productivity growth (Dinkelman 2011; Kline and Moretti 2014; Rud 2012; Van de Walle et al. 2017), though electrification alone may not be a sufficient condition (K. Lee, Miguel, and Wolfram 2020) -- these improvements do not come without downsides, especially when it comes to power derived from coal. Pollutants from coal contribute to climate change and the phase out of coal energy is therefore a major climate goal (IEA 2022). Emissions from the production and burning of coal are also directly harmful to human health and the environment; pollutants like sulfur dioxide, nitrogen oxides, methane, and mercury are particularly harmful.\footnote{www.eia.gov/energyexplained/coal/coal-and-the-environment.php} While the use of coal had been declining, recent events -- including Russia's invasion of Ukraine -- have led to an increase in the demand for coal.\footnote{www.npr.org/2022/08/15/1117560560/a-rising-demand-for-coal-amidst-war-in-ukraine}
+While there may be positive effects from this increase in power generation -- for example, electricity may lead to economic and productivity growth (Dinkelman 2011; Kline and Moretti 2014; Rud 2012; Van de Walle et al. 2017), though electrification alone may not be a sufficient condition (K. Lee, Miguel, and Wolfram 2020) -- these improvements do not come without downsides, especially when it comes to power derived from coal. Pollutants from coal contribute to climate change and the phase out of coal energy is, therefore, a major climate goal (IEA 2022). Emissions from the production and burning of coal are also directly harmful to human health and the environment; pollutants like sulfur dioxide, nitrogen oxides, methane, and mercury are particularly harmful.\footnote{www.eia.gov/energyexplained/coal/coal-and-the-environment.php} While the use of coal had been declining, recent events -- including Russia's invasion of Ukraine -- have led to an increase in the demand for coal.\footnote{www.npr.org/2022/08/15/1117560560/a-rising-demand-for-coal-amidst-war-in-ukraine}
 
 In addition to pollution from coal, pollution more generally is also increasing in much of the world. Carbon dioxide equivalent per capita has almost double over the last 50 years in India, more than doubled in Indonesia, and almost tripled in China.\footnote{\url{https://edgar.jrc.ec.europa.eu}} Much of this increase is due to the development process itself -- as countries develop, their economies transform, with more people moving out of agriculture and into manufacturing and services (Herrendorf, Rogerson, and Valentinyi 2014). Despite this development, agriculture remains a key sector in many developing countries, employing a large proportion of the poor (Dercon 2009). This also means agriculture is a key sector when it comes to poverty reduction (Christiaensen, Demery, and Kuhl 2011). Given the large effects of pollution on health and previously documented impacts on agriculture, this raises a important question: do rising pollution levels in developing countries threaten agricultural productivity?
 
-In this paper, I study the effects of pollution on agricultural productivity in India. Previous work has suggested that there may be harmful direct effects of air pollution (Heck et al. 1982; Marshall et al. 1997) and water pollution (Reddy and Behera 2006) on agricultural productivity, including work showing that gold mines -- which release large amounts of pollutants into the surrounding environment -- lead to lower agricultural productivity in Ghana (Aragón and Rud 2016). These effects can work through the well-known effects on human health and productivity, but also directly through land productivity. Black carbon in soot, for example, can directly affect solar radiation reaching plants on the surface (Ramanathan and Carmichael 2008; Burney and Ramanathan 2014). Relative to previous work in economics, this paper tackles pollution more broadly, before turning to a specific source of pollution: coal plants. I show that air pollution leads to lower agricultural productivity in India and that pollution from coal plants is particularly harmful to agriculture.
+In this paper, I study the effects of pollution on agricultural productivity in India. Previous work has suggested that there may be harmful direct effects of air pollution (Heck et al. 1982; Marshall et al. 1997) and water pollution (Reddy and Behera 2006) on agricultural productivity, including work showing that gold mines -- which release large amounts of pollutants into the surrounding environment -- lead to lower agricultural productivity in Ghana (Aragón and Rud 2016). These effects can work through the well-known effects on human health and productivity, but also directly through land productivity. Black carbon in soot, for example, can directly affect solar radiation reaching plants on the surface (Ramanathan and Carmichael 2008; Burney and Ramanathan 2014), while, on the other hand, sulfur in some pollution sources can actually be productivity enhancing (Sanders and Barreca 2022). Relative to previous work in economics, this paper tackles pollution more broadly, before turning to a specific source of pollution: coal plants. I show that air pollution leads to lower agricultural productivity in India and that pollution from coal plants is particularly harmful to agriculture.
 
 Identifying the causal effects of pollution is difficult. For starters, the construction of coal plants is likely to be endogenous, though the relationship between construction and economic conditions is not a priori clear. On the one hand, governments may locate new plants in fast-growing areas, while on the other hand, they may decide the exact location of plants based on the political power of local citizens (Kopas et al. 2020). In the case of the data I use here, coal plants are constructed in areas with higher population and higher levels of pollution. In terms of agriculture, higher productivity predicts more coal plants in a given year as well as the construction of a coal plant over the next decade, indicating possible bias when estimating effects of pollution on agricultural productivity.
 
@@ -177,21 +177,25 @@ Several papers are closely related to this one. Aragón and Rud (2016) show that
 
 \label{data}
 
-The main goal of this paper is to examine whether exposure to pollution and emissions from coal plants, in particular, affect agricultural productivity. I use several sources of data, which I describe here and list in Table \ref{tab:data} of the appendix.
+The main goal of this paper is to examine whether exposure to pollution affects agricultural productivity, as well as to provide evidence about the effects of pollution from coal plants, in particular. I use several sources of data, which I describe here and list in Table \ref{tab:data} of the appendix.
 
 The first set of data lists the location of coal plant across the globe. This data comes from Global Energy Monitor\footnote{globalenergymonitor.org/projects/global-coal-plant-tracker/} and lists all units generating at least 30 megawatts of electricity. The data on coal plants includes the year of opening (and, if applicable, the year of retirement), the GPS (latitude/longitude) location of each plant, and the amount of power produced by the units at each plant. For this paper, I do not use the information on the capacity of the plant.
 
 Figure \ref{fig:plants} in the appendix displays the location of coal plants in India for two specific years: 1990 and 2010. There is a clear increase in the prevalence of coal plants across the country over the two decades. Additionally, the overall capacity from coal plants increased from 42.4 gigawatts to 100.4 gigawatts, an increase of 136.6 percent in just 20 years. This increase is driven both by the roll out of new plants as well as the construction of new units at existing plants, the latter of which is not shown in Figure \ref{fig:plants}.
 
-The second dataset includes agricultural productivity for both the monsoon and winter seasons, from 2002 to 2018. To match other data, I only use the data up to 2013. This data comes from Gangopadhyay et al. (2022) and estimates land productivity (i.e.~yield, in tons per hectare) for the major crops in India, using satellite-derived data. While there is a wealth of literature on measurement error in land (Desiere and Jolliffe 2018; Abay et al. 2022), the authors use a static cropland mask for the productivity estimates. This means that any measurement error will be constant across time and subsumed by the village fixed effects. While the measure of output is also noisy, the use of satellite-derived data and a static cropland mask reduces concerns about measurement error being responsible for the results below, especially since common sources of measurement error are unlikely to be correlated with wind direction. The authors define the monsoon season as June to October and the winter season as November to March. I focus on only the monsoon season and keep the authors' definition when matching across data below. This data is also publicly available from Nature's data-sharing website.\footnote{springernature.figshare.com} Since the main regressions below use village fixed effects, any differences in cropping patterns across areas should not bias estimates on changes, as long as these patterns do not change markedly in response to pollution.
+The second dataset includes agricultural productivity for both the monsoon and winter seasons, from 2002 to 2018. To match other data, I only use the data up to 2013. This data comes from Gangopadhyay et al. (2022) and estimates land productivity (i.e.~yield, in tons per hectare) for the major crops in India, using satellite-derived data. While there is a wealth of literature on measurement error in land (Desiere and Jolliffe 2018; Abay et al. 2022), the authors use a static cropland mask for the productivity estimates. This means that any measurement error will hopefully be constant across time and subsumed by the village fixed effects. While the measure of output is also noisy, the use of satellite-derived data and a static cropland mask reduces concerns about measurement error being responsible for the results below, especially since common sources of measurement error are unlikely to be correlated with wind direction. The authors define the monsoon season as June to October and the winter season as November to March. Due to large differences in the crops grown and the production technologies used across seasons, I focus on only the monsoon season and keep the authors' definition when matching across data below. The data on agricultural productivity is publicly available from Nature's data-sharing website.\footnote{springernature.figshare.com} Since the main regressions below use village fixed effects, any differences in cropping patterns across areas should not bias estimates on changes, as long as these patterns do not change markedly in response to annual pollution levels.
 
 The agricultural productivity data is available as raster files with a resolution of 500m. To aggregate this data up to a useful administrative unit, I use village-level shapefiles provided by Asher et al. (2021) and publicly available on the SHRUG platform.\footnote{www.devdatalab.org/shrug\_download/} I aggregate the agricultural productivity data to the village level by extracting mean productivity for each feature in the shapefile. I do this separately for the monsoon season each year, from 2002 to 2013.
 
-To measure exposure to pollution from coal plants, I first locate all village centroids located within 30km from a coal plant in a given year. I choose 30km due to previous research on the effects of (air) pollution (Aragón and Rud 2016; Bencko and Symon 1977; Li and Gibson 2014). I then calculate the direction from coal plants to all village centroids within that 30km radius. To define exposure, I then pull daily wind direction data from the National Center for Atmospheric Research.\footnote{climatedataguide.ucar.edu/} For each day, I document whether the wind is blowing towards each village centroid\footnote{I define ``towards'' as within five degrees to help take into account that I am using village centroids, using the x and y components of wind speed to calculate angles.} and then temporally aggregate this daily data depending on the temporal definition of the corresponding outcome. For example, agricultural productivity is defined across five months (e.g.~the monsoon season is from June to October) so I count the total days a given village is exposed to wind blowing from \emph{any} coal plant within 30km during those five months.
+To measure exposure to pollution from point sources around coal plants, I first locate all village centroids located within 30km from a coal plant in a given year. I choose 30km due to previous research on the effects of (air) pollution (Aragón and Rud 2016; Bencko and Symon 1977; Li and Gibson 2014). I then calculate the direction from these point sources to all village centroids within that 30km radius. To define exposure, I pull daily wind direction data from the National Center for Atmospheric Research.\footnote{climatedataguide.ucar.edu/} For each day, I document whether the wind is blowing towards each village centroid\footnote{I define ``towards'' as within five degrees to help take into account that I am using village centroids. The wind data includes both the x and y components of wind speed, which I can use to calculate angles from point sources to village centroids.} and then temporally aggregate this daily data depending on the temporal definition of the corresponding outcome. For example, agricultural productivity is defined across five months (i.e.~the monsoon season is from June to October) so I count the total days a given village is exposed to wind blowing from \emph{any} coal plant within 30km during those five months.
 
-The top panel in Figure \ref{fig:windexample} in the appendix is an example wind direction raster. The raster shows wind direction for the entirety of India on January 1st, 2010, as well as the location of coal power plants on that date. The prevailing winds on the date differ across the country and, though not shown in the figure, across days. This means that the overall exposure for a given area to coal plant emissions changes across time. I also pull data on particulate matter to help validate this proxy for exposure. This data comes from Hammer et al. (2020) and I also aggregate this to the village using the same method detailed above.
+The top panel in Figure \ref{fig:windexample} in the appendix is an example wind direction raster. The raster shows wind direction for the entirety of India on January 1st, 2010, as well as the location of coal power plants on that date. The prevailing winds on the date differ across the country and, though not shown in the figure, across days. This means that the overall exposure for a given area to coal plant emissions changes across time.
 
-To help understand some of the mechanisms driving the relationship between exposure to emissions and agricultural productivity, I also look at the differential effects by the labor intensity of the predominant crop in each area. For this, I use data from (Monfreda, Ramankutty, and Foley 2008), who estimate area harvested for different crops across the global around the year 2000. I identify areas where rice (paddy) is the most commonly grown crop, under the assumption that rice is more labor intensive than other crops (Vollrath 2011; Michler 2020). Michler (2020), for example, shows that rice, on avearge, uses almost 1,800 hours per hectare, while the second-highest crop in his data, cotton, juses just 850.\footnote{He estimates that wheat, another common crop in India, uses just 600 hours per hectare.}
+For pollution data, I use estimated particulate matter (PM). Specifically, I use estimates of PM 2.5, which includes particles with a diameter of 2.5 micrometers or less. This data comes from Hammer et al. (2020) and is available as a raster with a resolution of 0.01 degrees. I aggregate this data to the village level by extracting the mean PM for each feature in the shapefile. I do this separately for each month from June 2002 to October 2013. The bottom panel in Figure \ref{fig:windexample} in the appendix is an example of the PM data. The figure shows the estimated PM 2.5 from for each village in Guna district of Madhya Pradesh on January 1st, 2010.
+
+While I use PM 2.5 as the estimated level of pollution, it is important to clarify that I cannot explicitly say that PM 2.5, per se, is responsible for any effects. Pollution includes a variety of different components, including PM 2.5, PM 10, sulfur dioxide, and nitrogen dioxide, to name but a few. While I use PM 2.5 as a proxy for pollution, it is possible that other components are responsible for the effects. Additionally, the PM 2.5 data is estimated using satellite data and a machine learning algorithm. While this is a common approach in the literature ( see Hammer et al. (2020) for more details), it is important to note that the estimates are not direct measurements of pollution. However, a valid instrumental variable can help for any measurement error present in the data (Glewwe 2012; Gillen, Snowberg, and Yariv 2019).
+
+To help understand some of the mechanisms driving the relationship between exposure to emissions and agricultural productivity, I also look at the differential effects by the labor intensity of the predominant crop in each area. For this, I use data from Monfreda, Ramankutty, and Foley (2008), who estimate area harvested for different crops across the global around the year 2000. I identify areas where rice (paddy) is the most commonly grown crop, under the assumption that rice is more labor intensive than other crops (Vollrath 2011; Michler 2020). Michler (2020), for example, shows that rice, on avearge, uses almost 1,800 hours per hectare, while the second-highest crop in his data, cotton, juses just 850. He also estimates that wheat, another common crop in India, uses just 600 hours per hectare.
 
 \hypertarget{methods}{%
 \section{Methods}\label{methods}}
@@ -212,7 +216,7 @@ What are the characteristics of areas near the construction of new coal plants? 
 \caption{\label{tab:plantresultstable}Local characteristics and the construction of coal plants}
 \centering
 \begin{threeparttable}
-\begin{tabular}[t]{>{\raggedright\arraybackslash}p{3cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}}
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{3.5cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}}
 \toprule
 \multicolumn{1}{c}{ } & \multicolumn{2}{c}{1991 census} & \multicolumn{2}{c}{2001 census} \\
 \cmidrule(l{3pt}r{3pt}){2-3} \cmidrule(l{3pt}r{3pt}){4-5}
@@ -226,8 +230,8 @@ Urban pop (prop) & -0.029 & 0.006 & -0.003 & -0.007\\
  & (0.037) & (0.035) & (0.022) & (0.018)\\
 Ag. productivity &  &  & 0.014*** & 0.028***\\
  &  &  & (0.001) & (0.001)\\
-Pollution &  &  & 0.051*** & 0.016***\\
-(log PM 2.5) &  &  & (0.002) & (0.001)\\
+Pollution (log PM 2.5) &  &  & 0.051*** & 0.016***\\
+ &  &  & (0.002) & (0.001)\\
 Sub-sample & all & no plant & all & no plant\\
 \midrule
 Observations & 283,021 & 264,265 & 508,786 & 469,005\\
@@ -245,36 +249,42 @@ The last two columns are particularly relevant to the current results. They pres
 
 Pollution is also a significant predictor for the presence of a coal plant in 2001 as well as for whether a coal plant will be constructed before 2011. While the coefficient is relatively small, it is actually quite large given that only three percent of villages in column four will get a new plant in the next decade.
 
-Given the likely endogeneity previewed by these summary statistics, I now turn to a plausibly exogenous source of variation in pollution: wind direction. While the location of a coal plant might be endogenous, the amount of pollution received by a specific village in a given year can vary randomly based on wind direction. By counting the number of days in a given year that a village is downwind from a polluted area and conditioning on village fixed effects and weather (rainfall and temperature), variation across years is plausibly exogenous.
+Since pollution is likely to be endogenous, a naïve OLS regression will not return unbiased estimates. The experimental ideal would be to randomly assign pollution to villages, but this is obviously not possible. Instead, I use an instrumental variables (IV) approach to identify the causal effects of pollution on agricultural productivity. The key identifying assumption is that wind direction is exogenous from year to year, conditional on village fixed effects and weather. While the location of pollution sources might be endogenous, the amount of pollution received by a specific village in a given year can vary randomly based on wind direction. By counting the number of days in a given year that a village is downwind from a polluted area and conditioning on village fixed effects and weather (rainfall and temperature), variation across years is plausibly exogenous. Since I include village fixed effects, identification comes from within-village changes in wind direction across years.
 
 Consider the reduced form effect of wind exposure on agricultural productivity:
-\begin{gather} y_{it} = \alpha_{i} + \gamma_{t} + \beta wind_{it} + \delta rain_{it} + \psi temp_{it} + \varepsilon_{it}, \end{gather}
+\begin{gather} PM2.5_{it} = \alpha_{i} + \gamma_{t} + \beta wind_{it} + \delta rain_{it} + \psi temp_{it} + \varepsilon_{it}, \end{gather}
 
 where variables are defined identically to above but with wind as the primary variable of interest instead of pollution. Combining these into a two-stage procedure, we can instrument for pollution using wind direction; small changes in wind direction can lead to large changes in pollution exposure for villages located near point sources of pollution, allowing me to identify the causal effects of pollution by isolating the random component driven by wind direction. This is similar in spirit to Deryugina et al. (2019).
 
 Identification relies on changes in wind direction across time for the same geographic units. In other words, conditional on the fixed effects and weather, I assume changes in wind direction are as good as random and uncorrelated with the outcome -- primarily agricultural productivity in this paper -- except through exposure to pollution.
 
-The inclusion of rainfall and temperature is meant to reduce concerns that wind direction may not affect agricultural productivity but, instead, be correlated with it through changes in weather. For example, prevailing winds from one direction may be associated with dry weather, while winds from another direction may be more likely to carry moisture and rain. It is not a priori clear how this would bias the estimates with respect to pollution and coal plants, however. The differences in weather patterns is very context specific and can differ even for villages located near one another. Nonetheless, adding rainfall and temperature should alleviate some of these concerns.
+The inclusion of rainfall and temperature is meant to reduce concerns that wind direction may not affect agricultural productivity but, instead, be correlated with it through changes in weather. For example, prevailing winds from one direction may be associated with dry weather, while winds from another direction may be more likely to carry moisture and rain. It is not a priori clear how this would bias the estimates with respect to pollution and coal plants, however. The differences in weather patterns is very context specific and can differ even for villages located near one another.
 
-It is worth taking the time to validate the use of wind direction as a measure of exposure to pollution. Consider the data used for the regressions presented in Table \ref{tab:yield3ivmainfirststage} of the appendix. The outcome variable is particulate matter -- specifically, \(\mathrm{PM 2.5}\), which is particulate matter no larger than 2.5 micrometers in diameter -- which comes from Hammer et al. (2020). \(\mathrm{PM 2.5}\) is one of the harmful byproducts from coal plants, along with sulfur dioxide, different types of nitrogen oxides, and mercury.\footnote{www.epa.gov/airmarkets/power-plants-and-neighboring-communities} This data is available at the monthly level, but I aggregate variables to the season variable since that is the level of analysis in the main results.
+I believe there are two reasons this is unlikely to be the case here. First, villages located near one another have very similar weather patterns, but wind direction leads to large differences in pollution exposure even for villages right next to one another. Second, in some specifications, I include very flexible specifications for weather. These inclusions do not lead to very large changes in the estimated relationship between pollution and agricultural productivity, suggesting that weather is unlikely to be responsible for a spurious correlation between productivity and pollution in the main results.
 
-Both the particulate matter data and the wind data is at the village level, which means the regressions in Table \ref{tab:yield3ivmainfirststage} are at the village level. As such, the geographic fixed effects are village fixed effects and the temporal fixed effects are month fixed effects. Since the exposure variable is at the village level and we follow villages over time, the standard errors are also clustered at the village level. In columns two and four, I switch the month fixed effects for district-month fixed effects, which considers only villages in the same district in the same month.
+It is worth taking the time to validate the use of wind direction as a measure of exposure to pollution. Consider the data used for the regressions presented in Table \ref{tab:yield3ivmainfirststage} of the appendix. The outcome variable is particulate matter -- specifically, \(\mathrm{PM 2.5}\), which is particulate matter no larger than 2.5 micrometers in diameter -- which comes from Hammer et al. (2020). \(\mathrm{PM 2.5}\) is one of the harmful byproducts from many industrial processes, including power generation. Particulate matter is a major component of the pollution emitted by coal plants, along with sulfur dioxide, different types of nitrogen oxides, and mercury.\footnote{www.epa.gov/airmarkets/power-plants-and-neighboring-communities} This data is available at the monthly level, but I aggregate variables to the season variable since that is the level of analysis in the main results.
 
-In addition to serving as an example, Table \ref{tab:yield3ivmainfirststage} also helps validate the use of wind direction as a proxy for exposure to pollution. The first two columns include all available years of data while the last two columns restrict estimation only to the years for which the agricultural productivity regressions are estimated. Across all four columns, the story is the same: when the wind is blowing in the direction of a village from a coal plant within 30 kilometers, estimated \(\mathrm{PM 2.5}\) is substantially higher.
+Both the particulate matter data and the wind data is at the village level, which means the regressions in Table \ref{tab:yield3ivmainfirststage} are at the village level. As such, the geographic fixed effects are village fixed effects and the temporal fixed effects are month fixed effects. Since the exposure variable is at the village level and we follow villages over time, the standard errors are also clustered at the village level. I add more and more flexible specifications for weather, with the most flexible specification in the fourth column. Note that the relationship between wind direction and particulate matter is very similar across all four columns, suggesting that the inclusion of weather does not change the relationship between wind direction and pollution. This is important because it suggests that the use of wind direction as a proxy for pollution exposure is not biased by weather patterns.
 
 \hypertarget{identifying-mechanisms}{%
 \subsection{Identifying mechanisms}\label{identifying-mechanisms}}
 
-To identify possible mechanisms, I identify areas that grow predominantly rice, which is a labor-intensive crop. Specifically, we are interested in the following regression:
+A key question is how pollution affects agricultural productivity. Specifically, does pollution directly affect labor productivity, land productivity, or both? Unfortunately, there is a lack of data that would allow me to directly test these mechanisms, since I do not have data on the amount of labor or land used in each village. Instead, I look at heterogeneity in the effects of pollution based on the predominant crop grown in each village.
+
+Michler (2020) presents estimates of labor intensity for several major crops in India. The most labor-intensive crop is rice, which uses almost 1,800 hours per hectare. The second-most labor-intensive crop is cotton, which uses just 850 hours per hectare. Wheat, another common crop in India, uses just 600 hours per hectare. This suggests that pollution should be more harmful for rice than for other crops if there are direct impacts on labor productivity.
+
+To identify this possible mechanism, I identify areas that grow predominantly rice. Specifically, I estimate the following regression:
 \begin{gather} 
 y_{it} = \alpha_{i} + \gamma_{t} + \omega PM_{it} + \phi rice_{it} + \beta PM_{it}\times rice_{it} + \delta rain_{it} + \psi temp_{it} + \varepsilon_{it},
 \end{gather}
 where \(PM_{it}\) denotes the effect of pollution in non-rice areas and \(PM_{it}\times rice_{it}\) is the differential effect in rice-growing areas. Here, I create an indicator variable for rice areas that is time invariant, so \(rice_{it}\) drops out of the estimation. I instrument for \(PM_{it}\) and for \(PM_{it}\times rice_{it}\) using wind and wind interacted with the indicator for rice.
 
+While this is a useful first step, it is not a perfect identification strategy. First, there could be other differences in the types of areas that grow rice, and these differences could actually be responsible for any heterogeneity. Second, this strategy does not allow me to say anything about the effects of pollution on land productivity.
+
 \hypertarget{identifying-effects-of-pollution-from-coal-plants}{%
 \subsection{Identifying effects of pollution from coal plants}\label{identifying-effects-of-pollution-from-coal-plants}}
 
-I use the location of coal plants to identify locations of high pollution, but there can be other pollution sources located near coal plants, as well. I nonetheless want to identify the effects of pollution coming specifically from coal plants. I do this by combining the two-stage procedure above with a differences-in-differences framework. Specifically, I create a new variable identifying the exact year the coal plant opens in a given area and calculate the change in the effects of pollution on agricultural productivity.
+I use the location of coal plants to identify locations of high pollution emission, but there can be other pollution sources located near coal plants, as well. I nonetheless also want to identify the effects of pollution coming specifically from coal plants, in addition to the overall effects of pollution in the other parts of the paper. I do this by combining the two-stage procedure above with a differences-in-differences framework. Specifically, I create a new variable identifying the exact year the coal plant opens in a given area and calculate the change in the effects of pollution on agricultural productivity.
 
 Consider the following regression of interest:
 \begin{gather} 
@@ -288,36 +298,31 @@ where the interaction term \(PM_{it}\times open_{it}\) indicates the change in t
 
 \label{results}
 
-I first present the reduced form results for agricultural productivity. The outcome of all regressions in this section is the log of agricultural land productivity, which is defined as tons per hectare. The first set of results are in Table \ref{tab:yieldtable}. The unit of analysis is the village-season -- from 2002 to 2013 -- focusing only on the monsoon (kharif) season. The data used to construct the yield measure is calculated using five months of data, so the wind variable is defined for the same five months and is the sum of days in which the wind is pointed towards the village centroid from a coal plant.
+I first present the reduced form results for agricultural productivity. The outcome for all regressions in this section is the log of agricultural land productivity, which is defined as tons per hectare. The first set of results are in Table \ref{tab:yieldtable}. The unit of analysis is the village-season -- from 2002 to 2013 -- focusing only on the monsoon (kharif) season. The data used to construct the yield measure is calculated using five months of data, so the wind variable is defined for the same five months and is the sum of days in which the wind is pointed towards the village centroid from a coal plant.
 
-The first column presents the most simple results, with only the wind exposure variable and the fixed effects. The second column adds a rainfall and average temperature variable, while the third column includes higher-order weather variables, as well. While the coefficient decreases slightly in magnitude as we move from the first to the second column and the second to the third column, the decrease is relatively small. There is a consistent, negative effect of wind exposure on agricultural productivity.
+The first column presents the most simple results, with only the wind exposure variable and the fixed effects. The second column adds a rainfall and average temperature variable. While I leave them out of the table for simplicity, the coefficients are in the expected direction: rainfall is positive and average temperature is negative. The third column adds higher-order weather variables for both rainfall and temperature, as well as the interaction between them. This attenuates the relationship between wind and productivity somewhat, but the coefficient remains negative and statistically significant.
+
+The final column includes the most flexible form for the weather variables. The z-score for rainfall is turned into bins -- with cutoffs at \(z=-1\) and \(z=1\) -- based on rainfall in each month of the season. In other words, over the five months, I create 15 different indicator variables for rainfall based on the z-score in each month. One of these indicators drops out for each month of the year, leaving 10. I also include interactions between all of these and temperature, as well as between the bins and temperature squared. The coefficient on wind remains negative and statistically significant, and is actually slightly larger in magnitude than the results in column three, which is a much less flexible specification for weather. This leads me to conclude that the results are not being driven by weather patterns.
 
 \begin{table}
 
 \caption{\label{tab:yieldtable}Wind direction and agricultural productivity}
 \centering
 \begin{threeparttable}
-\begin{tabular}[t]{>{\raggedright\arraybackslash}p{4cm}>{\centering\arraybackslash}p{2.5cm}>{\centering\arraybackslash}p{2.5cm}>{\centering\arraybackslash}p{2.5cm}}
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{4cm}>{\centering\arraybackslash}p{2.5cm}>{\centering\arraybackslash}p{2.5cm}>{\centering\arraybackslash}p{2.5cm}c}
 \toprule
-  & (1) & (2) & (3)\\
+  & (1) & (2) & (3) & (4)\\
 \midrule
-Wind days & -0.0078*** & -0.0065*** & -0.0051***\\
- & (0.0007) & (0.0007) & (0.0007)\\
-Rain (z) &  & 0.0258*** & 0.2545***\\
- &  & (0.0004) & (0.0100)\\
-Mean temperature (10s) &  & -0.0023*** & 0.0654***\\
- &  & (0.0002) & (0.0028)\\
-Rain squared &  &  & -0.0410***\\
- &  &  & (0.0004)\\
-Temperature squared &  &  & -0.0001***\\
- &  &  & \vphantom{1} (0.0000)\\
-Rain times Temperature &  &  & -0.0007***\\
- &  &  & (0.0000)\\
-\textbf{Fixed effects:} & \textbf{} & \textbf{} & \textbf{}\\
-Village & Yes & Yes & Yes\\
-Year & Yes & Yes & Yes\\
+wind days & -0.0078*** & -0.0065*** & -0.0051*** & -0.0053***\\
+ & (0.0007) & (0.0007) & (0.0007) & (0.0007)\\
+weather & No & Yes & Yes & No\\
+weather (expanded) & No & No & Yes & No\\
+weather (expanded, bins) & No & No & No & Yes\\
+\textbf{fixed effects:} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
+village & Yes & Yes & Yes & Yes\\
+year & Yes & Yes & Yes & Yes\\
 \midrule
-Observations & 1,266,922 & 1,266,922 & 1,266,922\\
+observations & 1,266,922 & 1,266,922 & 1,266,922 & 1,266,922\\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[para]
@@ -326,26 +331,27 @@ Observations & 1,266,922 & 1,266,922 & 1,266,922\\
 \end{threeparttable}
 \end{table}
 
-To put the size of the coefficient in context, it is worth digging a little deeper into the exposure variable. The mean within-village absolute deviation in wind exposure is approximately 2.42 days, meaning that the average change in agricultural productivity from year-to-year due to nothing but changes in wind patterns carrying particulate matter is around 1.5 percent relative to the mean. This implies that swings in agricultural productivity -- due to wind direction -- of several percent are probably quite common, since the absolute deviation includes deviations below and above the mean.
+To put the size of the coefficient in context, it is worth digging a little deeper into the exposure variable. The mean within-village absolute deviation in wind exposure is approximately 2.42 days, meaning that the average change in agricultural productivity from year-to-year due to nothing but changes in wind patterns carrying particulate matter is around 1.5 percent relative to the mean. This implies that swings in agricultural productivity -- due to wind direction -- of several percent are probably quite common, since the absolute deviation includes deviations above and below the mean.
 
 \begin{table}
 
 \caption{\label{tab:yieldtablepm}Particulate matter (PM 2.5) and agricultural productivity}
 \centering
 \begin{threeparttable}
-\begin{tabular}[t]{>{\raggedright\arraybackslash}p{4cm}>{\centering\arraybackslash}p{2.5cm}>{\centering\arraybackslash}p{2.5cm}>{\centering\arraybackslash}p{2.5cm}}
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{5cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}c}
 \toprule
-  & (1) & (2) & (3)\\
+  & (1) & (2) & (3) & (4)\\
 \midrule
-Particulate matter & -0.042*** & -0.045*** & -0.041***\\
-(log PM 2.5) & (0.003) & (0.003) & (0.003)\\
-Weather & No & Yes & No\\
-Weather (expanded) & No & No & No\\
-\textbf{Fixed effects:} & \textbf{} & \textbf{} & \textbf{}\\
-Village & Yes & Yes & Yes\\
-Year & Yes & Yes & Yes\\
+Particulate matter (log PM 2.5) & -0.042*** & -0.045*** & -0.008** & -0.041***\\
+ & (0.003) & (0.003) & (0.003) & (0.003)\\
+Weather & No & Yes & Yes & No\\
+Weather (expanded) & No & No & Yes & No\\
+weather (expanded, bins) & No & No & No & Yes\\
+\textbf{Fixed effects:} & \textbf{} & \textbf{} & \textbf{} & \textbf{}\\
+Village & Yes & Yes & Yes & Yes\\
+Year & Yes & Yes & Yes & Yes\\
 \midrule
-Observations & 1,266,922 & 1,266,922 & 1,266,922\\
+Observations & 1,266,922 & 1,266,922 & 1,266,922 & 1,266,922\\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[para]
@@ -354,15 +360,15 @@ Observations & 1,266,922 & 1,266,922 & 1,266,922\\
 \end{threeparttable}
 \end{table}
 
-Of course, it is not wind, per se, that we are interested in. Instead, we are actually interested in better understanding the effects of exposure to pollution on agricultural productivity. Table \ref{tab:yieldtablepm} presents the same regressions as Table \ref{tab:yieldtable}, with a key difference: instead of wind exposure, it uses log average concentration of \(\mathrm{PM 2.5}\) -- from Hammer et al. (2020) -- during the season as the key explanatory variable. There is again a consistent, negative relationship between particulate matter and agricultural productivity. Since both variables are logged, the coefficients are similar to elasticities, indicating that a one-percent increase in pollution leads to an approximately 0.04 percent decrease in agricultural productivity.
+Of course, it is not wind, per se, that we are interested in. Instead, we are actually interested in better understanding the effects of exposure to pollution on agricultural productivity. Table \ref{tab:yieldtablepm} presents the same regressions as Table \ref{tab:yieldtable}, with a key difference: instead of wind exposure, it uses log average concentration of \(\mathrm{PM 2.5}\) -- from Hammer et al. (2020) -- during the season as the key explanatory variable. There is again a consistent, negative relationship between particulate matter and agricultural productivity. Since both variables are logged, the coefficients are similar to elasticities, indicating that a one-percent increase in pollution leads to an approximately 0.04 percent decrease in agricultural productivity in three of the columns.
 
-Recall, however, the results from above: coal plants were placed in places with higher average agricultural productivity. This means that the simple regressions in Table \ref{tab:yieldtablepm} might actually be biased upwards: although pollution might negatively affect productivity, pollution is higher in more productive areas due to the endogenous placement of coal plants in the study areas. One possible way to recover the actual effect of pollution on agricultural productivity is with an instrument. If, conditional on the fixed effects and weather variables, wind direction is exogenous and only affects agricultural productivity through pollution, then it is a valid instrument for pollution.
+Recall, however, the results from above: coal plants were placed in places with higher average agricultural productivity. This means that the simple regressions in Table \ref{tab:yieldtablepm} might actually be biased upwards: although pollution might negatively affect productivity, pollution is higher in more productive areas due to the endogenous placement of pollution sources in the study areas. One possible way to recover the actual effect of pollution on agricultural productivity is with an instrument. If, conditional on the fixed effects and weather variables, wind direction is exogenous and only affects agricultural productivity through pollution, then it is a valid instrument for pollution.
 
 I present these IV results in Table \ref{tab:yieldtabletwo}, with the first-stage F-statistic at the bottom. The first-stage results -- the full results are in Table \ref{tab:yield3ivmainfirststage} of the appendix -- make clear how strong of an instrument wind is; all three F-statistics are above 1,000, meeting even the higher bar for the first-stage F-test argued for by D. Lee et al. (2022).
 
-The second-stage results first indicate that \(\mathrm{PM 2.5}\) is a very strong predictor of agricultural productivity. Using the results in column three, a one percent increase in particulate matter leads to a 0.62 percent decrease in agricultural productivity. To put this in further perspective, the mean particulate matter concentration is just short of 40 (39.68) in the monsoon sample, while the within-village absolute deviation in particulate matter is 3.98, meaning year-to-year swings of several percent in agricultural productivity due to pollution exposure are common.
+The second-stage results first indicate that \(\mathrm{PM 2.5}\) is a very strong predictor of agricultural productivity. Using the results in column three, a one percent increase in particulate matter leads to a 0.62 percent decrease in agricultural productivity. To put this in further perspective, the mean particulate matter concentration is just short of 40 (39.68) in the monsoon sample, while the within-village absolute deviation in particulate matter is 3.98, meaning year-to-year swings of several percent in agricultural productivity due to pollution exposure alone are common.
 
-Column four presents one last specification; it includes a much more flexible specification for weather. Specifically, I turn the linear z-score weather variable into bins for each month of the season. I then interact this rainfall variable with the temperature variable. The coefficient in column four shows almost not change from those in column three, relieving some concerns that weather may not be correctly specified, leading to a spurious correlation between particulate matter and agricultural productivity.
+Column four presents one last specification; it includes a much more flexible specification for weather. This is the same binned specificaiton as I describe above. The coefficient in column four shows almost not change from those in column three, again relieving some concerns that weather may not be correctly specified, leading to a spurious correlation between particulate matter and agricultural productivity.
 
 \begin{table}
 
@@ -392,7 +398,7 @@ Observations & 1,266,922 & 1,266,922 & 1,266,922 & 1,266,922\\
 \end{threeparttable}
 \end{table}
 
-The comparison of the results to those in the previous table also confirm the concerns around endogenous placement of coal plants. The coefficients in Table \ref{tab:yieldtabletwo} are always more negative than those in Table \ref{tab:yieldtablepm}, and sometimes substantially so. In other words, the simple regression of agricultural productivity on pollution results in coefficients on pollution that are upwards biased, since higher levels of pollution occur in more productive areas, on average. The IV strategy corrects this bias and leads to a robust, negative relationship between pollution and agricultural productivity.
+The comparison of the results to those in the previous table also confirm the concerns around endogenous placement of pollution sources. The coefficients in Table \ref{tab:yieldtabletwo} are substantially more negative than those in Table \ref{tab:yieldtablepm}. In other words, the simple regression of agricultural productivity on pollution results in coefficients on pollution that are upwards biased, since higher levels of pollution occur in more productive areas, on average. The IV strategy corrects this bias and leads to a robust, negative relationship between pollution and agricultural productivity.
 
 \hypertarget{robustness-checks}{%
 \subsection{Robustness checks}\label{robustness-checks}}
@@ -405,27 +411,28 @@ I present these results in Figure \ref{fig:randomplot} of the appendix. The purp
 
 The within-district correlation in outcomes and treatment is apparent when instead randomly selecting from only villages within the same district in the same year. The distribution is still approximately normal but has a mode of almost -0.4. Nonetheless, the actual treatment effect is larger in magnitude than almost all of the bootstrapped replications. The results are apparently robust to alternative specifications of uncertainty.
 
-The second robustness check includes leads of pollution and wind direction. I present these results in Table \ref{tab:yieldtableleads}. Neither a one-year nor a two-year lead predicts current agricultural productivity, which supports the identification assumptions.
+The second robustness check includes leads of pollution and wind direction. I instrument for future pollution using future wind direction, which mirrors the strategy employed in the main results. I present these results in Table \ref{tab:yieldtableleads}. Neither a one-year nor a two-year lead predicts current agricultural productivity, which supports the identification assumptions.
 
 \begin{table}
 
 \caption{\label{tab:yieldtableleads}Agricultural productivity and pollution leads}
 \centering
 \begin{threeparttable}
-\begin{tabular}[t]{>{\raggedright\arraybackslash}p{3.5cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}}
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{5.5cm}>{\centering\arraybackslash}p{1.5cm}>{\centering\arraybackslash}p{1.5cm}}
 \toprule
   & (1) & (2)\\
 \midrule
-Particulate matter & -0.073 & \\
-(one-year lead) & (0.066) & \\
-Particulate matter &  & -0.079\\
-(two-year lead) &  & (0.051)\\
-\textbf{Fixed effects:} & \textbf{} & \textbf{}\\
-Village & Yes & Yes\\
-Year & Yes & Yes\\
+particulate matter (one-year lead) & -0.033 & \\
+ & (0.067) & \\
+particulate matter (two-year lead) &  & -0.070\\
+ &  & (0.052)\\
+weather (expanded) & No & No\\
+\textbf{fixed effects:} & \textbf{} & \textbf{}\\
+village & Yes & Yes\\
+year & Yes & Yes\\
 \midrule
-F & 603 & 746\\
-Observations & 1,161,265 & 1,055,562\\
+F & 592 & 783\\
+observations & 1,161,265 & 1,055,562\\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}[para]
@@ -437,11 +444,11 @@ Observations & 1,161,265 & 1,055,562\\
 \hypertarget{heterogeneity}{%
 \subsection{Heterogeneity}\label{heterogeneity}}
 
-Having established that exposure to pollution has a negative effect on agricultural productivity, I now move to the heterogeneity in these effects. Table \ref{tab:yieldtablehet} presents three different analyses: heterogeneity by median exposure, heterogeneity by initial yield, and possible multiplicative effects of shocks. All regressions use the IV strategy detailed above and I include the F statistic from the first stage regressions (of which there are two in the last column) at the bottom of the table.
+Having established that exposure to pollution has a negative effect on agricultural productivity, I now move to the heterogeneity in these effects to better understand whether certain areas are driving the effects. Table \ref{tab:yieldtablehet} presents three different analyses: heterogeneity by median exposure, heterogeneity by initial yield, and possible multiplicative effects of shocks. All regressions use the IV strategy detailed above and I include the F statistic from the first stage regressions (of which there are two in the last column) at the bottom of the table.
 
-The first two columns split the sample based on median exposure. In other words, for each village, I calculate the median exposure (based on wind) and then use this single value for each village to split the sample into villages above and below median exposure. The coefficient in the first column is slightly larger than the coefficient in the second column, indicating that pollution does not have large differential effects based on exposure. One possible explanation is that exposure is not cumulative, but continues to be harmful regardless of the baseline level.
+The first two columns split the sample based on median exposure. In other words, for each village, I calculate the median exposure (based on wind) and then use this single value for each village to split the sample into villages above and below the median. The coefficient in the first column is only slightly larger than the coefficient in the second column, indicating that pollution does not have large differential effects based on exposure. One possible explanation is that exposure is not cumulative, but continues to be harmful regardless of the baseline level.
 
-Columns three and four split the sample based on median yield at the very beginning of the sample (the first year available, 2002-2003). Column three presents results for villages above the median while column four presents results for villages below the median. The largest effects are apparently concentrated in the upper half of the distribution, meaning the most productive areas are also most susceptible to the effects of pollution. This could have important implications for the overall effects of the placement of any point sources of pollution.
+Columns three and four split the sample based on median yield at the very beginning of the sample (the first year available, 2002). Column three presents results for villages above the median while column four presents results for villages below the median. The largest effects are apparently concentrated in the upper half of the distribution, meaning the most productive areas are also most susceptible to the effects of pollution. This could have important implications for the overall effects of the placement of any point sources of pollution.
 
 Given ongoing changes in the climate, a key question is how welfare will change as shocks become more and more common. The last column looks at possible multiplicative effects of shocks by interacting pollution with rainfall and seeing whether the effects compound one another. Since there are now two endogenous regressors, I instrument for both using wind exposure and an interaction between wind exposure and rainfall.
 
@@ -476,18 +483,18 @@ Observations & 617,804 & 649,118 & 634,342 & 632,580 & 1,266,922\\
 \end{threeparttable}
 \end{table}
 
-The coefficient on the level term for pollution is negative. Since rainfall is defined as a z score, this represents the effect of pollution only when rainfall is at its mean value for a given season. The interaction term, on the other hand, is positive. Since higher values of rainfall are generally good, this positive coefficient represents a compounding effect of pollution and rainfall; when rainfall is low (bad), the effects of particulate matter on agricultural productivity is larger (more negative). Another way to think about this, however, is that higher values of rainfall dampen the effects of pollution shocks. This could have very profound effects on welfare, since this essentially increases the variance of agricultural productivity across years (which is already increasing due to climate change), at least as it relates to pollution exposure.
-
-\hypertarget{crops-and-labor-intensity}{%
-\subsection{Crops and labor intensity}\label{crops-and-labor-intensity}}
-
-A key question about the results is the mechanism. While previous results indicate that pollution may actually increase land productivity (Sanders and Barreca 2022), the results in that paper come from the United States, where agricultural practices vary greatly from those in India. Unfortunately, there is no good labor data that would allow me to directly test the effects of pollution on agricultural labor productivity. While the National Sample Survey is nationally representative, it does not allow one to back out productivity, only total labor allocation in the preceding week. Additional data options -- like the ARIS-REDS or IHDS -- are not collected frequently enough to enable the kind of analysis employed here.
-
-Instead, I look at heterogeneity by the modal crop grown in each area. I use data from Monfreda, Ramankutty, and Foley (2008), who estimate area harvested by crop at a resolution of approximately 10km. These estimates come from around the year 2000, at the beginning of my sample period. I identify areas where rice is the most commonly grown crop. Rice (paddy) is commonly regarded as a labor-intensive crop in India (Vollrath 2011; Michler 2020), meaning that it may be more susceptible to pollution if some of the effects of pollution are through direct effects on labor productivity.
+The coefficient on the level term for pollution is negative. Since rainfall is defined as a z score, this represents the effect of pollution only when rainfall is at its mean value for a given season. The interaction term, on the other hand, is positive. Since higher values of rainfall are generally good, this positive coefficient represents a compounding effect of pollution and rainfall; when rainfall is low (bad), the effects of particulate matter on agricultural productivity is larger (more negative). Another way to think about this, however, is that higher values of rainfall dampen the effects of pollution shocks. This could have very profound effects on welfare, since this essentially increases the variance of agricultural productivity across years (which is already increasing due to climate change), at least as it relates to pollution exposure. Given the importance of variability to welfare (Dercon 2002; Merfeld and Morduch 2023), this could have important implications for the effects of pollution on welfare.
 
 \begin{figure}
 \includegraphics{draft_files/figure-latex/crops-1} \caption[Most common crop by village]{Most common crop by village}\label{fig:crops}\floatfoot*{Note: The figure shows the most common crop grown in each village, by area harvested.}
 \end{figure}
+
+\hypertarget{crops-and-labor-intensity}{%
+\subsection{Crops and labor intensity}\label{crops-and-labor-intensity}}
+
+A key question about the results is the mechanism. While previous results indicate that pollution may actually increase land productivity (Sanders and Barreca 2022), the results in that paper come from the United States, where agricultural practices vary greatly from those in India. On the other hand, we also know that pollution can affect labor productivity in other contexts (Chang et al. 2019; Ebenstein, Lavy, and Roth 2016; Graff Zivin and Neidell 2012; Wen and Burke 2022). Unfortunately, there is no available labor data that would allow me to directly test the effects of pollution on agricultural labor productivity. While the National Sample Survey is nationally representative, it does not allow one to back out productivity, only total labor allocation in the preceding week. Additional data options -- like the ARIS-REDS or IHDS -- are not collected frequently enough to enable the kind of analysis employed here.
+
+Instead, I look at heterogeneity by the modal crop grown in each area. I use data from Monfreda, Ramankutty, and Foley (2008), who estimate area harvested by crop at a resolution of approximately 10km. These estimates come from around the year 2000, at the beginning of my sample period. I identify areas where rice is the most commonly grown crop. Rice (paddy) is commonly regarded as a labor-intensive crop in India (Vollrath 2011; Michler 2020), meaning that it may be more susceptible to pollution if some of the effects of pollution are through direct effects on labor productivity.
 
 Figure \ref{fig:crops} shows the distribution of the most common crop across the villages in my sample. Though there are large areas where rice is the most commonly grown crop, there is also quite a bit of overlap, especially in the middle parts of the country. However, given the geographic concentration of rice production, I will implement a robustness check with state-by-year fixed effects below.
 
@@ -496,12 +503,12 @@ Figure \ref{fig:crops} shows the distribution of the most common crop across the
 \caption{\label{tab:yieldrice}Agricultural productivity by most common crop}
 \centering
 \begin{threeparttable}
-\begin{tabular}[t]{>{\raggedright\arraybackslash}p{3.5cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}}
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{5.5cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}}
 \toprule
   & (1) & (2)\\
 \midrule
-Particulate matter & -0.287** & -0.394***\\
-(log PM 2.5) & (0.133) & (0.134)\\
+Particulate matter (log PM 2.5) & -0.287** & -0.394***\\
+ & (0.133) & (0.134)\\
 PM 2.5 times rice & -0.338*** & -0.205***\\
  & (0.061) & (0.060)\\
 Weather (expanded) & Yes & No\\
@@ -530,21 +537,23 @@ Given the geographic concentration of crops, Table \ref{tab:yieldricestatefe} in
 
 Finally, while I identify high-pollution areas using the location of coal plants, an important question is how much of the overall effect is driven by coal plants and how much is driven by other polluting industries located in areas near coal plants. I try to answer this question in Table \ref{tab:yield7ivdiffindiff}, where I implement an instrumental variables differences-in-differences, essentially instrumenting for pollution prior to the opening of a coal plant with wind and instrumenting for the interaction term (pollution times plant opening) with wind times plant opening.
 
+Columns one and two of Table \ref{tab:yield7ivdiffindiff} present specifications with slightly different weather controls. Column two presents the most extensive set of controls -- the flexible specification with binned weather variables -- and I focus on that column here. First, there are now two first stages but the F-tests indicate that the instruments are strong for both, including the interaction term (F = 205 in the second column). Second, the first row shows the effect of pollution on agricultural productivity prior to the opening of a coal plant; the coefficient is negative, indicating negative effects of non-coal pollution. Third, the interaction term is strongly negative and approximately the same in magnitude as the level term, indicating a very clear effect specific to coal plants, in addition to the overall negative effect of pollution.
+
 \begin{table}
 
 \caption{\label{tab:yield7ivdiffindiff}Agricultural productivity and pollution source}
 \centering
 \begin{threeparttable}
-\begin{tabular}[t]{>{\raggedright\arraybackslash}p{3.5cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}}
+\begin{tabular}[t]{>{\raggedright\arraybackslash}p{5.5cm}>{\centering\arraybackslash}p{2cm}>{\centering\arraybackslash}p{2cm}}
 \toprule
   & (1) & (2)\\
 \midrule
-Particulate matter & -0.228*** & -0.223***\\
-(log PM 2.5) & (0.066) & (0.065)\\
+Particulate matter (log PM 2.5) & -0.228*** & -0.223***\\
+ & (0.066) & (0.065)\\
 PM 2.5 times Coal & -0.250*** & -0.220***\\
  & (0.024) & (0.025)\\
-Weather & Yes & No\\
-Weather (expanded) & No & Yes\\
+Weather (expanded) & Yes & No\\
+Weather (expanded, bins) & No & Yes\\
 \textbf{Fixed effects:} & \textbf{} & \textbf{}\\
 Year & Yes & Yes\\
 Village & Yes & Yes\\
@@ -559,8 +568,6 @@ Observations & 1,266,922 & 1,266,922\\
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
-
-Columns one and two of Table \ref{tab:yield7ivdiffindiff} present specifications with slightly different weather controls. Column two presents the most extensive set of controls and I focus on that column here. First, there are now two first stages but the F-tests indicate that the instruments are strong for both, including the interaction term (F = 205 in the second column). Second, the first row shows the effect of pollution on agricultural productivity prior to the opening of a coal plant; the coefficient is negative, indicating negative effects of non-coal pollution. Third, the interaction term is strongly negative and approximately the same in magnitude as the level term, indicating a very clear effect specific to coal plants, in addition to the overall negative effect of pollution.
 
 Importantly, since these results come from an IV, both coefficients denote the change in agricultural yield due to an increase in pollution by the same units. In other words, this is not identifying differences in overall pollution, per se, but rather differences in the effects of an increase of pollution by the same percentage. These different effects could be due to, for example, differences in emission patterns for different kinds of plants and factories; coal plants, for example, are responsible for much more mercury than other kinds of polluting industries.\footnote{\url{https://www.epa.gov/sites/default/files/2016-12/documents/nei2014v1_tsd.pdf}}
 
@@ -623,8 +630,11 @@ Chen, Shuai, Paulina Oliva, and Peng Zhang. 2022. {``{The effect of air pollutio
 \leavevmode\vadjust pre{\hypertarget{ref-christiaensen2011evolving}{}}%
 Christiaensen, Luc, Lionel Demery, and Jesper Kuhl. 2011. {``{The (evolving) role of agriculture in poverty reduction --- An empirical perspective}.''} \emph{{Journal of Development Economics}} 96 (2): 239--54.
 
+\leavevmode\vadjust pre{\hypertarget{ref-dercon2002income}{}}%
+Dercon, Stefan. 2002. {``Income Risk, Coping Strategies, and Safety Nets.''} \emph{{The World Bank Research Observer}} 17 (2): 141--66.
+
 \leavevmode\vadjust pre{\hypertarget{ref-dercon2009rural}{}}%
-Dercon, Stefan. 2009. {``{Rural poverty: Old challenges in new contexts}.''} \emph{{The World Bank Research Observer}} 24 (1): 1--28.
+---------. 2009. {``{Rural poverty: Old challenges in new contexts}.''} \emph{{The World Bank Research Observer}} 24 (1): 1--28.
 
 \leavevmode\vadjust pre{\hypertarget{ref-deryugina2019mortality}{}}%
 Deryugina, Tatyana, Garth Heutel, Nolan H Miller, David Molitor, and Julian Reif. 2019. {``{The mortality and medical costs of air pollution: Evidence from changes in wind direction}.''} \emph{{American Economic Review}} 109 (12): 4178--4219.
@@ -640,6 +650,12 @@ Ebenstein, Avraham, Victor Lavy, and Sefi Roth. 2016. {``{The long-run economic 
 
 \leavevmode\vadjust pre{\hypertarget{ref-gangopadhyay2022new}{}}%
 Gangopadhyay, Prasun K, Paresh B Shirsath, Vinay K Dadhwal, and Pramod K Aggarwal. 2022. {``{A new two-decade (2001--2019) high-resolution agricultural primary productivity dataset for India}.''} \emph{{Scientific Data}} 9 (1): 1--12.
+
+\leavevmode\vadjust pre{\hypertarget{ref-gillen2019experimenting}{}}%
+Gillen, Ben, Erik Snowberg, and Leeat Yariv. 2019. {``{Experimenting with measurement error: Techniques with applications to the Caltech cohort study}.''} \emph{{Journal of Political Economy}} 127 (4): 1826--63.
+
+\leavevmode\vadjust pre{\hypertarget{ref-glewwe2012much}{}}%
+Glewwe, Paul. 2012. {``{How much of observed economic mobility is measurement error? IV methods to reduce measurement error bias, with an application to Vietnam}.''} \emph{{The World Bank Economic Review}} 26 (2): 236--64.
 
 \leavevmode\vadjust pre{\hypertarget{ref-graff2012impact}{}}%
 Graff Zivin, Joshua, and Matthew Neidell. 2012. {``{The impact of pollution on worker productivity}.''} \emph{{American Economic Review}} 102 (7): 3652--73.
@@ -682,6 +698,9 @@ Markard, Jochen. 2018. {``The Next Phase of the Energy Transition and Its Implic
 
 \leavevmode\vadjust pre{\hypertarget{ref-marshall1997hidden}{}}%
 Marshall, Fiona, Mike Ashmore, Fiona Hinchcliffe, et al. 1997. \emph{{A hidden threat to food production: Air pollution and agriculture in the developing world}}. {International Institute for Environment and Development.}
+
+\leavevmode\vadjust pre{\hypertarget{ref-merfeld2023poverty}{}}%
+Merfeld, Joshua D, and Jonathan Morduch. 2023. {``Poverty at Higher Frequency.''} \emph{{KDI School of Pub Policy \& Management Paper No. DP23-03}}.
 
 \leavevmode\vadjust pre{\hypertarget{ref-michler2020agriculture}{}}%
 Michler, Jeffrey D. 2020. {``{Agriculture in the process of development: A micro-perspective}.''} \emph{{World Development}} 129: 104888.
@@ -750,7 +769,7 @@ crops & Monfreda et al. (2008) & global & 2000 (year)\\
 \newpage
 
 \begin{figure}
-\includegraphics{draft_files/figure-latex/plants-1} \caption[Coal plants in India from 1990 to 2010]{Coal plants in India from 1990 to 2010}\label{fig:plants}\floatfoot*{Note: The top figure shows the location of coal plants in 1990. The bottom figure shows the location of coal plants in 2010.}
+\includegraphics{draft_files/figure-latex/plants-1} \caption[Coal plants in India from 1990 to 2010]{Coal plants in India from 1990 to 2010}\label{fig:plants}\floatfoot*{Note: The left figure shows the location of coal plants of at least 30MW in 1990. The right figure shows the location of such coal plants in 2010.}
 \end{figure}
 
 \FloatBarrier

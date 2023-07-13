@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.3.20)  10 JUL 2023 15:34
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.3.20)  13 JUL 2023 16:05
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -789,54 +789,54 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 {/usr/local/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <7> on input line 147.
-[2] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13] [14] [15] [16] [17]
+[2] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13] [14] [15] [16] [17] [18]
 <draft_files/figure-latex/crops-1.png, id=175, 453.695pt x 348.30125pt>
 File: draft_files/figure-latex/crops-1.png Graphic file (type png)
 <use draft_files/figure-latex/crops-1.png>
 Package pdftex.def Info: draft_files/figure-latex/crops-1.png  used on input li
 ne 489.
 (pdftex.def)             Requested size: 453.6939pt x 348.3004pt.
-[18 <./draft_files/figure-latex/crops-1.png>] [19] [20] [21] [22] [23]
+[19 <./draft_files/figure-latex/crops-1.png>] [20] [21] [22] [23] [24] [25]
 pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has
  been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.727 \caption{\label{tab:data}Data sources}
-                                             [24]
-<draft_files/figure-latex/plants-1.png, id=269, 449.68pt x 238.8925pt>
+l.746 \caption{\label{tab:data}Data sources}
+                                             [26]
+<draft_files/figure-latex/plants-1.png, id=280, 449.68pt x 238.8925pt>
 File: draft_files/figure-latex/plants-1.png Graphic file (type png)
 <use draft_files/figure-latex/plants-1.png>
 Package pdftex.def Info: draft_files/figure-latex/plants-1.png  used on input l
-ine 753.
+ine 772.
 (pdftex.def)             Requested size: 449.6789pt x 238.8919pt.
 
 pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) ha
 s been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.753 ...]{Coal plants in India from 1990 to 2010}
+l.772 ...]{Coal plants in India from 1990 to 2010}
                                                   \label{fig:plants}\floatfo...
-[25 <./draft_files/figure-latex/plants-1.png>]
-<draft_files/figure-latex/windexample-1.png, id=275, 286.06876pt x 556.0775pt>
+[27 <./draft_files/figure-latex/plants-1.png>]
+<draft_files/figure-latex/windexample-1.png, id=285, 286.06876pt x 556.0775pt>
 File: draft_files/figure-latex/windexample-1.png Graphic file (type png)
 <use draft_files/figure-latex/windexample-1.png>
 Package pdftex.def Info: draft_files/figure-latex/windexample-1.png  used on in
-put line 760.
+put line 779.
 (pdftex.def)             Requested size: 286.07242pt x 556.08463pt.
-[26 <./draft_files/figure-latex/windexample-1.png>]
+[28 <./draft_files/figure-latex/windexample-1.png>]
 pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has
  been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.768 ...ge}Wind direction and particulate matter}
-                                                   [27]
-<draft_files/figure-latex/randomplot-1.png, id=285, 459.7175pt x 278.03876pt>
+l.787 ...ge}Wind direction and particulate matter}
+                                                   [29]
+<draft_files/figure-latex/randomplot-1.png, id=295, 459.7175pt x 278.03876pt>
 File: draft_files/figure-latex/randomplot-1.png Graphic file (type png)
 <use draft_files/figure-latex/randomplot-1.png>
 Package pdftex.def Info: draft_files/figure-latex/randomplot-1.png  used on inp
-ut line 798.
+ut line 817.
 (pdftex.def)             Requested size: 459.72337pt x 278.04231pt.
-[28
+[30
 
 
  <./draft_files/figure-latex/randomplot-1.png>]
@@ -844,26 +844,26 @@ pdfTeX warning (ext4): destination with the same identifier (name{table.3}) has
  been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.809 ... exposure to pollution during the season}
-                                                   [29]
+l.828 ... exposure to pollution during the season}
+                                                   [31]
 pdfTeX warning (ext4): destination with the same identifier (name{table.4}) has
  been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.846 ...ultural productivity by most common crop}
-                                                   [30] (./draft.aux)
+l.865 ...ultural productivity by most common crop}
+                                                   [32] (./draft.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 20771 strings out of 478268
- 387586 string characters out of 5846347
- 697273 words of memory out of 5000000
+ 20782 strings out of 478268
+ 387743 string characters out of 5846347
+ 697347 words of memory out of 5000000
  38308 multiletter control sequences out of 15000+600000
- 553229 words of font info for 185 fonts, out of 8000000 for 9000
+ 553572 words of font info for 188 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 74i,13n,79p,1498b,786s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 74i,13n,79p,1642b,786s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/
 texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/20
 22/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2022/texmf-dist/
@@ -882,10 +882,10 @@ ocal/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive
 dist/fonts/type1/public/lm/lmr9.pfb></usr/local/texlive/2022/texmf-dist/fonts/t
 ype1/public/lm/lmri10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/publi
 c/lm/lmsy10.pfb>
-Output written on draft.pdf (30 pages, 532126 bytes).
+Output written on draft.pdf (32 pages, 541251 bytes).
 PDF statistics:
- 444 PDF objects out of 1000 (max. 8388607)
- 367 compressed objects within 4 object streams
- 129 named destinations out of 1000 (max. 500000)
+ 456 PDF objects out of 1000 (max. 8388607)
+ 377 compressed objects within 4 object streams
+ 134 named destinations out of 1000 (max. 500000)
  49277 words of extra memory for PDF output out of 51595 (max. 10000000)
 
