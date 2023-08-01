@@ -22,10 +22,45 @@ getwd()    # check
 
 
 villages <- read_sf(paste0("data/spatial/village_new/village_new.shp"))
+
+
+### Load raw plants data
+plants <- read.xlsx("data/raw/coal_plants.xlsx", sheet = "Units")
+# India only
+plants <- plants %>% filter(Country=="India")
+# Also want only things with a non-missing year
+plants <- plants %>% filter(is.na(Year)==F)
+
+# Just keep what we want 
+plants <- plants %>% dplyr::select(plant_id = ParentID, 
+                                   unit_id = Tracker.ID, 
+                                   lat = Latitude, 
+                                   lon = Longitude) %>%
+                      group_by(plant_id) %>%
+                      filter(row_number()==1) %>%
+                      ungroup()
+
+gps_points_plants <- plants %>% dplyr::select(lon, lat)
+plants <- st_as_sf(SpatialPointsDataFrame(gps_points_plants, plants, proj4string = CRS("EPSG:4258")))
+plants <- st_transform(plants, crs = crs(villages))
+overlap <- st_join(plants, villages, join = st_intersects)
+
+overlap <- as_tibble(overlap) %>% mutate(shrid = paste0(pc11_s_id, "-", pc11_tv_id), has_plant = 1) %>%
+                                  dplyr::select(shrid, has_plant)
+overlap <- overlap %>%
+            group_by(shrid) %>%
+            filter(row_number()==1) %>%
+            ungroup()
+
+
+
 villages <- as_tibble(villages) %>% mutate(shrid = paste0(pc11_s_id, "-", pc11_tv_id),
                                 district_id = paste0(pc11_s_id, "-", pc11_d_id),
                                 area_overlap = area) %>%
-                          dplyr::select(shrid, district_id)
+                          dplyr::select(shrid, district_id) %>%
+                          group_by(shrid) %>%
+                          filter(row_number()==1) %>%
+                          ungroup()
 
 
 # Where do plants open?
@@ -38,6 +73,9 @@ villages90 <- villages90 %>% mutate(
                                     tar_road = pc91_vd_tar_road,
                                     urban_pop = pc91_pca_tot_p_u/pc91_pca_tot_p
                                     ) %>%
+                              group_by(shrid) %>%
+                              filter(row_number()==1) %>%
+                              ungroup() %>%
                               left_join(villages, by = c("shrid"))
 villages00 <- read_csv("data/clean/census_plants/villages00.csv")
 villages00$pc01_pca_tot_p_u[is.na(villages00$pc01_pca_tot_p_u)] <- 0
@@ -84,11 +122,22 @@ villages00 <- villages00 %>% left_join(pollution, by = "shrid")
 villages90$state <- substr(villages90$shrid, 1, 2)
 villages00$state <- substr(villages00$shrid, 1, 2)
 
+villages90 <- villages90 %>% left_join(overlap, by = "shrid")
+villages00 <- villages00 %>% left_join(overlap, by = "shrid")
 
-reg1 <- feols(plants90 ~ log(pop) + log(area) + urban_pop | state, data = villages90, vcov = "hetero")
-reg2 <- feols(plants00 ~ log(pop) + log(area) + urban_pop | state, data = villages90 %>% filter(plants90==0), vcov = "hetero")
-reg3 <- feols(plants00 ~ ag_prod + log(pm25) + log(pop) + log(area) + urban_pop | state, data = villages00, vcov = "hetero")
-reg4 <- feols(plants10 ~ ag_prod + log(pm25) + log(pop) + log(area) + urban_pop | state, data = villages00 %>% filter(plants00==0), vcov = "hetero")
+villages90$plants90[is.na(villages90$has_plant)] <- 0
+villages90$plants00[is.na(villages90$has_plant)] <- 0
+villages00$plants00[is.na(villages00$has_plant)] <- 0
+villages00$plants10[is.na(villages00$has_plant)] <- 0
+
+
+
+
+
+reg1 <- feglm(plants90 ~ log(pop) + log(area) | state, data = villages90, vcov = "hetero", family = binomial(link = "probit"))
+reg2 <- feglm(plants00 ~ log(pop) + log(area) + plants90 | state, data = villages90, vcov = "hetero", family = binomial(link = "probit"))
+reg3 <- feglm(plants00 ~ ag_prod + log(pm25) + log(pop) + log(area) | state, data = villages00, vcov = "hetero", family = binomial(link = "probit"))
+reg4 <- feglm(plants10 ~ ag_prod + log(pm25) + log(pop) + log(area) + plants00 | state, data = villages00, vcov = "hetero", family = binomial(link = "probit"))
 
 plantresultstable <- etable(
                           reg1, reg2, reg3, reg4,
@@ -101,10 +150,13 @@ plantresultstable <- etable(
                           coefstat = "se",
                           extralines = list("Sub-sample" = c("all", "no plant", "all", "no plant"))
                           )
+
+plantresultstable[11:12,3] <- plantresultstable[5:6, 3]
+plantresultstable <- plantresultstable[-c(5:6),]
 plantresultstable <- as.matrix(plantresultstable)
-plantresultstable <- plantresultstable[-c(12:15),]
-rownames(plantresultstable) <- c("pop (log)", "", "area (log)", "", "urban pop. (prop)", "", "ag productivity", "", "Pollution", " ",
-                                "sub-sample", "observations")
+plantresultstable <- plantresultstable[-c(11:15),]
+rownames(plantresultstable) <- c("pop (log)", "", "area (log)", "", "ag productivity", "", "pollution", " ", "has plant?", "",
+                                "observations")
 plantresultstable <- plantresultstable[,-c(1)]
 saveRDS(plantresultstable, "pollution_development/draft/tables/plantresultstable.rds")
 
