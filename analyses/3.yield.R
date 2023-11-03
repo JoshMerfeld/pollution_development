@@ -17,7 +17,6 @@ library(parallel)
 # setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 # We want to get the wd up to the main folder
 # Need to go up two levels
-setwd("../")
 # Double check
 getwd()    # check
 

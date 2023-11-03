@@ -14,65 +14,42 @@ library(tidyverse)
 library(ncdf4)
 library(lubridate)
 library(R.utils)
-
+library(exactextractr)
 
 # Sets wd to folder this script is in so we can create relative paths instead of absolute paths
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
-# We want to get the wd up to the main folder
-# Need to go up two levels
-setwd("../../")
 # Double check
 getwd()    # check
 
 
 ### Load raw data ----------------------------------------------------------------------------------------------------------------------------------------------
-ntl <- as_tibble(read.csv("data/raw/shrug-v1.5.samosa-nl-csv/shrug_nl_wide.csv"))
-ntl <- ntl %>% select(-num_cells)
-
-# Gather, one variable at a time (we want long by year but wide by variables)
-ntl2 <- ntl %>% select(-c(starts_with("total_light_cal"), starts_with("max_"))) %>%
-                                gather(
-                                       "variable",
-                                       "ntl",
-                                       -shrid
-                                       )
-# Do some cleaning
-ntl2 <- ntl2 %>% mutate(
-                        year = substr(variable, str_length(variable) - 3, str_length(variable))
-                        ) %>%
-                  select(shrid, year, total_light = ntl)
-
-# Same thing for nezt var
-ntl3 <- ntl %>% select(c(starts_with("total_light_cal"), "shrid")) %>%
-                                gather(
-                                       "variable",
-                                       "ntl",
-                                       -shrid
-                                       )
-# Do some cleaning
-ntl3 <- ntl3 %>% mutate(
-                        year = substr(variable, str_length(variable) - 3, str_length(variable))
-                        ) %>%
-                  select(shrid, year, total_light_cal = ntl)
-
-# And the last one
-ntl4 <- ntl %>% select(c(starts_with("max"), "shrid")) %>%
-                                gather(
-                                       "variable",
-                                       "ntl",
-                                       -shrid
-                                       )
-# Do some cleaning
-ntl4 <- ntl4 %>% mutate(
-                        year = substr(variable, str_length(variable) - 3, str_length(variable))
-                        ) %>%
-                  select(shrid, year, max_light = ntl)
+villages <- read_sf("data/spatial/villages_overlap/villages_overlap.shp") %>% st_set_crs(st_crs("EPSG:24378"))
+villages$shrid <- paste0(villages$pc11_s_id, "-", villages$pc11_tv_id)
+villages <- villages %>%
+              group_by(shrid) %>%
+              filter(row_number()==1) %>%
+              ungroup()
+# put in same crs as nightlights (much easier than transforming each year of nightlights)
+villages <- st_transform(villages, crs = st_crs("EPSG:4326"))
 
 
-ntl <- ntl2 %>% left_join(ntl3, by = c("shrid", "year")) %>% 
-                left_join(ntl4, by = c("shrid", "year"))
+# go through nightlights, one year at a time
+# from https://www.nature.com/articles/s41597-020-0510-y#code-availability
+for (year in 1999:2013){
+      nightlights <- raster(paste0("data/raw/nightlights/Harmonized_DN_NTL_", year, "_calDMSP.tif"))
+      nighlights <- exact_extract(nightlights, villages, fun = "mean", append_cols = "shrid")
+      nighlights <- nighlights %>% rename(ntl = mean)
+      # add year
+      nighlights$year <- year
+      # save
+      if (year==1999){
+            ntl_all <- nighlights
+      } else ntl_all <- rbind(ntl_all, nighlights)
 
-write.csv(ntl, "data/clean/village_ntl.csv")
+      print(year)
+}
+
+# save
+write.csv(ntl_all, "data/clean/village_ntl.csv")
 
 
 

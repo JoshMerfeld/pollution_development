@@ -39,6 +39,7 @@ header-includes:
   - \usepackage[shortlabels]{enumitem}
   - \usepackage[hang,flushmargin]{footmisc}		# no indents on footnotes
   - \usepackage{makecell}
+
 ---
 
 ```{r setup, include=FALSE}
@@ -352,7 +353,7 @@ What are the characteristics of areas near the construction of new coal plants? 
 colnames(plantresultstable) <- c("1991", "2001", "2001", "2011")
 rownames(plantresultstable) <- c("Population (log)", "", "Area (log)", "", "Urban pop (prop)", "", "Ag. productivity", "", "Pollution (log PM 2.5)", "",
                                 "Sub-sample", "Observations")
-kable(
+kable(    
       plantresultstable, caption = "Local characteristics and the construction of coal plants",
       align = "cccc", booktabs = TRUE, linesep = "", escape = FALSE
       ) %>%
@@ -365,7 +366,6 @@ kable(
            ) %>%
   column_spec(1, width = "3.5cm") %>%
   column_spec(c(2:5),width = "2cm") %>%
-  row_spec(11, hline_after = TRUE) %>%
   add_header_above(c(" ", "1991 census" = 2, "2001 census" = 2)) %>%
   kable_classic_2()
 
