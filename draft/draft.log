@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.3.20)  19 JUL 2023 10:40
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2023.3.20)  23 NOV 2023 16:16
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -789,82 +789,142 @@ LaTeX Font Info:    External font `lmex10' loaded for size
 {/usr/local/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 LaTeX Font Info:    External font `lmex10' loaded for size
 (Font)              <7> on input line 147.
-[2] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13] [14] [15] [16] [17]
-<draft_files/figure-latex/crops-1.png, id=167, 453.695pt x 348.30125pt>
-File: draft_files/figure-latex/crops-1.png Graphic file (type png)
-<use draft_files/figure-latex/crops-1.png>
-Package pdftex.def Info: draft_files/figure-latex/crops-1.png  used on input li
-ne 489.
-(pdftex.def)             Requested size: 453.6939pt x 348.3004pt.
-[18] [19 <./draft_files/figure-latex/crops-1.png>] [20] [21] [22] [23] [24] [25
-]
+[2] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13] [14] [15] [16] [17] [18]
+<draft_files/figure-latex/yield8monthly-1.png, id=177, 459.7175pt x 316.18124pt
+>
+File: draft_files/figure-latex/yield8monthly-1.png Graphic file (type png)
+<use draft_files/figure-latex/yield8monthly-1.png>
+Package pdftex.def Info: draft_files/figure-latex/yield8monthly-1.png  used on 
+input line 505.
+(pdftex.def)             Requested size: 459.74442pt x 316.19975pt.
+[19] [20 <./draft_files/figure-latex/yield8monthly-1.png>]
+
+LaTeX Warning: Reference `yield8monthly' on page 21 undefined on input line 510
+.
+
+[21] [22] [23] [24] [25] [26] [27]
 pdfTeX warning (ext4): destination with the same identifier (name{table.1}) has
  been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.746 \caption{\label{tab:data}Data sources}
-                                             [26]
-<draft_files/figure-latex/plants-1.png, id=276, 449.68pt x 238.8925pt>
+l.763 \caption{\label{tab:data}Data sources}
+                                             [28]
+<draft_files/figure-latex/plants-1.png, id=301, 449.68pt x 238.8925pt>
 File: draft_files/figure-latex/plants-1.png Graphic file (type png)
 <use draft_files/figure-latex/plants-1.png>
 Package pdftex.def Info: draft_files/figure-latex/plants-1.png  used on input l
-ine 772.
+ine 789.
 (pdftex.def)             Requested size: 449.6789pt x 238.8919pt.
 
 pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) ha
 s been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.772 ...]{Coal plants in India from 1990 to 2010}
+l.789 ...]{Coal plants in India from 1990 to 2010}
                                                   \label{fig:plants}\floatfo...
-[27 <./draft_files/figure-latex/plants-1.png>]
-<draft_files/figure-latex/windexample-1.png, id=281, 286.06876pt x 556.0775pt>
+[29 <./draft_files/figure-latex/plants-1.png>]
+<draft_files/figure-latex/windexample-1.png, id=306, 286.06876pt x 556.0775pt>
 File: draft_files/figure-latex/windexample-1.png Graphic file (type png)
 <use draft_files/figure-latex/windexample-1.png>
 Package pdftex.def Info: draft_files/figure-latex/windexample-1.png  used on in
-put line 779.
+put line 796.
 (pdftex.def)             Requested size: 286.07242pt x 556.08463pt.
-[28 <./draft_files/figure-latex/windexample-1.png>]
+[30 <./draft_files/figure-latex/windexample-1.png>]
 pdfTeX warning (ext4): destination with the same identifier (name{table.2}) has
  been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.787 ...ge}Wind direction and particulate matter}
-                                                   [29]
-<draft_files/figure-latex/randomplot-1.png, id=291, 459.7175pt x 278.03876pt>
-File: draft_files/figure-latex/randomplot-1.png Graphic file (type png)
-<use draft_files/figure-latex/randomplot-1.png>
-Package pdftex.def Info: draft_files/figure-latex/randomplot-1.png  used on inp
-ut line 817.
-(pdftex.def)             Requested size: 459.72337pt x 278.04231pt.
-[30
-
-
- <./draft_files/figure-latex/randomplot-1.png>]
+l.804 ...r (PM 2.5) and agricultural productivity}
+                                                   [31]
 pdfTeX warning (ext4): destination with the same identifier (name{table.3}) has
  been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.828 ... exposure to pollution during the season}
-                                                   [31]
+l.834 ...ge}Wind direction and particulate matter}
+                                                   [32]
+<draft_files/figure-latex/randomplot-1.png, id=322, 459.7175pt x 278.03876pt>
+File: draft_files/figure-latex/randomplot-1.png Graphic file (type png)
+<use draft_files/figure-latex/randomplot-1.png>
+Package pdftex.def Info: draft_files/figure-latex/randomplot-1.png  used on inp
+ut line 864.
+(pdftex.def)             Requested size: 459.72337pt x 278.04231pt.
+[33
+
+
+
+ <./draft_files/figure-latex/randomplot-1.png>]
+<draft_files/figure-latex/crops-1.png, id=328, 453.695pt x 348.30125pt>
+File: draft_files/figure-latex/crops-1.png Graphic file (type png)
+<use draft_files/figure-latex/crops-1.png>
+Package pdftex.def Info: draft_files/figure-latex/crops-1.png  used on input li
+ne 871.
+(pdftex.def)             Requested size: 453.6939pt x 348.3004pt.
+[34 <./draft_files/figure-latex/crops-1.png>]
 pdfTeX warning (ext4): destination with the same identifier (name{table.4}) has
  been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.865 ...ultural productivity by most common crop}
-                                                   [32] (./draft.aux)
+l.879 ...ultural productivity by most common crop}
+                                                  
+<draft_files/figure-latex/yielddatamaps-1.png, id=334, 349.305pt x 314.17375pt>
+
+File: draft_files/figure-latex/yielddatamaps-1.png Graphic file (type png)
+<use draft_files/figure-latex/yielddatamaps-1.png>
+Package pdftex.def Info: draft_files/figure-latex/yielddatamaps-1.png  used on 
+input line 911.
+(pdftex.def)             Requested size: 349.32011pt x 314.18735pt.
+[35 <./draft_files/figure-latex/yielddatamaps-1.png>]
+<draft_files/figure-latex/yield9counterfactual1-1.pdf, id=340, 562.1pt x 315.17
+75pt>
+File: draft_files/figure-latex/yield9counterfactual1-1.pdf Graphic file (type p
+df)
+<use draft_files/figure-latex/yield9counterfactual1-1.pdf>
+Package pdftex.def Info: draft_files/figure-latex/yield9counterfactual1-1.pdf  
+used on input line 919.
+(pdftex.def)             Requested size: 562.13293pt x 315.19595pt.
+[36
+
+
+ <./draft_files/figure-latex/yield9counterfactual1-1.pdf>]
+<draft_files/figure-latex/yield9counterfactual2-1.pdf, id=354, 562.1pt x 315.17
+75pt>
+File: draft_files/figure-latex/yield9counterfactual2-1.pdf Graphic file (type p
+df)
+<use draft_files/figure-latex/yield9counterfactual2-1.pdf>
+Package pdftex.def Info: draft_files/figure-latex/yield9counterfactual2-1.pdf  
+used on input line 928.
+(pdftex.def)             Requested size: 562.13293pt x 315.19595pt.
+[37
+
+
+ <./draft_files/figure-latex/yield9counterfactual2-1.pdf>]
+<draft_files/figure-latex/yield9counterfactual3-1.pdf, id=369, 562.1pt x 315.17
+75pt>
+File: draft_files/figure-latex/yield9counterfactual3-1.pdf Graphic file (type p
+df)
+<use draft_files/figure-latex/yield9counterfactual3-1.pdf>
+Package pdftex.def Info: draft_files/figure-latex/yield9counterfactual3-1.pdf  
+used on input line 937.
+(pdftex.def)             Requested size: 562.13293pt x 315.19595pt.
+[38
+
+
+ <./draft_files/figure-latex/yield9counterfactual3-1.pdf>] (./draft.aux)
+
+LaTeX Warning: There were undefined references.
+
 
 LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 20778 strings out of 478268
- 387712 string characters out of 5846347
- 698377 words of memory out of 5000000
- 38308 multiletter control sequences out of 15000+600000
- 553483 words of font info for 187 fonts, out of 8000000 for 9000
+ 20855 strings out of 478268
+ 390700 string characters out of 5846347
+ 698008 words of memory out of 5000000
+ 38361 multiletter control sequences out of 15000+600000
+ 553704 words of font info for 189 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 74i,13n,79p,1642b,786s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 74i,13n,79p,1642b,802s stack positions out of 10000i,1000n,20000p,200000b,200000s
 {/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/
 texlive/2022/texmf-dist/fonts/enc/dvips/lm/lm-mathsy.enc}{/usr/local/texlive/20
 22/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2022/texmf-dist/
@@ -883,10 +943,10 @@ ocal/texlive/2022/texmf-dist/fonts/type1/public/lm/lmr7.pfb></usr/local/texlive
 dist/fonts/type1/public/lm/lmr9.pfb></usr/local/texlive/2022/texmf-dist/fonts/t
 ype1/public/lm/lmri10.pfb></usr/local/texlive/2022/texmf-dist/fonts/type1/publi
 c/lm/lmsy10.pfb>
-Output written on draft.pdf (32 pages, 540445 bytes).
+Output written on draft.pdf (38 pages, 619030 bytes).
 PDF statistics:
- 451 PDF objects out of 1000 (max. 8388607)
- 372 compressed objects within 4 object streams
- 132 named destinations out of 1000 (max. 500000)
- 49277 words of extra memory for PDF output out of 51595 (max. 10000000)
+ 538 PDF objects out of 1000 (max. 8388607)
+ 440 compressed objects within 5 object streams
+ 147 named destinations out of 1000 (max. 500000)
+ 49310 words of extra memory for PDF output out of 51595 (max. 10000000)
 
