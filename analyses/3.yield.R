@@ -149,7 +149,6 @@ df <- df %>%
 
 
 
-
 summary(df$wind_abs_dev)
 summary(df$pm25_abs_dev)
 summary(exp(df$pm25))
@@ -159,6 +158,31 @@ df <- df %>%
       left_join(crops, by = c("shrid"))
 
 
+
+# # get lat/lon
+# villages_overlap <- read_sf("data/spatial/villages_overlap/villages_overlap.shp") %>% st_set_crs(st_crs("EPSG:24378"))
+# villages_overlap <- villages_overlap %>% 
+#                       mutate(
+#                              shrid = paste0(pc11_s_id, "-", pc11_tv_id)
+#                              ) %>%
+#                       dplyr::select(shrid) %>%
+#                       group_by(shrid) %>%
+#                       filter(row_number()==1) %>%
+#                       ungroup()
+# # to centroid
+# villages_overlap <- villages_overlap %>% st_centroid() 
+# villages_overlap <- st_transform(villages_overlap, crs = 4326)
+# shrid <- villages_overlap$shrid
+# # to lat/lon
+# villages_overlap <- st_coordinates(villages_overlap)
+# villages_overlap <- as_tibble(cbind(shrid, villages_overlap))
+# colnames(villages_overlap) <- c("shrid", "lon", "lat")
+
+# villages_overlap$lon <- as.numeric(villages_overlap$lon)
+# villages_overlap$lat <- as.numeric(villages_overlap$lat)
+
+# df <- df %>%
+#       left_join(villages_overlap, by = c("shrid"))
 
 
 
@@ -180,15 +204,6 @@ setFixest_fml(..ctrl3 = ~ rain1_zbin0 + rain1_zbin1 + rain2_zbin0 + rain2_zbin1 
                 temp_mean^2 + 
                 rain1_zbin0*temp_mean^2 + rain1_zbin1*temp_mean^2 + rain2_zbin0*temp_mean^2 + rain2_zbin1*temp_mean^2 + rain3_zbin0*temp_mean^2 + rain3_zbin1*temp_mean^2 +
                 rain4_zbin0*temp_mean^2 + rain4_zbin1*temp_mean^2 + rain5_zbin0*temp_mean^2 + rain5_zbin1*temp_mean^2)
-
-# add centroid
-df <- df %>% left_join(villages_overlap_latlon, by = "shrid")
-vcov_conley(
-  yield4,
-  lat = "centroid_lat",
-  lon = "centroid_lon",
-  distance = "triangular"
-)
 
 
 # Regressions ---------------------------------
@@ -321,6 +336,7 @@ yieldtable1 <- etable(
                       keep = c("wind")
                     )
 
+
 # rename
 yieldtable1 <- yieldtable1[-c(9:10),]
 yieldtable1[6,] <- " "
@@ -363,6 +379,9 @@ saveRDS(yieldtable, "pollution_development/draft/tables/yield3ivmain.rds")
 
 
 
+
+
+
 ##################
 ## placebo test ##
 ##################
@@ -376,23 +395,6 @@ setFixest_fml(..ctrl3 = ~ rain1_zbin0 + rain1_zbin1 + rain2_zbin0 + rain2_zbin1 
                 rain4_zbin0*temp_mean^2 + rain4_zbin1*temp_mean^2 + rain5_zbin0*temp_mean^2 + rain5_zbin1*temp_mean^2)
 
 
-wind_year <- df %>%
-  dplyr::select(wind, pm25, year, shrid) %>%
-  arrange(year) %>%
-  mutate(row = row_number()) %>%
-  group_by(year) %>%
-  mutate(
-    row_min = min(row), # min row number
-    row_max = max(row)
-    ) %>% # max
-  ungroup()
-df_placebo <- df %>%
-  dplyr::select(-c(wind, pm25)) %>%
-  arrange(year)
-
-samplefrom <- cbind(wind_year$row_min, wind_year$row_max)
-
-
 # create function to sample
 sample_pre_fun <- function(a) {
   sample(x = min(a):max(a), size = 1, replace = T)
@@ -403,65 +405,48 @@ sample_fun <- function(a) {
   sample_vec <- apply(a, 1, sample_pre_fun)
 }
 
-f <- function(i) {
-  set.seed(i + 500)
-  # create vector with random sampling
-  temp_sample <- sample_fun(samplefrom)
-
-  # take those rows
-  wind_all <- wind_year[temp_sample,]
-  # wind_all is in same order as df_placebo
-  # just cbind the random wind column
-  temp <- cbind(df_placebo, wind_all %>% dplyr::select(wind, pm25))
-  # get coefficient
-  coefs <- feols(log(yield) ~ ..ctrl3 | shrid + year | pm25 ~ wind, data = temp)
-  # return
-  return(coefs$coeftable[1,1])
-}
-RNGkind("L'Ecuyer-CMRG")
-set.seed(2430986) #resetting seed just to make sure this works correctly when using parallel
-coef_vec <- pbmclapply(1:500, f, mc.set.seed = TRUE, mc.cores = 10)
-coef_vec <- as_vector(coef_vec)
 
 
 
-# Also get distribution if we resample wind from WITHIN STATES ONLY
-## placebo test
 wind_year <- df %>%
-  dplyr::select(wind, pm25, state, year) %>%
-  arrange(year, state) %>% # order by year/state
-    mutate(row = row_number()) %>%
-  group_by(year, state) %>%
+  dplyr::select(wind, pm25, distfe, year) %>%
+  # just districts with at least 50 observations
+  arrange(year, distfe) %>% # order by year/distfe
+  mutate(row = row_number()) %>%
+  group_by(year, distfe) %>%
   mutate(
     row_min = min(row), # min row number
     row_max = max(row) # max
   ) %>%
-  ungroup()
+  ungroup() %>%
+  arrange(year, distfe) # order by year/distfe
 df_placebo <- df %>%
+  ungroup() %>%
   dplyr::select(-c(wind, pm25)) %>%
-  arrange(year, state) # order by year/state
+  arrange(year, distfe) # order by year/distfe
+# double check same order
+min(wind_year$distfe==df_placebo$distfe)
 
 samplefrom <- cbind(wind_year$row_min, wind_year$row_max)
 
 f <- function(i) {
   set.seed(i)
   # create vector with random sampling
-  temp_sample <- sample_fun(samplefrom)
   # take those rows
-  wind_all <- wind_year[temp_sample,]
+  wind_all <- wind_year[sample_fun(samplefrom), c("wind", "pm25")]
   # wind_all is in same order as df_placebo
   # just cbind the random wind column
-  temp <- cbind(df_placebo, wind_all %>% dplyr::select(wind, pm25))
+  temp <- cbind(df_placebo, wind_all)
   # get coefficient
   coefs <- feols(log(yield) ~ ..ctrl3 | shrid + year | pm25 ~ wind,  data = temp)
   # return
-  return(coefs$coeftable[1,3])
+  return(coefs$coeftable[1,1])
 }
 
 # use mclapply to take advantage of the cores on this computer
 # should take around an hour
-coefs_distfe <- pbmclapply(1:500, f)
-coefs_distfe <- as_vector(coefs_distfe)
+coefs_dist <- pbmclapply(1:500, f, mc.cores = 10)
+coefs_dist <- as_vector(coefs_dist)
 
 
 
@@ -472,16 +457,19 @@ true_value <- feols(log(yield) ~ ..ctrl3 | shrid + year | pm25 ~ wind,
                     cluster = c("shrid"))
 true_value <- true_value$coeftable[1,1]
 
+# true: -0.63
+# lowest from placebo: -0.59
+
+mean(coefs_dist<true_value) # 0.003 (3 of 1,000)
 
 
 
 pal <- viridis(4)
-colors <- c(paste0(pal[1]), paste0(pal[2]))
+colors <- c(paste0(pal[1]))
 
 # plot
 gg1 <- ggplot() + 
-  geom_density(aes(x = coef_vec, fill = "all"), alpha = 0.5) +
-  geom_density(aes(x = coefs_distfe, fill = "within district"), alpha = 0.5) +
+  geom_density(aes(x = coefs_dist, fill = "within district"), alpha = 0.5, show.legend = FALSE) +
   scale_fill_manual(
     name = "randomization:",
     values = colors
@@ -498,10 +486,11 @@ gg1 <- gg1 +
     name = "",
     values = colors,
     labels = labels
-  )
+  ) + 
+  geom_vline(aes(xintercept = -0.8), color = "transparent")
 saveRDS(gg1, "pollution_development/draft/tables/randomization.rds")
-
-
+saveRDS(coefs_dist, "pollution_development/draft/tables/randomization_coefs_distfe.rds")
+saveRDS(true_value, "pollution_development/draft/tables/randomization_true_value.rds")
 
 
 

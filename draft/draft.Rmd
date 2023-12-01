@@ -205,9 +205,8 @@ labor3month <- readRDS("pollution_development/draft/tables/labor3month.rds")
 laborplot <- readRDS("pollution_development/draft/tables/laborplot.rds")
 monthplot <- readRDS("pollution_development/draft/tables/monthplot.rds")
 opplot <- readRDS("pollution_development/draft/tables/opplot.rds")
-coef_vec <- readRDS("pollution_development/draft/tables/randomization_coef_vec.rds")
-coefs_distfe <- readRDS("pollution_development/draft/tables/randomization_coefs_distfe.rds")
-true_value <- readRDS("pollution_development/draft/tables/randomization_true_value.rds")
+coefsdist <- readRDS("pollution_development/draft/tables/randomization_coefs_distfe.rds")
+truevalue <- readRDS("pollution_development/draft/tables/randomization_true_value.rds")
 coef_current <- readRDS("pollution_development/draft/tables/coef_current.rds")
 coef_lead <- readRDS("pollution_development/draft/tables/coef_lead.rds")
 yieldrice <- readRDS("pollution_development/draft/tables/yieldrice.rds")
@@ -521,13 +520,11 @@ The comparison of the results to those in the previous table also confirm the co
 
 ## Robustness checks
 
-In this section, I report the results of two separate robustness checks for the main results presented above. In the previous results, standard errors are clustered at the level of the village, which is also the level at which treatment (exposure to pollution) is assigned as well as the level at which agricultural productivity is extracted. Past work has shown that standard errors might be underestimated in such contexts [@bertrand2004much]. This is a particular concern in the present case, since agricultural productivity is extracted at the village level but estimated using less coarse data that has high spatial correlation [@gangopadhyay2022new]. 
+In this section, I report the results of two separate robustness checks for the main results presented above. In the previous results, standard errors are clustered at the level of the village, which is also the level at which treatment (exposure to pollution) is assigned as well as the level at which agricultural productivity is extracted. Past work has shown that standard errors might be underestimated in such contexts [@bertrand2004much]. This is a particular concern in the present case, since agricultural productivity is extracted at the village level but estimated using data that has high spatial correlation [@gangopadhyay2022new]. 
 
-To help remedy concerns, I perform randomization inference (e.g. @barrios2012clustering) by randomly assigning observed treatment across villages and repeating this process 1,000 times. I do this in two separate ways. First, I take all villages in a given year and randomly assign, with replacement, treatment intensity within the year. Second, I do this separately by selecting from within district-years only, to help take into account district-year correlation in outcomes and as a way to mitigate possible concerns that traditional clustered standard errors may actually be much too conservative [@abadie2023should]. Since this is an instrumental variables procedure, I randomly select the wind and pollution variable _together_.
+To help remedy concerns, I perform randomization inference (e.g. @barrios2012clustering) by randomly assigning treatment (wind and pollution) across villages and repeating this process 1,000 times. I do this separately by selecting from within district-years only, to help take into account district-year correlation in outcomes and as a way to mitigate possible concerns that traditional clustered standard errors may actually be much too conservative [@abadie2023should]. Since this is an instrumental variables procedure, I randomly select the wind and pollution variable _together_, from the same observation.
 
-I present these results in Figure \@ref(fig:randomplot) of the appendix. The purple density is the resulting distribution of estimated treatment effects when selecting from all villages within the same year. The density of treatment effects is relatively tight around 0, with the left tail only reaching slightly beyond -0.05, compared to the most conservative actual estimated treatment effect of -0.63.
-
-The within-district correlation in outcomes and treatment is apparent when instead randomly selecting from only villages within the same district in the same year. The distribution is still approximately normal but has a mode of almost -0.4. Nonetheless, the actual treatment effect is larger in magnitude than almost all of the bootstrapped replications. The results are apparently robust to alternative specifications of uncertainty.
+I present these results in Figure \@ref(fig:randomplot) of the appendix. The within-district correlation is apparent when selecting villages from within the same district in the same year. The distribution is approximately normal but has a mean and median of around -0.4. Nonetheless, the actual treatment effect is larger in magnitude than almost all of the bootstrapped replications; only three of the 1,000 replications results in a large coefficient than the true coefficient, leading to a p-value of well less than 0.01. The results are apparently robust to alternative specifications of uncertainty.
 
 The second robustness check includes leads of pollution and wind direction. I instrument for future pollution using future wind direction, which mirrors the strategy employed in the main results. I present these results in Table \@ref(tab:yieldtableleads). Neither a one-year nor a two-year lead predicts current agricultural productivity, which supports the identification assumptions.
 
@@ -992,37 +989,33 @@ kable(
 
 
 
-```{r randomplot, echo = FALSE, message = FALSE, warning = FALSE, dev='png', fig.height = 4, fig.cap = "Randomization inference", fig.footer = list("Note: The figure presents the distribution of coefficients by randomly assigning wind direction across villages within the same year. The \"all\" distribution is created by randomly assigning a single wind value to each village, sampled with replacement across all villages in a given year. The \"within district\" randomly samples with replacement only from within the same district in the same year.")}
+```{r randomplot, echo = FALSE, message = FALSE, warning = FALSE, dev='png', fig.height = 4, fig.cap = "Randomization inference", fig.footer = list("Note: The figure presents the distribution of coefficients by randomly assigning wind direction and pollution exposure across villages within the same year. Sampling is done within year and district. The vertical line is the actual coefficient from column (4) of Table 3.")}
 
 
 pal <- viridis(4)
-colors <- c(paste0(pal[1]), paste0(pal[2]))
-labels <- c("All", "Within district")
+colors <- c(paste0(pal[1]))
 
 # plot
 gg1 <- ggplot() + 
-        geom_density(aes(x = coef_vec, fill = "All"), alpha = 0.5) +
-        geom_density(aes(x = coefs_distfe, fill = "Within district"), alpha = 0.5) +
-        scale_fill_manual(
-          name = "Randomization:",
-          values = colors,
-          labels = labels
-        ) +
-        theme_minimal() +
-        xlab("Distribution of coefficients") +
-        ylab("Density")
+  geom_density(aes(x = coefsdist, fill = "within district"), alpha = 0.5, show.legend = FALSE) +
+  scale_fill_manual(
+    name = "randomization:",
+    values = colors
+  ) +
+  theme_minimal() +
+  xlab("distribution of coefficients")
 
 colors <- c(paste0(pal[3]))
 labels <- c("actual")
 
 gg1 <- gg1 + 
-        geom_vline(aes(xintercept = true_value, color = "actual")) +
-        scale_color_manual(
-          name = "",
-          values = colors,
-          labels = labels
-        ) +
-        theme(legend.position = c(0.4, 0.6))
+  geom_vline(aes(xintercept = truevalue, color = "actual")) +
+  scale_color_manual(
+    name = "",
+    values = colors,
+    labels = labels
+  ) + 
+  geom_vline(aes(xintercept = -0.8), color = "transparent")
 
 gg1
 

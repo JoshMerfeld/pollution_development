@@ -127,7 +127,7 @@
 
 \title{Air pollution and agricultural productivity in a developing country\footnote{I thank Ariel Ortiz-Bobea, Marc Bellemare, and David Sungho Park for comments and suggestions that greatly improved the quality of the paper, as well as conference attendees at the 2023 KER International Conference and the University of Reading. The usual disclaimer applies. All scripts used in this paper are publicly available on my GitHub page: github.com/JoshMerfeld/pollution\_development}}
 \author{Joshua D. Merfeld\footnote{KDI School of Public Policy and Management and IZA; \href{mailto:merfeld@kdis.ac.kr}{\nolinkurl{merfeld@kdis.ac.kr}}}}
-\date{2023-11-23}
+\date{2023-12-01}
 
 \begin{document}
 \maketitle
@@ -376,13 +376,11 @@ The comparison of the results to those in the previous table also confirm the co
 \hypertarget{robustness-checks}{%
 \subsection{Robustness checks}\label{robustness-checks}}
 
-In this section, I report the results of two separate robustness checks for the main results presented above. In the previous results, standard errors are clustered at the level of the village, which is also the level at which treatment (exposure to pollution) is assigned as well as the level at which agricultural productivity is extracted. Past work has shown that standard errors might be underestimated in such contexts (Bertrand, Duflo, and Mullainathan 2004). This is a particular concern in the present case, since agricultural productivity is extracted at the village level but estimated using less coarse data that has high spatial correlation (Gangopadhyay et al. 2022).
+In this section, I report the results of two separate robustness checks for the main results presented above. In the previous results, standard errors are clustered at the level of the village, which is also the level at which treatment (exposure to pollution) is assigned as well as the level at which agricultural productivity is extracted. Past work has shown that standard errors might be underestimated in such contexts (Bertrand, Duflo, and Mullainathan 2004). This is a particular concern in the present case, since agricultural productivity is extracted at the village level but estimated using data that has high spatial correlation (Gangopadhyay et al. 2022).
 
-To help remedy concerns, I perform randomization inference (e.g. Barrios et al. (2012)) by randomly assigning observed treatment across villages and repeating this process 1,000 times. I do this in two separate ways. First, I take all villages in a given year and randomly assign, with replacement, treatment intensity within the year. Second, I do this separately by selecting from within district-years only, to help take into account district-year correlation in outcomes and as a way to mitigate possible concerns that traditional clustered standard errors may actually be much too conservative (Abadie et al. 2023). Since this is an instrumental variables procedure, I randomly select the wind and pollution variable \emph{together}.
+To help remedy concerns, I perform randomization inference (e.g. Barrios et al. (2012)) by randomly assigning treatment (wind and pollution) across villages and repeating this process 1,000 times. I do this separately by selecting from within district-years only, to help take into account district-year correlation in outcomes and as a way to mitigate possible concerns that traditional clustered standard errors may actually be much too conservative (Abadie et al. 2023). Since this is an instrumental variables procedure, I randomly select the wind and pollution variable \emph{together}, from the same observation.
 
-I present these results in Figure \ref{fig:randomplot} of the appendix. The purple density is the resulting distribution of estimated treatment effects when selecting from all villages within the same year. The density of treatment effects is relatively tight around 0, with the left tail only reaching slightly beyond -0.05, compared to the most conservative actual estimated treatment effect of -0.63.
-
-The within-district correlation in outcomes and treatment is apparent when instead randomly selecting from only villages within the same district in the same year. The distribution is still approximately normal but has a mode of almost -0.4. Nonetheless, the actual treatment effect is larger in magnitude than almost all of the bootstrapped replications. The results are apparently robust to alternative specifications of uncertainty.
+I present these results in Figure \ref{fig:randomplot} of the appendix. The within-district correlation is apparent when selecting villages from within the same district in the same year. The distribution is approximately normal but has a mean and median of around -0.4. Nonetheless, the actual treatment effect is larger in magnitude than almost all of the bootstrapped replications; only three of the 1,000 replications results in a large coefficient than the true coefficient, leading to a p-value of well less than 0.01. The results are apparently robust to alternative specifications of uncertainty.
 
 The second robustness check includes leads of pollution and wind direction. I instrument for future pollution using future wind direction, which mirrors the strategy employed in the main results. I present these results in Table \ref{tab:yieldtableleads}. Neither a one-year nor a two-year lead predicts current agricultural productivity, which supports the identification assumptions.
 
@@ -861,7 +859,7 @@ observations & 1,266,922 & 1,266,922 & 1,266,922 & 1,266,922\\
 \newpage
 
 \begin{figure}
-\includegraphics{draft_files/figure-latex/randomplot-1} \caption[Randomization inference]{Randomization inference}\label{fig:randomplot}\floatfoot*{Note: The figure presents the distribution of coefficients by randomly assigning wind direction across villages within the same year. The "all" distribution is created by randomly assigning a single wind value to each village, sampled with replacement across all villages in a given year. The "within district" randomly samples with replacement only from within the same district in the same year.}
+\includegraphics{draft_files/figure-latex/randomplot-1} \caption[Randomization inference]{Randomization inference}\label{fig:randomplot}\floatfoot*{Note: The figure presents the distribution of coefficients by randomly assigning wind direction and pollution exposure across villages within the same year. Sampling is done within year and district. The vertical line is the actual coefficient from column (4) of Table 3.}
 \end{figure}
 
 \FloatBarrier
