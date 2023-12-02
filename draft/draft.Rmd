@@ -458,7 +458,7 @@ kable(
       align = "cccc", booktabs = TRUE, linesep = ""
       ) %>%
   footnote(
-           "Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions is estimated agricultural yield, defined as tons per hectare. * p<0.10 ** p<0.05 *** p<0.01", 
+           "Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions is estimated (log) agricultural yield, defined as tons per hectare. * p<0.10 ** p<0.05 *** p<0.01", 
            general_title = "",
            threeparttable = TRUE,
            footnote_as_chunk = TRUE
@@ -499,7 +499,7 @@ kable(
       align = "cccc", booktabs = TRUE, linesep = ""
       ) %>%
   footnote(
-           "Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions is estimated agricultural yield, defined as tons per hectare. * p<0.10 ** p<0.05 *** p<0.01", 
+           "Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions is estimated (log) agricultural yield, defined as tons per hectare. * p<0.10 ** p<0.05 *** p<0.01", 
            general_title = "",
            threeparttable = TRUE,
            footnote_as_chunk = TRUE
@@ -580,7 +580,7 @@ kable(
       align = "ccccc", booktabs = TRUE, linesep = ""
       ) %>%
   footnote(
-           "Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions is estimated agricultural yield, defined as tons per hectare. The first two columns split the sample based on the median exposure (by village). The second two columns split the sample based on initial -- the first year available -- agricultural productivity. * p<0.10 ** p<0.05 *** p<0.01", 
+           "Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions is estimated (log) agricultural yield, defined as tons per hectare. The first two columns split the sample based on the median exposure (by village). The second two columns split the sample based on initial -- the first year available -- agricultural productivity. * p<0.10 ** p<0.05 *** p<0.01", 
            general_title = "",
            threeparttable = TRUE,
            footnote_as_chunk = TRUE
@@ -682,7 +682,7 @@ kable(
       align = "cc", booktabs = TRUE, linesep = ""
       ) %>%
   footnote(
-           "Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions is estimated agricultural yield, defined as tons per hectare. * p<0.10 ** p<0.05 *** p<0.01", 
+           "Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions is estimated (log) agricultural yield, defined as tons per hectare. * p<0.10 ** p<0.05 *** p<0.01", 
            general_title = "",
            threeparttable = TRUE,
            footnote_as_chunk = TRUE
@@ -937,7 +937,7 @@ kable(
       align = "cccc", booktabs = TRUE, linesep = ""
       ) %>%
   footnote(
-           "Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions is estimated agricultural yield, defined as tons per hectare. * p<0.10 ** p<0.05 *** p<0.01", 
+           "Note: Standard errors are in parentheses and are clustered at the village level. The outcome in all regressions is estimated (log) agricultural yield, defined as tons per hectare. * p<0.10 ** p<0.05 *** p<0.01", 
            general_title = "",
            threeparttable = TRUE,
            footnote_as_chunk = TRUE
