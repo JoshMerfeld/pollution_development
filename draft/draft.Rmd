@@ -1,5 +1,5 @@
 ---
-title: "Air pollution and agricultural productivity in a developing country^[I thank Ariel Ortiz-Bobea, Marc Bellemare, and David Sungho Park for comments and suggestions that greatly improved the quality of the paper, as well as conference attendees at the 2023 KER International Conference and the University of Reading. The usual disclaimer applies. All scripts used in this paper are publicly available on my GitHub page: github.com/JoshMerfeld/pollution_development]"
+title: "Air pollution and agricultural productivity in a developing country^[I thank Ariel Ortiz-Bobea, Marc Bellemare, and David Sungho Park for comments and suggestions that greatly improved the quality of the paper, as well as conference/seminar attendees at the 2023 KER International Conference, Seoul National, the University of Reading, and the EEA. The usual disclaimer applies.]"
 author:
   - Joshua D. Merfeld^[KDI School of Public Policy and Management and IZA; merfeld@kdis.ac.kr]
 date: "`r Sys.Date()`"
